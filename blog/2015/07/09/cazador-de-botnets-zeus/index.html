@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cazador De Botnets: [Zeus] - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="&nbsp;By [Q]3rV[0]Quien no fantaseo alguna vez con tener miles y miles de ordenadores bajo su poder?, no me refiero con el objetivo de desatar un &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/07/09/cazador-de-botnets-zeus/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Cazador De Botnets: [Zeus]</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-07-09T15:20:00-07:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>9</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:20 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-1eQg62wJHX0/VZ7s98FDEbI/AAAAAAAAAps/5vY8cFLVzu0/s1600/cazador.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="320" src="http://1.bp.blogspot.com/-1eQg62wJHX0/VZ7s98FDEbI/AAAAAAAAAps/5vY8cFLVzu0/s320/cazador.jpg" width="240" /></a></div><div style="text-align: right;"><b>&nbsp;By [Q]3rV[0]</b></div><br />Quien no fantaseo alguna vez con tener miles y miles de ordenadores bajo su poder?, no me refiero con el objetivo de desatar un caos o incluso robar masivamente información, sino para simplemente, tener el profundo sentimiento de <b>"control"</b>. O hablando desde el otro <b>"lado"</b> a quien no se le ocurrio la idea de <b>desbaratar botnets</b> alguna vez?, cazarlas<br /><a name='more'></a>por el simple echo de ver que ahí adentro, descubrir el numero de&nbsp; maquinas que cayeron bajo su poder? y quizá hasta tomar el control?. Bueno, este post va dedicado a esta ultima fantasía.<br /><br /><h2 style="text-align: left;">Como encontramos una botnet?</h2><br />Vamos a lo primero, para cazar una botnet hay que localizarla, existen diversos servicios online que se dedican al traceo de estas, en los que se publican el <b>path del C&amp;C</b>,<b> información de los ejecutables usados para la infección</b>, <b>el tipo de botnet</b>, etc. <br /><br /><h3 style="text-align: left;">&nbsp;Cybercrime-tracker </h3><br /><table align="center" cellpadding="0" cellspacing="0" class="tr-caption-container" style="margin-left: auto; margin-right: auto; text-align: center;"><tbody><tr><td style="text-align: center;"><a href="http://2.bp.blogspot.com/-hY4K4bwm-ZM/VZm3TAqPJqI/AAAAAAAAAlc/Mi293JstXIw/s1600/2.png" imageanchor="1" style="margin-left: auto; margin-right: auto;"><img border="0" src="http://2.bp.blogspot.com/-hY4K4bwm-ZM/VZm3TAqPJqI/AAAAAAAAAlc/Mi293JstXIw/s1600/2.png" /></a></td></tr><tr><td class="tr-caption" style="text-align: center;"><a href="http://cybercrime-tracker.net/">Cybercrime-Tracker</a></td></tr></tbody></table><br />La cual mantiene archivado una gran diversidad de malware como la botnet <b>Blackhole</b>, <b>Citadel</b>, <b>Zeus</b>, <b>Pony</b>, <b>IceIX</b>, <b>VertexNet</b> entre otras.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-kqdFOuCuNp8/VZm3qq9WrvI/AAAAAAAAAlk/3YPc9w_301I/s1600/3.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-kqdFOuCuNp8/VZm3qq9WrvI/AAAAAAAAAlk/3YPc9w_301I/s1600/3.png" /></a></div><br /><h3 style="text-align: left;">&nbsp;</h3><h3 style="text-align: left;">Abuse.ch</h3><h3 style="text-align: center;"></h3>Otra de gran utilidad es <a href="http://abuse.sh/">abuse.ch</a> contando con un tracker para la <b>Zeus</b>, <b>Feodo</b>, <b>Palevo</b> y la <b>SpyEye</b>.<br /><br /><div class="separator" style="clear: both; text-align: center;"></div><table align="center" cellpadding="0" cellspacing="0" class="tr-caption-container" style="margin-left: auto; margin-right: auto; text-align: center;"><tbody><tr><td style="text-align: center;"><a href="http://2.bp.blogspot.com/-hzT8MRbaLxo/VZm45aL5rdI/AAAAAAAAAl0/1Zb-rjHL9pk/s1600/4.png" imageanchor="1" style="margin-left: auto; margin-right: auto;"><img border="0" src="http://2.bp.blogspot.com/-hzT8MRbaLxo/VZm45aL5rdI/AAAAAAAAAl0/1Zb-rjHL9pk/s1600/4.png" /></a></td></tr><tr><td class="tr-caption" style="text-align: center;"><a href="https://zeustracker.abuse.ch/">Zeus-Tracker</a></td></tr></tbody></table><br />Posiblemente existan otras listas de botnets, pero por el momento son las unicas que conozco.<br /><br />También podemos hacer uso de algún <b>motor de búsqueda como google</b>. Implementando uno que otro <b>google dork</b> llevándonos por las estructura del panel que deseemos localizar, por ejemplo, la ruta del C&amp;C por defecto en la botnet <b>Zeus</b> es el siguiente: <b>/cp.php?m=login</b>.<br /><br /><br /><pre class="brush: bash">inurl:/cp.php?m=login </pre><br />De ahí en mas podríamos ir variando, ya que probablemente el responsable haya echo algunas modificaciones al script, incluso cambiado el nombre, en fin todo va en el ensayo y error. Tal vez nos topemos con alguna que otra semi camuflada.<br /><br /><br /><pre class="brush: bash">inurl:/adm.php?m=login</pre><br /><br /><pre class="brush: bash">intext:"Remember (MD5 cookies)" ext:php</pre><br /><br /><h2 style="text-align: left;">Hosting1</h2>Partamos por el punto de que una botnet puede estar montada en un:<br /><br /><ul><li>Servicio de hosting free</li><li>Servicio de hosting pago</li><li>Hosting hacked</li><li>VPS </li></ul><br />En mi caso se hallaba alojada en lo que parecía ser un servicio de hosting pago, llamémoslo <b>hosting1.com</b>.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-ppnAS092r7o/VZnCQDmQL9I/AAAAAAAAAmE/zA88ywMxQDc/s1600/panel.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-ppnAS092r7o/VZnCQDmQL9I/AAAAAAAAAmE/zA88ywMxQDc/s1600/panel.png" /></a></div><br /><br />A simple vista me atrevía a decir que el encargado del malware obtuvo acceso ilícito, por lo que lo mas seguro es que la web presentara alguna que otra vulnerabilidad que me permitiese la entrada, si es que no fue parcheada por el atacante, para alejar a los curiosos.<br /><br />Realmente aun quedaba alguna que otra brecha.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-9y2f5vRWTTU/VZnDOtnMELI/AAAAAAAAAmM/dkXE44dp_sA/s1600/5.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-9y2f5vRWTTU/VZnDOtnMELI/AAAAAAAAAmM/dkXE44dp_sA/s1600/5.png" /></a></div><br /><br />Fijémonos haber que hay detrás del panel.<br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-3tsAobvKvXU/VZnEKpzI06I/AAAAAAAAAmY/dSJtbBtep3I/s1600/6.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-3tsAobvKvXU/VZnEKpzI06I/AAAAAAAAAmY/dSJtbBtep3I/s1600/6.png" />&nbsp;</a></div><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-bvSlokqzfJc/VZnEzXVQQMI/AAAAAAAAAmo/_IA-u-ULHXY/s1600/7.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-bvSlokqzfJc/VZnEzXVQQMI/AAAAAAAAAmo/_IA-u-ULHXY/s1600/7.png" /></a></div><br />Un upload bastante jodido y otra <b>SQLI</b>. Luego de realizar varios intentos decidí dejar de lado la subida de ficheros, pero si podía inyectar comandos en la db, solo tenia que buscar la tabla con las credenciales de la botnet.<br /><br />&nbsp; <br /><table align="center" cellpadding="0" cellspacing="0" class="tr-caption-container" style="margin-left: auto; margin-right: auto; text-align: center;"><tbody><tr><td style="text-align: center;"><a href="http://2.bp.blogspot.com/-zPQ_9kf4Ytk/VZmyvCP9BNI/AAAAAAAAAlQ/qUa0AHS_-UY/s1600/dbzeus.png" imageanchor="1" style="margin-left: auto; margin-right: auto;"><img border="0" src="http://2.bp.blogspot.com/-zPQ_9kf4Ytk/VZmyvCP9BNI/AAAAAAAAAlQ/qUa0AHS_-UY/s1600/dbzeus.png" /></a></td></tr><tr><td class="tr-caption" style="text-align: center;">Estructura de la db Zeus</td></tr></tbody></table><div style="text-align: center;"><br /></div><div style="text-align: left;">Por desgracia no había rastros de la Zeus.<br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-_hsefoDRhgs/VZ22VeF3hiI/AAAAAAAAAm8/XgIGnxYgZGs/s1600/db_materno.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-_hsefoDRhgs/VZ22VeF3hiI/AAAAAAAAAm8/XgIGnxYgZGs/s1600/db_materno.png" /></a></div><br /><br />Lo mas probable es que corra con un usuario diferente.<br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-VKzvAbWQ5r8/VZ3EVRwA8_I/AAAAAAAAAnk/B8QUsgWKjHs/s1600/user-db.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-VKzvAbWQ5r8/VZ3EVRwA8_I/AAAAAAAAAnk/B8QUsgWKjHs/s1600/user-db.png" /></a></div><br /><br />Después de navegar por la aplicación, me encontré con la zona de acceso a clientes.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-oF-n4bG8MI8/VZ23woRmRGI/AAAAAAAAAnI/wqUXclhnf68/s1600/acceso_clientes.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-oF-n4bG8MI8/VZ23woRmRGI/AAAAAAAAAnI/wqUXclhnf68/s1600/acceso_clientes.png" /></a></div><br /><br />Evidentemente trabajaba con otro user ya que las credenciales del formulario no estaban en la anterior base de datos. Así que me registre para ponerme en busca de alguna inyección u otra abertura que me de acceso.</div><div style="text-align: left;">Al rato termine por darme por vencido y decidí ir por otra via, enumerar los dominios en el servidor, tratar de acceder mediante alguno de ellos y así escalar hasta <b>hosting1.com</b>.<br /><br /><h2 style="text-align: left;">&nbsp;</h2><h2 style="text-align: left;">Evilnet</h2>El proveedor de hosting, llamémoslo <b>"Evilnet"</b>, por motivos obvios no voy a dar nombres. Evilnet ofrece servicio de hosting, diseño y programación web, varios dominios que pertenecen a Evilnet, <b>usan la misma estructura de CMS</b>, el mismo con el que corre nuestro <b>hosting1.com</b>&nbsp; por&nbsp; acá tenemos otro similar y por supuesto junto con la misma <b>SQLI</b> :)<br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-kol3ojEHA-o/VZ2_y2Gvb-I/AAAAAAAAAnc/K8DQAueUXAg/s1600/login_hosting2.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-kol3ojEHA-o/VZ2_y2Gvb-I/AAAAAAAAAnc/K8DQAueUXAg/s1600/login_hosting2.png" /></a></div><div class="separator" style="clear: both; text-align: center;"></div><br /><div class="separator" style="clear: both; text-align: center;"></div><br />Si no leíste el articulo <b>"Engañando al WAF con XMP"</b> podes ingresar al siguiente <a href="http://www.securitysignal.org/2015/05/enganando-el-waf-con-xmp.html">link</a> donde detallo como conseguí acceso al servidor mediante <b>hosting2.com</b>.<br /><br />Siguiendo con el apartado cabe destacar algo interesante que me encontré mediante la recolección de información:<br /><br /><ul><li>Ambas webs usan el mismo <b>password</b> en el formulario de administración.</li></ul><br /><ul><li>Ambas webs cuentan con el mismo <b>password</b> en la base de datos (el mismo que usan para acceder al panel, <b>no es joda!</b>). </li></ul><br /><table align="center" cellpadding="0" cellspacing="0" class="tr-caption-container" style="margin-left: auto; margin-right: auto; text-align: center;"><tbody><tr><td style="text-align: center;"><a href="http://1.bp.blogspot.com/-Z-BLymwqX3I/VZ3XAxTKAcI/AAAAAAAAAoA/2mnHU_o4P-I/s1600/conf.png" imageanchor="1" style="margin-left: auto; margin-right: auto;"><img border="0" src="http://1.bp.blogspot.com/-Z-BLymwqX3I/VZ3XAxTKAcI/AAAAAAAAAoA/2mnHU_o4P-I/s1600/conf.png" /></a></td></tr><tr><td class="tr-caption" style="text-align: center;">DB config hosting2.com</td></tr></tbody></table><br />Parece que el administrador de Evilnet <b>no tiene buena memoria</b> y prefiere usar <b>la misma llave</b> para todo, podría apostar que este <b>"descuido"</b> por llamarlo de manera elegante, se repite en los demás dominios bajo su autoría. Con este criterio quien sabe, si llegara a probar, hasta me podría cargar el facebook y el twitter del admin o hasta la sesión ssh personal, <b>espero no llegarle hasta abajo de la cama</b> jeje!.<br /><br />Pero en fin ya estaba dentro de <b>hosting2.com</b>, solo me faltaba escalar hasta <b>hosting1.com</b>, lo primero que hice fue tratar de leer el fichero de configuración de la botnet que se encuentra en el directorio base <b>/system/config.php</b>, mediante la creación de un <b>enlace simbólico</b>, pero para mi mala suerte no funciono. Entonces recordé el descuido del administrador e intente ingresar con la <b>llave maestra</b> por así decirlo, mediante otro usuario en la db que pertenezca a <b>hosting1.com</b>, por lo que veía, la estrutura de nombres tiene la siguiente regla:<br /><br /><b>"Nombre que hace referencia al dominio"_XXXXXXX</b><br /><br />ya había intentado loguearme como <b>hosting1_xxxxxxx</b>, entonces fui probando diversas combinaciones de usuarios.<br /><br />Hasta que logre ingresar como <b>hosting1</b> solamente, el cual tenia acceso a todas las dbs dentro de la aplicación.</div><div style="text-align: left;"></div><div style="text-align: left;"><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-CvTT9J1koe8/VZ3Vc8Ib5rI/AAAAAAAAAn0/FWjIur3erpo/s1600/dbs.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-CvTT9J1koe8/VZ3Vc8Ib5rI/AAAAAAAAAn0/FWjIur3erpo/s1600/dbs.png" /></a></div><br /><br />Ya habiendo identificado la preciada base de datos.<br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-Cr4OEHcrdew/VZ3aEA7hEgI/AAAAAAAAAoM/vNpJ7_9axN8/s1600/db_zeus.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-Cr4OEHcrdew/VZ3aEA7hEgI/AAAAAAAAAoM/vNpJ7_9axN8/s1600/db_zeus.png" /></a></div><br /><br />Restaba consultar las credenciales en la tabla <b>cp_users</b> y rogar obtener el <b>hash md5 en claro</b>.<br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-U93VW2Q8q2w/VZ3a9f_XJgI/AAAAAAAAAoU/nxxBChJSkfo/s1600/admin.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-U93VW2Q8q2w/VZ3a9f_XJgI/AAAAAAAAAoU/nxxBChJSkfo/s1600/admin.png" /></a></div><br /><br />Afortunadamente el hashe del admin estaba presente en <a href="http://md5online.org/">md5online</a>.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-BFOp4gfL4AY/VZ3cHgtaKDI/AAAAAAAAAog/DnwSu_ld3KM/s1600/hash.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-BFOp4gfL4AY/VZ3cHgtaKDI/AAAAAAAAAog/DnwSu_ld3KM/s1600/hash.png" /></a></div><br /><br /><br /><h2 style="text-align: left;">&nbsp;La Zeus </h2></div><div style="text-align: left;">Una vez dentro termine un poco decepcionado al respecto, creí que podía encontrarme con una mayor cantidad de bots, y para peor no había uno solo en pie.<br /><br />&nbsp;</div><div style="text-align: left;"></div><div style="text-align: left;"><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-Hl8sSZD7K_U/VZ3fSrC4u_I/AAAAAAAAAos/RULPk2xcxW0/s1600/bots.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-Hl8sSZD7K_U/VZ3fSrC4u_I/AAAAAAAAAos/RULPk2xcxW0/s1600/bots.png" /></a></div><div style="text-align: left;"><br /></div><div style="text-align: left;"><br />Aunque contaba con una respetable cantidad de reportes sobre credenciales <b>pop3</b> y <b>http</b>.<br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-SRZ7DGf6TSY/VZ7iGCGZHqI/AAAAAAAAApA/MymM5UKD9-E/s1600/reports.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-SRZ7DGf6TSY/VZ7iGCGZHqI/AAAAAAAAApA/MymM5UKD9-E/s1600/reports.png" /></a></div><br /><br />Una cosa interesante, es que el reports path de la botnet apuntaba al home de <b>hosting1</b>.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-rQZ9XKL0MDE/VZ7quIKtCGI/AAAAAAAAApQ/ldrQzyTQkiw/s1600/paths.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-rQZ9XKL0MDE/VZ7quIKtCGI/AAAAAAAAApQ/ldrQzyTQkiw/s1600/paths.png" /></a></div><br />Por lo tanto podía navegar libremente a través del file browser y descargar ficheros a diestra y siniestra.</div><div style="text-align: left;"></div><div style="text-align: left;"><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-Fdd7Hbj45X0/VZ7rI0vfvBI/AAAAAAAAApY/_IT7EupKbRE/s1600/file_browser.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-Fdd7Hbj45X0/VZ7rI0vfvBI/AAAAAAAAApY/_IT7EupKbRE/s1600/file_browser.png" /></a></div><br /><br />De no haber sido así, solo tenia que ir a <b>options</b> y editar el path con tantos directorios transversales sean necesarios para llegar al home.<br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-q9ib50b8lBY/VZ7reyXMllI/AAAAAAAAApg/u7GFrVNgXOE/s1600/back.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-q9ib50b8lBY/VZ7reyXMllI/AAAAAAAAApg/u7GFrVNgXOE/s1600/back.png" /></a></div><br /><br /></div></div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-07-09T15:20:00-07:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>9</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:20 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/07/09/cazador-de-botnets-zeus/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/07/09/cazador-de-botnets-zeus/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/05/25/enganando-el-waf-con-xmp/" title="Previous Post: Engañando al WAF con XMP">&laquo; Engañando al WAF con XMP</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/07/18/esquivando-la-seguridad-de-wixcom/" title="Next Post: Esquivando la seguridad de WIX.COM">Esquivando la seguridad de WIX.COM &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

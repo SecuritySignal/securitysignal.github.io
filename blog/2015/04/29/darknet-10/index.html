@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Darknet 1.0 - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="By [Q]3rV[0] La persistencia bloguera no es mi fuerte y ya hacia rato que no publicaba nadanuevo, de a lapsos durante el tiempo libre me vi enfocado &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/04/29/darknet-10/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Darknet 1.0</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-04-29T10:49:00-07:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>29</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:49 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-1XTvGWm6f6k/VUEXT6geJ9I/AAAAAAAAAeo/SVJQc8tykLo/s1600/darknet.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-1XTvGWm6f6k/VUEXT6geJ9I/AAAAAAAAAeo/SVJQc8tykLo/s1600/darknet.png" height="213" width="400" /></a></div><br /><b>By [Q]3rV[0]</b> <br /><br />La persistencia bloguera no es mi fuerte y ya hacia rato que no publicaba nada<br />nuevo, de a lapsos durante el tiempo libre me vi enfocado a la creación de una<br />nueva <b>VM</b> que pudiera ser digna del nivel de <b>#Vulnhub</b>, creo que me acerque lo<br />mas que pude, nació así Darknet, una maquina virtual vulnerable para el <br /><a name='more'></a>desarrollo de laboratorios <b>100% Secsignal!</b>.<br /><br /><h2><b><span style="font-weight: normal;">Que nos tiene preparado Darknet?</span></b></h2><br />No me gusta hacer spoiler y sobre todo de un reto de estas características, así que voy a tratar de ser lo mas escaso posible al tratar de describirla. <b>Darknet</b> tiene un poco de todo, una salsa con un toque de enrosque y frustración que espero lleve horas de migrañas y diversión para el que se atreva a conquistar sus aposentos. <br />Como se acostumbra el objetivo sera leer el contenido del fichero <b>/root/flag.txt</b>, obviamente una vez escalado los privilegios necesarios para cumplir con el cometido.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-HbR-HWrLRU8/VUEXntXVljI/AAAAAAAAAew/5AW2x2DK-Nk/s1600/drknedssd.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-HbR-HWrLRU8/VUEXntXVljI/AAAAAAAAAew/5AW2x2DK-Nk/s1600/drknedssd.png" height="292" width="640" /></a></div><br /><br />La imagen podrán montarla con <b>VirtualBox</b>. La maquina posee <b>DHCP</b> activo así que una vez lista asignara automaticamente una ip de red, el paso siguiente sera identificar el objetivo y&nbsp; descubrir <b>el/los servicio/s</b> para que comience el juego. Buena suerte!.<br /><br />Si desean enviar sus solucionarios en formato pdf pueden hacerlo a la siguiente dirección: <b>s3csignal[at]gmail[dot]com</b><br /><br /><br /><a href="http://www.mediafire.com/download/c7j67ezi61e4ozz/Darknet.rar" target="_blank">DESCARGAR DARKNET 1.0</a></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-04-29T10:49:00-07:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>29</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:49 am</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/04/29/darknet-10/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/04/29/darknet-10/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/04/18/xss-httpswwwclickoncomar/" title="Previous Post: XSS https://www.clickon.com.ar">&laquo; XSS https://www.clickon.com.ar</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/05/12/analizando-js-malicioso/" title="Next Post: Analizando JS Malicioso AutoLike/AutoShare">Analizando JS Malicioso AutoLike/AutoShare &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

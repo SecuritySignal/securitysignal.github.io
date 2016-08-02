@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Webot - One Ring to Control the Others - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="by hdbreaker Alguna vez has pensado como armar tu propia Botnet?&nbsp;Repasado internamente la planificación para dispersar Malware? Has pensado en &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/03/04/webot-one-ring-to-control-others/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Webot - One Ring to Control the Others</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-03-04T18:32:00-08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>6:32 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div style="text-align: center;"><div class="separator" style="clear: both; text-align: center;"></div><div class="separator" style="clear: both; text-align: center;"><a href="http://www.techweekeurope.co.uk/wp-content/uploads/2011/06/Botnet.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://www.techweekeurope.co.uk/wp-content/uploads/2011/06/Botnet.jpg" height="353" width="400" /></a> </div><div style="text-align: right;"><b>by hdbreaker</b> </div><div style="text-align: left;"></div><div style="text-align: left;">Alguna vez has pensado como armar tu propia Botnet?&nbsp;</div><div style="text-align: left;">Repasado internamente la planificación para dispersar Malware? <br /><a name='more'></a><br />Has pensado en armar tu propio Malware?<br /><br />Las miles de lineas de código que implica tener un Malware decente?&nbsp;</div><div style="text-align: left;">Has pensado si cuentas realmente con las skills necesarias?</div><div style="text-align: left;"></div><div style="text-align: left;"></div><div style="text-align: left;"><br />Bueno quiero comentarles un secreto a esas personas curiosas que probablemente tengan un perfil Pentester&nbsp; y no se sientan atraídas por el Malware o no ven el desarrollo de software como parte principal de sus intereses.<br /><br /><div style="text-align: center;"><h2><b>Estamos trabajando en una solución</b></h2></div></div><div style="text-align: left;"><br /></div><div style="text-align: left;">Imagina ir realizando tus ataques, ingresando a servidores recorriendo archivos leyendo logs, intentando escalar privilegios y te encuentras con la necesidad&nbsp; de mantener el acceso de forma fiable y pasiva.</div><div style="text-align: left;"><b>Webot</b> es posible gracias a la base robusta que brinda Frameshock, se presenta como un modulo privado del mismo y viene a realizar esos deseos realidad.</div><div style="text-align: left;"></div><div style="text-align: left;">Podrás realizar tus auditorías y a medida que trabajes podrás generarte poco a poco una botnet PHP pasiva que en el momento que tu elijas te daría la posibilidad de volver activa a cada victima LINUX, gestionarla remotamente o en conjunto con todos tus zombies y hasta garantizarte reverse shell de todas tus victimas.</div><div style="text-align: left;"><br /></div><div style="text-align: center;"><h2>¿Como Funciona?</h2></div><div style="text-align: left;"></div><div style="text-align: left;"></div><div style="text-align: left;"><b>Webot</b> da la posibilidad de crear un payload especial protegido por contraseña que debe inyectarse en cualquier archivo php dentro del servidor.</div><div style="text-align: left;"><br />Este payload funciona de forma OnDemand, lo que quiere decir que cuando el titiritero solicite al Zombie privilegios este le responderá, pero mientras no sea necesario el Zombie no despertara ninguna actitud sospechosa quedando dormido pero residente.<br /><br />Una vez hecho esto solo queda gestionar los Zombies desde el modulo <b>Webot</b> de <b>Frameshock</b> que permite el envío individual o masivo de comando a los Zombies. <br /><br />Ademas de esto <b>Webot</b> ofrece la posibilidad de solicitar un Reverse Shell a los Zombies, tanto a un Bot especifico como a toda la Mesh de Bots.<br /><br />Este modulo se encuentra en desarrollo privado y se esta debatiendo la posibilidad de liberar una versión gratuita.<br /><br />De momentos los dejamos con unas capturas:</div><div style="text-align: left;"></div><div style="text-align: left;"><div style="text-align: center;"><br /><a href="http://3.bp.blogspot.com/-vujy0UM7q6Q/VPe_jN7XrlI/AAAAAAAAAbU/H5LE6suMWH4/s1600/main.png" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-vujy0UM7q6Q/VPe_jN7XrlI/AAAAAAAAAbU/H5LE6suMWH4/s1600/main.png" height="275" width="640" /></a></div><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-j-ryWknopgA/VPe_ieu9rcI/AAAAAAAAAbA/EpeEic0KcCk/s1600/cmd.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-j-ryWknopgA/VPe_ieu9rcI/AAAAAAAAAbA/EpeEic0KcCk/s1600/cmd.png" height="265" width="640" /></a></div></div><div style="text-align: center;"><a href="http://3.bp.blogspot.com/-lom6f5K_KoI/VPe_ijafRlI/AAAAAAAAAbI/d4XQ2k4eVG4/s1600/generate.png" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-lom6f5K_KoI/VPe_ijafRlI/AAAAAAAAAbI/d4XQ2k4eVG4/s1600/generate.png" height="288" width="640" /></a></div><div style="text-align: left;"></div><div style="text-align: left;"><div style="text-align: center;"><a href="http://1.bp.blogspot.com/-lwPsAijUq0A/VPe_iNIRn8I/AAAAAAAAAa4/QGD8jh15Z8w/s1600/bot.png" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-lwPsAijUq0A/VPe_iNIRn8I/AAAAAAAAAa4/QGD8jh15Z8w/s1600/bot.png" height="128" width="640" /></a><a href="http://1.bp.blogspot.com/-o7Zrd3ovDIk/VPe_icBgcxI/AAAAAAAAAa8/fuRHMeFGsBs/s1600/exploit.png" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-o7Zrd3ovDIk/VPe_icBgcxI/AAAAAAAAAa8/fuRHMeFGsBs/s1600/exploit.png" height="116" width="640" /></a></div><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-p1q-t53dSlc/VPe_ixw5-QI/AAAAAAAAAbM/_eRbrlUEwek/s1600/handler.png" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-p1q-t53dSlc/VPe_ixw5-QI/AAAAAAAAAbM/_eRbrlUEwek/s1600/handler.png" height="435" width="640" /></a></div><br /><br /><br /><br /><br /><br /></div></div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-03-04T18:32:00-08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>6:32 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/03/04/webot-one-ring-to-control-others/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/03/04/webot-one-ring-to-control-others/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/02/26/arduino-p0wned-desbordando-arduino/" title="Previous Post: Arduino P0wn3d - Desbordando Arduino">&laquo; Arduino P0wn3d - Desbordando Arduino</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/04/08/webot-release/" title="Next Post: Webot Release!">Webot Release! &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

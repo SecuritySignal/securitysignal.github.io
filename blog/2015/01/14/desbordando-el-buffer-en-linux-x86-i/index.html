@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Desbordando El Buffer en Linux X86 (I) - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="by [Q]3rv[0]Cada vez que corremos un proceso en la maquina, se crea una memoria virtual para dicho proceso, ese segmento se divide en 3 partes, el &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/01/14/desbordando-el-buffer-en-linux-x86-i/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Desbordando El Buffer en Linux X86 (I)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-14T04:24:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>4:24 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="https://c2.staticflickr.com/4/3246/3082468985_e7047ee5be_b.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="400" src="https://c2.staticflickr.com/4/3246/3082468985_e7047ee5be_b.jpg" width="400" /></a></div><div style="text-align: right;"><b>by [Q]3rv[0]</b></div><br />Cada vez que corremos un proceso en la maquina, se crea una memoria virtual para dicho proceso, ese segmento se divide en 3 partes, el texto, los datos&nbspy&nbsppor&nbspultimo&nbspel&nbspstack, que es donde nos vamos a concentrar para realizar la explotacion de este tipo de vulnerabilidad. <br /><br /><h3 style="text-align: center;"> <b>¿Que es el stack?</b> </h3>El stack es un segmento en la memoria que se encarga de almacenar datos y a su vez recuperarlos, administra la información en modo LIFO (last in first out), quiere decir que el ultimo dato en entrar es el primero en salir<br /><br />Un ejemplo mas sencillo seria comparar el stack con una pila de cd's, en el que el primer cd hace de base de la pila y para llegar a el hay que retirar uno por uno los que se encuentran encima. <br /><br />Entonces cada vez que se ingresa un dato al stack se utiliza una instruccion denominada PUSH y cuando se retira un dato se llama a la instruccion POP, algo similar a un array. <br /><br /><h3 style="text-align: center;"><b>Los registros del procesador</b></h3>El procesador cuenta con varios registros que cumplen diversas tareas en el stack, por el momento solo voy a mencionar a 3 de ellos. <br /><br /><b>EIP</b> - Registro que almacena la dirección de memoria de la proxima funcion que se va a ejecutar.  <br /><br /><b>ESP</b> - Apunta a la parte superior del stack <br /><br /><b>EBP</b> - Aputa a la base del stack   Ahora que ya se explicaron algunos conceptos basicos sobre el tema, vayamos al nudo del tutorial.   <br /><div style="text-align: center;"><h3><b>¿Que es un Buffer overflow?</b></h3></div>Empezemos por definir que es un buffer, no es mas que un espacio de memoria en donde se vuelcan datos para determinada accion por ejemplo, tengo el siguiente programa en c.  <br /><br /><pre class="brush: cpp">#include &lt;stdlib&gt;<br />#include &lt;stdio&gt;<br />#include &lt;string&gt;<br /> <br />int main(int argc, char *argv[]) {<br /> <br />    char buffer[10];<br /> <br />    strcpy(buffer, argv[1]);<br /> <br />    printf(buffer);<br /> <br />    return 0;<br />}<br /></pre>Donde se define un buffer de 10 bytes, luego se lo pasa a la funcion strcpy que almacena en el buffer el argumento insertado por el usuario, esta misma no se encarga de controlar el tamaño limite del buffer por lo tanto si se introduce una mayor cantidad de caracteres,  el espacio desbordara y comenzara a sobrescribir los registros de memoria cercanos al buffer.  <br /><br />Antes que nada, vamos a desactivar ASLR  ASLR en criollo es un sistema de seguridad que vuelve aleatoria las direcciones de la memoria virtual.  <br /><br /><pre class="brush bash">echo 0 &gt; /proc/sys/kernel/randomize_va_space</pre><pre class="brush bash">&nbsp;</pre>y compilaremos el prog con los siguientes flag de gcc.  <br /><br /><pre class="brush bash">gcc -ggdb -fno-stack-protector -mpreferred-stack-boundary=2 -o prog prog.c<br /><br /></pre>Para quitarle algunas protecciones al stack que le agrega gcc al compilar.  <br /><br />Probemos pasandole mas de 10 caracteres al programa.  <br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/beDd3zp.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/beDd3zp.png" height="64" width="640" /></a></div><div style="text-align: center;"><br /></div>Como se ve el programa crashea, veamos que pasa por dentro con <b>gdb</b>.<br /><br /><pre class="brush: bash">gdb prog</pre><pre class="brush: bash">&nbsp;</pre>Le pasamos los argumentos<br /><br /><pre class="brush: bash">run AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</pre><br />y una vez que el prog nos patee miramos en los registros a ver que encontramos? <br /><br /><pre class="brush: bash">info registers</pre><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/euFxWOT.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/euFxWOT.png" height="606" width="640" /></a></div><br />Como se ve en la imagen, se sobrescribieron dos registros como EIP y EBP con x41, que representa el caracter A en hex. <br /><br />Ahora por que crashea?, como explique anteriormente, el registro EIP contenia la direccion  de la proxima funcion a ejecutar, pero al ser sobreescrito con 4 A's, EIP termina apuntando a una direccion invalida.  <br /><br />Sabiendo que podemos inyectar en EIP, podriamos controlar el flujo del programa y mandarlo a la direccion que se nos ocurra.&nbsp;  <br /><br /><div style="text-align: center;"><h3><b>Controlando el flujo de ejecución</b></h3></div>Vamos con otro ejemplo pero un poco mas divertido.<br /><br />Le agregue la funcion owned() al programa anterior, que lo unico que hace es imprimir un texto.  <br /><br /><pre class="brush: cpp"><br />#include &lt;stdlib&gt;<br />#include &lt;stdio&gt;<br />#include &lt;string&gt;<br /> <br />void owned(){<br />    printf(&quot;Owned :)&quot;);<br />}<br /> <br /> <br />int main(int argc, char *argv[]) {<br /> <br />    char buffer[10];<br /> <br />    strcpy(buffer, argv[1]);<br /> <br />    printf(buffer);<br /> <br />return 0;<br />}<br /><br /></pre>Pero no vamos a llamarla en el code, sino que vamos a inyectarle la direccion de memoria de owned() al EIP para asi alterar la salida del prog.  <br /><br />Compilamos y abrimos con gdb.  <br /><br />Ahora tenemos que saber el punto exacto donde empieza a sobrescribirse EIP.<br /><br />Le pasamos 14 A's - nada  <br /><br />Le pasamos 15 A's y se puede ver como empieza a infectarse el EIP  <br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/7M8OvfU.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/7M8OvfU.png" height="278" width="640" /></a></div><div style="text-align: center;"><br /></div>Como una direccion de memoria esta compuesta por 4 bytes le sumamos 3 y tenemos el EIP bien pintado con 18 A's.  <br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/bvB7Qoy.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/bvB7Qoy.png" height="196" width="640" /></a></div><div style="text-align: center;"><br /></div>Ahora solo nos queda averiguar la direccion donde la funcion owned() comienza a ser pusheada al stack, para esto vamos a desensamblarla  <br /><br /><pre class="brush: bash">disas owned<br /></pre><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/7KrlqNN.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/7KrlqNN.png" height="172" width="640" /></a></div><div style="text-align: center;"><br /></div>Se ven las instrucciones del codigo ensamblador, la primera linea comienza a pushear la funcion asi que usaremos esa direccion de memoria: 0x08048408  <br /><br />Ahora que tenemos la direccion con la que editaremos el EIP, solo basta restar 4 A's e incluirla.  <br /><br />A*14 + 0x08048408  <br /><br />Voy a utlizar python para realizar la inyeccion. como se ve, se utiliza el escape \x para codificar los datos.  <br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/OVUuV7o.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/OVUuV7o.png" height="148" width="640" /></a></div><div style="text-align: center;"><br /></div><br />Pero si miramos la direccion a donde apunta el EIP vemos que esta al revez, esto pasa por que los procesadores Intel utilizan el sistema little-endian por lo tanto tendremos que invertir la direccion antes de ingresarla.  <br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/vAT6OWw.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/vAT6OWw.png" height="170" width="640" /></a></div><div style="text-align: center;"><br /></div>Y ahora si logramos ver la salida de la funcion owned. <br /><br />Y si en vez de direccionar a una función, lograramos llegar hasta un shellcode alojado en la memoria?, eso se vera en la proximo entrada.<br /><br /><br /><div style="text-align: right;">Saludos!</div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-01-14T04:24:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>4:24 am</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/01/14/desbordando-el-buffer-en-linux-x86-i/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/01/14/desbordando-el-buffer-en-linux-x86-i/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/01/14/rooteando-sin-local-exploit/" title="Previous Post: Rooteando sin Local Exploit">&laquo; Rooteando sin Local Exploit</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/01/14/desbordando-el-buffer-en-linux-x86-ii/" title="Next Post: Desbordando el buffer en linux x86 (II)">Desbordando el buffer en linux x86 (II) &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>¿Quién Te Choco? Hackeando Patentes - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="by hdbreakerHace algún tiempo tuve la mala fortuna de estar envuelto en un accidente de trafico algo grave, donde yo por viajar en moto, me lleve la &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/02/05/quien-te-choco-hackeado-patentes/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">¿Quién Te Choco? Hackeando Patentes</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-05T19:19:00-08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>7:19 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-Kaj4GWRPSTo/VNQZifsmy3I/AAAAAAAAAT8/PolYUA2eVOU/s1600/test.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-Kaj4GWRPSTo/VNQZifsmy3I/AAAAAAAAAT8/PolYUA2eVOU/s1600/test.png" height="380" width="640" /></a></div><div style="text-align: right;"><b>by hdbreaker</b></div><div style="text-align: left;"><br /></div><div style="text-align: left;">Hace algún tiempo tuve la mala fortuna de estar envuelto en un accidente de trafico algo grave, donde yo por viajar en moto, me lleve la peor parte. Totalmente en contra a lo que esperaba, el responsable del accidente no se detuvo a asistirme, por su parte prefirió darse a la fuga.<br /><br />Luego de todos los protocolos médicos, unos cuantos moretones y tras no encontrar respuestas en la policía por falta de testigos, decidí comenzar una búsqueda personal de identificación del vehículo con el único dato que había logrado divisar en el golpe. </div><div style="text-align: center;"><span style="color: red;"><b>###su numero de patente###</b></span></div><div style="text-align: center;"></div><div style="text-align: left;"><span style="color: red;"></span>Por cuestiones de confidencialidad no utilizare la patente real del agresor sino una que alcance a leer en el registro del automotor mientras realizaba los tramites del seguro.</div><div style="text-align: left;"></div><div style="text-align: center;"><h2><u><b>¿La pregunta? </b></u></h2></div><div style="text-align: left;">Existe algún sistema que me permita consultar los datos y el estado de un vehículo que transita en la calle actualmente? La respuesta es si!</div><div style="text-align: left;"><br /></div><div style="text-align: left;">Luego de algunas consultas a google, logre dar con un servicio de Rentas en la provincia de Buenos Aires que nos permite consultar el estado de deudas de patentes que tiene un vehículo.<br /><a href="https://www.blogger.com/goog_1561451275"><br /></a></div><div style="text-align: center;"><a href="https://lbserver02.agip.gob.ar/ConsultaPat/index.html">https://lbserver02.agip.gob.ar/ConsultaPat/index.html</a></div><div style="text-align: left;"><br /></div><div style="text-align: left;">El mismo tiene dos formas de funcionar, si no eres el propietario solamente puedes obtener los datos correspondiente a deudas sobre el automóvil pero el sistema no te permite acceder a las secciones que identifica a la persona registrada en el Registro del Automotor como titular del vehículo.</div><div style="text-align: left;"><br /></div><div style="text-align: left;">Por otro lado, para comprobar la titularidad del vehículo, el sistema solicita ingresar un numero de verificación especial <b>único</b> que solo el dueño del automóvil debe poseer, ya que el mismo sirve para imprimir boletas de pago de deudas que incluyen los datos personales del propietario del automotor, de esta forma garantiza la privacidad de los datos de los usuarios.</div><div style="text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-qB9xNkqbtHs/VNQfJe_tVKI/AAAAAAAAAUM/70QsGT-fpeQ/s1600/num.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-qB9xNkqbtHs/VNQfJe_tVKI/AAAAAAAAAUM/70QsGT-fpeQ/s1600/num.png" height="366" width="640" /></a></div><div style="text-align: center;"></div><div style="text-align: left;">Lo primero que podemos analizar en el sitio, es que el dígito especial y verificador del sistema, solo acepta valores que van desde 00 a 99 (el valor no es tan único como uno cree)</div><div style="text-align: left;"><br /></div><div style="text-align: left;">En fin, la patente a estudiar en esta entrada sera <b>JMO089</b>, luego de realizar algunas pruebas manuales podemos apreciar que el captcha del sistema nunca es actualizado una vez que nos encontramos asociado a una sesión, permitiéndonos probar de forma manual las 99 combinaciones posibles hasta dar con la correcta.</div><div style="text-align: left;"></div><div style="text-align: left;"><br /></div><div style="text-align: center;"><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-lCSRLVEmFNI/VNQhXub3esI/AAAAAAAAAUY/I81TL06CM9Y/s1600/Sin%2Bnombre.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-lCSRLVEmFNI/VNQhXub3esI/AAAAAAAAAUY/I81TL06CM9Y/s1600/Sin%2Bnombre.png" height="224" width="640" /></a></div><br /></div><div style="text-align: left;">En la imagen podemos apreciar que el captcha no cambia a medida que vamos probando posibles combinaciones numéricas hasta lograr dar con el correcto, por lo que da la posibilidad de programar un Brute Forcer que valla probando todos los valores posibles hasta dar con el indicado. Pero un ataque así representa un problema al tener que enfrentarnos con un captcha, cosa que no estaba dispuesto por una falta de tiempo para programar un <a href="http://webscraping.com/blog/Solving-CAPTCHA/"><b>OCR</b></a>.<br /><br />La pregunta que me formule fue:<br /><br /><b>Cual es la forma en que el sistema valida el valor correcto del dígito verificador?</b><br /><br />Lo primero que pensé es que el sistema validaba el valor del lado del servidor luego de la consulta, por lo que me puse a comprobar las peticiones que realizaba el sitio al momento de enviar el formulario. Para esto utilice <b>Live HTTP headers</b><br /><b><br /></b><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-wi2c_1oB0sk/VNQkcg_JOZI/AAAAAAAAAUk/qz6SK1EJIA8/s1600/ajax.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-wi2c_1oB0sk/VNQkcg_JOZI/AAAAAAAAAUk/qz6SK1EJIA8/s1600/ajax.png" height="355" width="640" /></a></div><div style="text-align: center;"><b><br /></b></div><div style="text-align: left;">Al encontrarme con esto, no podía creer lo que estaba viendo, técnicamente hablando si una validación no presenta una petición web hacia el Backend, quiere decir que la validación se esta realizado del lado del cliente osea:</div><div style="text-align: center;"><h2><b>EL SISTEMA VALIDA POR JAVASCRIPT!</b><b>&nbsp;</b><b> </b></h2></div><div style="text-align: left;">Esto implica que el algoritmo de validación del código verificador se encuentra servido en algún archivo <b>javascript</b> del lado del navegador, por lo que me puse a analizar el source html del documento para lograr identificar algún indicio de la validación. Lo primero que analice fueron los siguientes archivos:</div><div style="text-align: left;"><br /></div><div style="text-align: left;"></div><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-KjLsz9ou-FM/VNQmEVvOV2I/AAAAAAAAAUw/2AguNFy0xFk/s1600/ttt.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-KjLsz9ou-FM/VNQmEVvOV2I/AAAAAAAAAUw/2AguNFy0xFk/s1600/ttt.png" height="38" width="640" /></a></div><div style="text-align: center;"><br /><div style="text-align: left;">Dentro del archivo <b>consultaDatos.js</b> encontré la siguiente función con un nombre revelador: <b>validaDatos</b></div><div style="text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-mK0b28HlMos/VNQmv5XUaQI/AAAAAAAAAU4/BX-qrWpYwEA/s1600/validator.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-mK0b28HlMos/VNQmv5XUaQI/AAAAAAAAAU4/BX-qrWpYwEA/s1600/validator.png" height="496" width="640" /></a></div><div style="text-align: left;"><div style="text-align: center;"><pre><span style="color: red;"><b>&nbsp;</b></span></pre><pre><span style="color: red;"><b>if (!check.checked &amp;&amp; patente.valido(dom1) != true)</b></span></pre></div>En la misma función se puede apreciar&nbsp; en las lineas remarcadas la estructura donde se decide el mensaje de patente valida cumpliendo los requisitos de que el <b>checkbox</b> se encuentre marcado y el resultado de la función <span style="color: red;"><b>patente.valido()</b></span> sea el necesario para resolver de forma correcta la estructura de decisión <span style="color: red;"><b>if</b><b>()</b></span>.</div><div style="text-align: left;"><br /></div><div style="text-align: left;">El problema resulto que la función <b>patente.valido() </b>no se encontraba dentro del mismo documento, por lo que debía encontrar el fichero donde se encontraba la misma. <br /><br />Para lo que no conozcan el funcionamiento de javascript, les aclaro que los ficheros js representan un gran código estructurado dividido en distintos archivos para mejorar su organización, pero siempre que estos archivos sean incluidos en el html los mismos pueden realizar llamadas a las funciones definidas entre ellos como si todos fueran miembros de la misma clase.</div><div style="text-align: left;"><br /></div><div style="text-align: left;">Luego de buscar un poco, llegue al siguiente archivo:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-VzGAp_0Rm0M/VNQpOUC5f2I/AAAAAAAAAVE/uBs_0swkoFA/s1600/pat.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-VzGAp_0Rm0M/VNQpOUC5f2I/AAAAAAAAAVE/uBs_0swkoFA/s1600/pat.png" height="22" width="640" /></a></div><div style="text-align: center;"><br /></div></div><div style="text-align: left;">Dentro del mismo podemos obtener la estructura del código validador:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-h0CKawpkx_Q/VNQpyo9SWII/AAAAAAAAAVM/yqNczRJ7AZI/s1600/getdv.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-h0CKawpkx_Q/VNQpyo9SWII/AAAAAAAAAVM/yqNczRJ7AZI/s1600/getdv.png" height="628" width="640" /></a></div><div style="text-align: center;"><br /></div></div></div><div style="text-align: right;">Función Completa: <a href="http://pastebin.com/gYTdC9Yh">http://pastebin.com/gYTdC9Yh</a></div><div style="text-align: left;"><br />Luego de analizar detenida mente el código pude develar el comportamiento final del mismo.<br /><br />El código calcula el dígito verificador en base a la patente del vehículo, sustituyendo las letras por números especiales para formar una cadena decimal, que luego suma según su indice, pares por un lado e impares por otro, como si de un array se tratase.</div><div style="text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-Ie58vHIagQY/VNQrEziWUUI/AAAAAAAAAVY/pX2M3Zc9uOw/s1600/tetete.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-Ie58vHIagQY/VNQrEziWUUI/AAAAAAAAAVY/pX2M3Zc9uOw/s1600/tetete.png" height="508" width="640" /></a></div><div style="text-align: left;"><br />Luego si estos valores separados (digi1 y digi2) tienen un largo superior a un dígito (0 a 9), vuelve a sumarlos respectivamente hasta obtener 2 números de forma independiente con un largo de un dígito (0 a 9).</div><div style="text-align: left;"><br /></div><div style="text-align: left;">Y luego los concatena para obtener el numero mágico verificador:</div><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-B7iqpLnp82I/VNQr4qxNCXI/AAAAAAAAAVg/5uRIZdU7AfM/s1600/salida.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-B7iqpLnp82I/VNQr4qxNCXI/AAAAAAAAAVg/5uRIZdU7AfM/s1600/salida.png" height="38" width="320" /></a></div><div style="text-align: left;">Lo que resulta algo cómico es que esta función no tiene ninguna protección, y puede ser llamada desde la consola de desarrollo de Google Chrome o Firefox:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-ImRsGXuhKfc/VNQseJUbl1I/AAAAAAAAAVo/WpdGiwnySNE/s1600/call.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-ImRsGXuhKfc/VNQseJUbl1I/AAAAAAAAAVo/WpdGiwnySNE/s1600/call.png" height="192" width="640" /></a></div><div style="text-align: left;">Con este numero verificador podemos realizar la consulta de forma exitosa:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-rnPrnoDRUjk/VNQtCQ-CziI/AAAAAAAAAVw/9sXsescIvw8/s1600/principal.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-rnPrnoDRUjk/VNQtCQ-CziI/AAAAAAAAAVw/9sXsescIvw8/s1600/principal.png" height="180" width="640" /></a></div><div style="text-align: center;"><br /></div></div></div><div style="text-align: center;"><br /></div><div style="text-align: left;">Al momento de solicitar una factura podemos apreciar los datos personales como el nombre del titular registrado y la dirección residencial del mismo:</div><div style="text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-Sm6PzSW1M8U/VNQtS3TmFjI/AAAAAAAAAV4/aQ6q8AI22ok/s1600/datos.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-Sm6PzSW1M8U/VNQtS3TmFjI/AAAAAAAAAV4/aQ6q8AI22ok/s1600/datos.png" height="368" width="640" /></a></div><div style="text-align: center;"><br /></div>Realizando un poco de ingienería inversa desarrolle el siguientes scripts que permiten calcular cualquier dígito verificador solo con el numero de patente:<br /><br /><b>Ruby:</b><br /><b><br /></b><br /><pre class="brush: ruby">require 'colorize' #By hdbreaker<br /><br />class Calculate <br /><br />  def initialize()<br />   <br />    #inicializo array asociativo de clase<br />    @letrasValidas ={'A' =&gt; '14','B' =&gt; '01','C' =&gt; '00','D' =&gt; '16','E' =&gt; '05','F' =&gt; '20','G' =&gt; '19',<br />                     'H' =&gt; '09','I' =&gt; '24','J' =&gt; '07','K' =&gt; '21','L' =&gt; '08','M' =&gt; '04','N' =&gt; '13',<br />                     'O' =&gt; '25','P' =&gt; '22','Q' =&gt; '18','R' =&gt; '10','S' =&gt; '02','T' =&gt; '06','U' =&gt; '12',<br />                     'V' =&gt; '23','W' =&gt; '11','X' =&gt; '03','Y' =&gt; '15','Z' =&gt; '17',' ' =&gt; '60',};<br />  end<br /><br />  #Funcion para calcular el numero de patente<br />  def calculate(patente)<br />    patAux = patente.upcase;<br />    pares = 0;<br />    impares = 0;<br /><br />    #Bloque para sustituir las letras por los numeros correspondisntes<br />    @letrasValidas.each { |key|<br />      if(patAux.include? key[0])<br />        patAux = patAux.gsub(key[0], key[1]);<br />      end<br />    }<br /><br />    #Sumo los imares por un lado y los pares por el otro<br />    for x in (0...patAux.length)<br />      if (x % 2 == 0)<br />        pares += patAux[x].to_i;<br />      else<br />        impares += patAux[x].to_i;<br />      end<br />    end<br /><br />    #Si la sumatoria de los pares da un numero mayor a 1 digito, los sumo nuevamente hasta obtener 1 digito<br />    digi1 =pares.to_s;<br />    while (digi1.length &gt; 1)<br />      pares = 0;<br />      for x in (0...digi1.length)<br />        pares += digi1[x].to_i;<br />      end<br />      digi1 = pares.to_s;<br />    end<br /><br />    #Si la sumatoria de los impares da un numero mayor a 1 digito, los sumo nuevamente hasta obtener 1 digito<br />    digi2 =impares.to_s;<br />    while (digi2.length &gt; 1)<br />      impares = 0;<br />      for x in (0...digi2.length)<br />        impares += digi2[x].to_i;<br />      end<br />      digi2 = impares.to_s;<br />    end<br /><br />    ###############Salida en Pantalla###############<br />    puts "\n############## Rentas Ciudad de Buenos Aires ##############".green<br />    puts "URL: ".green+"https://lbserver02.agip.gob.ar/ConsultaPat/index.html".red<br />    puts "Dominio: ".green+patente.red<br />    puts "Verificador: ".green+digi1.red+""+digi2.red<br />    puts "\n"<br />  end<br />end<br /><br />if(ARGV.length==1)<br />  obj = Calculate.new()<br />  obj.calculate(ARGV[0].to_s)<br />else<br />  puts "Usage: ruby calculate.rb [patente]"<br />end<br /><br /><br /></pre><br />También dejo a continuación el script en python que armo <b>[Q]3rV[0]</b><br/><pre class="brush: py"><br />#!/usr/bin/env python<br /># -*- coding: utf-8 -*-<br /># Author : [Q]3rV[0]<br /><br />import re<br /><br />def main():<br />    pares=0<br />    impares=0<br />    letrasPatente={"A":"14", "B":"01", "C":"00", "D":"16", "E":"05", "F":"20", "G":"19", "H":"09", "I":"24", "J":"07", "K":"21", "L":"08", "M":"04", "N":"13", "O":"25", "P":"22", "Q":"18", "R":"10", "S":"02", "T":"06", "U":"12", "V":"23", "W":"11", "X":"03", "Y":"15", "Z":"17", " ":"60"}<br />    input=raw_input("Nro Patente: ")<br />    patente=input.upper()<br />    if re.match("[A-Z][A-Z][A-Z][0-9][0-9][0-9]$", patente)!=None:<br />        toInt=""<br />        for n in patente[0:3]:<br />            toInt+=letrasPatente[n]<br />        nums=toInt+patente[3:] <br />        <br />        for n in range(len(nums)):<br />            if n%2==0:<br />                pares+=int(nums[n])<br />            else:<br />                impares+=int(nums[n])<br /><br /><br />        while len(str(pares))!=1:<br />           dp=0<br />           for p in str(pares):<br />               dp+=int(p)<br />           pares=dp<br />          <br /><br />        while len(str(impares))!=1:<br />           di=0<br />           for i in str(impares):<br />               di+=int(i)<br />           impares=di<br />     <br /><br />        <br />        print "| Patente: %s | DV: %s%s |" % (patente, pares, impares)<br /><br />    else:<br />        print "[*] Error, Asegurese de que el formato de la patente es correcto. Ejemplo: GTD125"<br />       <br />if __name__ == '__main__':<br />    main()<br /><br /></pre><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-qYYlvHTBrt4/VNQx_GXRnNI/AAAAAAAAAWE/MbP8fPDnWQ0/s1600/jmo.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-qYYlvHTBrt4/VNQx_GXRnNI/AAAAAAAAAWE/MbP8fPDnWQ0/s1600/jmo.png" height="114" width="640" /></a></div><div style="text-align: center;"><br /></div>Espero que esta entrega sirva para concientizar sobre la seguridad de nuestros datos personales, ya que recordemos que el fallo se encuentra en una red gubernamental que expone de forma descarada los datos personales de las personas. <br /><br />Y si eres conductor... no vallas por la calle creyéndote intocable, nunca sabes con quien te puedes cruzar ni para que pueda utilizar tus datos, tal vez te encuentres con una persona que en vez de reportar el fallo utilice tu información para encontrarte, ir hacia tu casa y romperte las piernas.<br /><div style="text-align: right;"><br /><b>Saludos!</b></div><br /><br /><b><br /></b>&nbsp; <br /><br /><br /></div><div style="text-align: left;"><br /></div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-02-05T19:19:00-08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>7:19 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/02/05/quien-te-choco-hackeado-patentes/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/02/05/quien-te-choco-hackeado-patentes/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/02/05/smf-enhancer-of-views-dos/" title="Previous Post: SMF DoS && Enhancer of Views">&laquo; SMF DoS && Enhancer of Views</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/02/07/programa-tu-modulo-para-frameshock/" title="Next Post: Programa tu modulo para Frameshock">Programa tu modulo para Frameshock &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

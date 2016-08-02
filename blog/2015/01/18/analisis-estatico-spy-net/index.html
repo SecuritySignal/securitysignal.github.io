@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Análisis Estático Spy-Net - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="by hdbreakerMis mas allegados saben que hace un tiempo he empezado a aumentar mis fronteras en Desarrollo y Análisis de Malware, y me parecio &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/01/18/analisis-estatico-spy-net/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Análisis Estático Spy-Net</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-18T20:58:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>8:58 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://esmastechandbits.files.wordpress.com/2013/05/dna.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://esmastechandbits.files.wordpress.com/2013/05/dna.png" height="294" width="640" /></a></div><div style="text-align: center;"><div style="text-align: right;"><b>by hdbreaker</b></div><br /></div>Mis mas allegados saben que hace un tiempo he empezado a aumentar mis fronteras en Desarrollo y Análisis de Malware, y me parecio interesante analizar<br /><a name='more'></a> de forma estática el conocido Spy-Net, y ver si podía lograr una desinfección exitosa. El resultado fue mucho mas satisfactorio de lo que esperaba.<br /><br />Escenario: La victima ejecuta un binario de Spy-Net que prometía ser un juego en su pc, este no nota nada inusual nisiquiera una ventana de instalación en su pc,intenta nuevamente la ejecución pero nuevamente nada sucede y antes de decidirse a borrar el archivo se pregunta, estaré siendo victima de un malware. Y pone manos a la obra para Análisar Estaticamente el binario, y ver si entre sus strings, revelan alguna modificación al Sistema Operativo<br /><br />Primero, intenta abrir el binario con un editor hexadecimal:<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://s02.imageupper.com/1/3/G14205261031951839_1.png" height="124" onclick="zoomToggle('640px','124px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div>Al bajar unas pocas lineas de código se encuentra con que el binario tiene algunos sectores comprimidos con UPX.<br />Intenta visualizar sin exito algún string desofucado con OllyDBG:<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://s02.imageupper.com/1/3/G14205261031951839_8.png" height="358" onclick="zoomToggle('640px','358px','100%','100%',this);" width="640" /></div><div style="text-align: center;">(En la imagen se puede apreciar que todos los Strings del archivo estan ofuscados)</div><br />Para asegurar su idea Analiza RDG Packer Detector:<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://imageupper.com/s04/1/1/K14205273581951475_3.png" height="202" onclick="zoomToggle('640px','202px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div><br />Esto confirma que detrás del binario hay algo empaquetado y protegido con UPX, además el resultado no denota que el binario este bindeado, por lo que cierra la coincidencia que luego de la ejecución del binario no apareciera ninguna ventana de instalación<br /><br />Se prepara para desempaquetar una copia del archivo para poder Análizar mas profundamente los Strings del binario<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://imageupper.com/s04/1/1/K14205273581951475_1.png" height="334" onclick="zoomToggle('640px','334px','100%','100%',this);" width="640" /></div><br />Luego de esto analiza nuevamente el fichero con RDG Packer Detector:<br /><br /><div class="separator" style="clear: both; text-align: center;">&gt;<img border="0" src="http://s04.imageupper.com/1/1/K14205273581951475_2.png" height="440" onclick="zoomToggle('640px','440px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div>Esto confirma que efectivamente fue victima de un malware, en este caso Spy-Net, el mismo esta programado en Delphi y su binario esta protegido por Private Exe Protector. Luego de una busqueda sin resultados por un Desofucador de Private Exe Protector y por darse a la caza con un Análisis Dinámico, decide pasar el archivo por DeDe (Delphi Decompiler) con el fin de lograr ver algo que haya quedado sin Ofuscar.<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://s02.imageupper.com/1/3/G14205261031951839_3.png" height="392" onclick="zoomToggle('640px','392px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div><br />Al bajar un poco, resalta una linea que todo aquel que ha desarrollado un malware en su vida, reconoce...<br /><br /><span style="color: red;">Software\Microsoft\Windows\CurrentVersion\</span><br /><br />Esta famosa linea con alguna que otra variante, indica la posible ejecución de un programa al momento del inicio del sistema.<br /><br />Preocupado la victima decide Analizar mas profundamente las strings del binario con OllyDBG<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://s04.imageupper.com/1/1/K14205273581951475_4.png" height="392" onclick="zoomToggle('640px','392px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div>Entre las lineas que encuentra resaltan las siguientes:<br /><br /><span style="color: red;">Software\Microsoft\Windows\CurrentVersion\Run<br />Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run</span><br /><br />Luego de esto pasa a buscar que hay en el registro (regedit.exe) de Windows en esas direcciones<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://s02.imageupper.com/1/3/G14205261031951839_2.png" height="76" onclick="zoomToggle('640px','76px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div>Encuentra la "coincidencia" que en ambas las rutas, encuentra un registro que apunta hacia <span style="color: red;">"C:\Windows\EIS\update.exe"</span>.<br /><br />Acto seguido ejecuta el explorador de archivos y se dirige hacia esa dirección<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://s02.imageupper.com/1/3/G14205261031951839_10.png" height="138" onclick="zoomToggle('640px','138px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div>Encuentra el famoso archivo <span style="color: red;">update.exe</span> y al no estar seguro si este archivo realmente es o no parte del Sistema Operativo, realiza una serie de comprobaciones.<br /><br />Una muy basica, compara el peso de "update.exe" con el peso del archivo original que descargo<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://s02.imageupper.com/1/3/G14205261031951839_4.png" height="140" onclick="zoomToggle('640px','140px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div>Se sorprende un poco y ve que ambos archivos pesan EXACTAMENTE lo mismo. Pero antes de dar fe ciega de que este archivo es el troyano oculto de Spy-Net, decide hacer una comprobación binaria profunda con Hex Workshop para asegurar de que ambos archivos son binariamente iguales, y no solo una coincidencia de peso.<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://s02.imageupper.com/1/3/G14205261031951839_13.png" height="406" onclick="zoomToggle('640px','406px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://s02.imageupper.com/1/3/G14205261031951839_12.png" height="358" onclick="zoomToggle('640px','358px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div><br />Ambos archivos son binariamente iguales, lo que garantiza que update.exe es el binario oculto de Spy-Net. (En este paso, tambien podrimos haber comparado el md5 checksum para garantizar la igualdad de los ficheros)<br /><br />La Victima se alegra un poco, y decide realizar una desinfección manual.<br /><br /><b>Desinfeccion: </b><br /><br />Elimina ambos binarios.<br />Elimina las claves en el registro de windows.<br />Destildar todo lo que apunte a update desde msconfig.<br /><br />(Esto es para eliminar las entradas destildadas en el msconfig)<br />Elimina todas las carpetas del registro que hagan referencias al binario en las rutas: <br /><br /><span style="color: red;">"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Shared Tools\MSConfig\startupfolder"<br /><br />"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Shared Tools\MSConfig\startupreg" </span><br /><br />Para esto debe iniciar su pc en Modo Seguro al inicio.<br /><br /><div style="text-align: center;"><h2>Inicio Modo Seguro</h2></div><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://s03.imageupper.com/1/3/X1420526754195881_5.png" height="148" onclick="zoomToggle('640px','148px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><h2>Elimino Binarios</h2></div><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://s02.imageupper.com/1/3/G14205261031951839_9.png" height="394" onclick="zoomToggle('640px','394px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><h2>Elimino Entradas de Registro</h2></div><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://s02.imageupper.com/1/3/G14205261031951839_11.png" height="204" onclick="zoomToggle('640px','202px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div><br /><div style="text-align: center;"><h2>Destildo entradas relacionadas en MSCONFIG</h2></div><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://s03.imageupper.com/1/3/X1420526754195881_4.png" height="130" onclick="zoomToggle('640px','130px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><h2>Borro Claves de configuración de MSCONFIG</h2></div><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://s02.imageupper.com/1/3/G14205261031951839_14.png" height="358" onclick="zoomToggle('640px','358px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div>Luego reinicia y puede garantizar una desinfección correcta por medio de un Análisis Dinámico. <br /><br />En este caso dejo una imagen del Panel de Control, antes y después del Análisis.<br /><br /><b>Antes del Análisis:</b><br /><div style="text-align: center;"><img border="0" src="http://s02.imageupper.com/1/3/G14205261031951839_6.png" height="82" onclick="zoomToggle('640px','82px','100%','100%',this);" width="640" /></div><b>Después del Análisis:</b><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://s02.imageupper.com/1/3/G14205261031951839_5.png" height="82" onclick="zoomToggle('640px','82px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div><br /><div style="text-align: center;"><b>Happy Hunting!</b></div><br /></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-01-18T20:58:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>8:58 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/01/18/analisis-estatico-spy-net/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/01/18/analisis-estatico-spy-net/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/01/18/explotar-shellshock-en-qmail/" title="Previous Post: Explotar Shellshock en QMAIL">&laquo; Explotar Shellshock en QMAIL</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/01/18/analisis-dinamico-spy-net/" title="Next Post: Análisis Dinámico Spy-Net">Análisis Dinámico Spy-Net &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

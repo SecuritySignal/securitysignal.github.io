@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Frameshock - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="by hdbreakerHoy quiero compartir con toda la comunidad un importante lanzamiento de nuestro equipo, luego de varios meses de desarrollo y testing &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/02/02/frameshock-v-10/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Frameshock</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-02T22:35:00-08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2015</span></span> <span class='time'>10:35 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://riaus.org.au/wp-content/uploads/2012/03/FRS_Behind-the-shock-machine.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://riaus.org.au/wp-content/uploads/2012/03/FRS_Behind-the-shock-machine.jpg" height="333" width="400" /></a></div><div style="text-align: right;"><b>by hdbreaker</b><br /><b><br /></b></div><div style="text-align: left;">Hoy quiero compartir con toda la comunidad un importante lanzamiento de nuestro equipo, luego de varios meses de desarrollo y testing tenemos las<br /><a name='more'></a>primeras versiones estables y 100% funcionales de una idea que nació al no sentirnos identificado al 100% con Metasploit.<br /><br />Alguna vez te has preguntado... Realmente cuantos módulos de <b>Metasploit</b> son actualmente <b>funcionales</b>? <b>Cuanto tiempo dura</b> un modulo funcional? Framework <b>lento</b>?&nbsp; Demasía de módulos,<b> ruido</b> <b>visual</b>, y un buscador algo <b>limitado</b>? Por que <b>Ruby</b> y no <b>Python</b>? <b>Inestabilidad</b> en las Sesiones fuera de la LAN? <br /><br />La principal queja de muchos, es que el framework fomenta la aparición constante de Script Kiddies que cargan msf y atacan sin entender que están haciendo.<br /><br />La verdad es que estas son algunas de las preguntas que muchos de la comunidad nos hacemos, por mi parte creo que el equipo de Metasploit ha logrado un excelente trabajo, pero tengo que resaltar algunos problemas:<br /><br />[*] Gran cantidad de Script Kiddies a la espera de un nuevos 0day<br />[*] Inestabilidad en las Sesiones<br />[*] Mucho ruido visual<br />[*] Framework lento<br /><br />y algo por lo que no quiero entrar en discusión... <b>¿POR QUE RUBY?</b><br /><br />Ruby y Python me parece excelentes lenguajes de programación, por mi parte considero una mayor facilidad de introducir a los nuevos adeptos de la mano de Python. Y creo que con Ruby se dejo de lado a grandes mentes "Pythonicas" y una gran cantidad de material sobre el desarrollo de Exploits en Python<br /><div style="text-align: center;"><br /><b>Un mal concepto de Framework?</b></div><br />Un Framework realmente es una base robusta, modular, limpia y pura que nos dota de una fuerte cantidad de herramientas para el desarrollo de nuestros propios módulos.<br /><b></b><br /><b><br /></b><br /><div style="text-align: center;"><b>Que es Frameshock? que me ofrece? por que debería probarlo?</b></div><br />Frameshock <span data-ft="{&quot;tn&quot;:&quot;K&quot;}" data-reactid=".18g.1:3:1:$comment855715964467759_855736757799013:0.0.$right.0.$left.0.0.1:$comment-body"><span class="UFICommentBody" data-reactid=".18g.1:3:1:$comment855715964467759_855736757799013:0.0.$right.0.$left.0.0.1:$comment-body.0"><span data-reactid=".18g.1:3:1:$comment855715964467759_855736757799013:0.0.$right.0.$left.0.0.1:$comment-body.0.$end:0:$0:0">propone una base robusta y solida para desarrollar o portar viejo código en módulos</span></span></span> de forma limpia, clara y pura.&nbsp;<span data-ft="{&quot;tn&quot;:&quot;K&quot;}" data-reactid=".18g.1:3:1:$comment855715964467759_855736757799013:0.0.$right.0.$left.0.0.1:$comment-body"><span class="UFICommentBody" data-reactid=".18g.1:3:1:$comment855715964467759_855736757799013:0.0.$right.0.$left.0.0.1:$comment-body.0"><span data-reactid=".18g.1:3:1:$comment855715964467759_855736757799013:0.0.$right.0.$left.0.0.1:$comment-body.0.$end:0:$0:0"> Incluye distintos payloads y un handler MultiThreading que nos permite interactuar con multiples víctimas al mismo tiempo de forma estable segura y pensado 100% en ataques fuera de la LAN<br /><br />Frameshock viene de la mano con la filosofía "<b>Pick and Drop"</b>, <b>eres desarrollador?</b> <b>has creado tus propios módulos?</b>, simplemente <b>comparte!</b> estos se integraran automáticamente al framework con tan solo arrastrar el modulo dentro de la carpeta <b>"Modules"</b>. <b>Crea tu armamento personalizado</b>, selecciona lo <b>justo y necesario</b>, sin cantidad de módulos que no utilizas y <b>sin perdidas de tiempo</b> antes de realizar un ataque, y lo mas importante... <b>Do it Your Self!!!</b></span></span></span><br /><span data-ft="{&quot;tn&quot;:&quot;K&quot;}" data-reactid=".18g.1:3:1:$comment855715964467759_855736757799013:0.0.$right.0.$left.0.0.1:$comment-body"><span class="UFICommentBody" data-reactid=".18g.1:3:1:$comment855715964467759_855736757799013:0.0.$right.0.$left.0.0.1:$comment-body.0"><span data-reactid=".18g.1:3:1:$comment855715964467759_855736757799013:0.0.$right.0.$left.0.0.1:$comment-body.0.$end:0:$0:0"><br /></span></span></span><span data-ft="{&quot;tn&quot;:&quot;K&quot;}" data-reactid=".18g.1:3:1:$comment855715964467759_855736757799013:0.0.$right.0.$left.0.0.1:$comment-body"><span class="UFICommentBody" data-reactid=".18g.1:3:1:$comment855715964467759_855736757799013:0.0.$right.0.$left.0.0.1:$comment-body.0"><span data-reactid=".18g.1:3:1:$comment855715964467759_855736757799013:0.0.$right.0.$left.0.0.1:$comment-body.0.$end:0:$0:0">Una característica a resaltar de Frameshock es su integración con <b>Shodan</b> pensada </span></span></span>para <b>atacar multiples targets de forma rápida y simultanea</b> dando al pentester una excelente herramienta para automatizar ataques y realizar nuevas <b>pruebas de concepto masivas</b> potenciando por completo la capacidad de explotar un nuevo 0day.<br /><br /><div style="text-align: center;">&nbsp;<b>¿Lenguaje elegido?</b></div><div style="text-align: left;">Nuestro concepto de framework viene de la mano de Python, dando la oportunidad de <b>portar y reutilizar</b> gran cantidad de código programado por desarrolladores que eligieron este magnifico y <b>potente lenguaje</b> para el desarrollo de herramientas, dando la posibilidad a <b>usuarios menos experimentados</b> ingresar al mundo del <b>desarrollo de exploits</b> y la <b>automatización de procesos</b> de forma <b>rápida, practica y amigable</b>. De esta forma combatir a la creciente población de Script Kiddies, dando una herramienta <b>simple y profesional</b> para el desarrollo de módulos.<br /><b><br />Has tu trabajo y hazlo por ti mismo!</b> <b>aprende, sorprende y comparte con tus descubrimientos! &nbsp; </b></div><div style="text-align: center;"><br /></div><b>Frameshock</b> aun se encuentra en estado <b>BETA</b> por lo que puedes encontrar alguna <b>inestabilidad</b> en el sistema, pero ya puedes <b>descargar, probar y utilizar</b> los primeros módulos desarrollados por el equipo de Frameshock, <b>si quieres ayudar, desarrollar, reportar bugs, o compartir tus módulos</b> con la comunidad no dudes en ponerte en contacto!<br /><br /><span style="color: red;">Para los fanáticos de Metasploit, no hay de que preocuparse, Frameshock integra completamente Meterpreter y el modulo Muli/Handler de Metasploit.</span><br /><br />Repositorio: <a href="https://bitbucket.org/hdbreaker/frameshock/">https://bitbucket.org/hdbreaker/frameshock/</a><br />Email: <a href="mailto:hdbreaker96@gmail.com">hdbreaker96@gmail.com</a><br /><br /><div style="text-align: right;">Gracias por hacer esto posible, Saludos!</div></div><div style="text-align: right;"><br /></div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-02-02T22:35:00-08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2015</span></span> <span class='time'>10:35 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/02/02/frameshock-v-10/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/02/02/frameshock-v-10/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/02/02/joystick-analogico-pwm/" title="Previous Post: Joystick Analógico & PWM">&laquo; Joystick Analógico & PWM</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/02/03/frameshock-al-descubierto/" title="Next Post: Frameshock al Descubierto!">Frameshock al Descubierto! &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

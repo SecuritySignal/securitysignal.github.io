@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Análisis Dinámico Spy-Net - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="by hdbreakerContinuando con la entrada anterior:Análisis Estático Spy-netVoy a realizar el Análisis Dinámico de la Infección, para los que no &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/01/18/analisis-dinamico-spy-net/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Análisis Dinámico Spy-Net</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-18T21:05:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:05 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://imagenes.publico.es/resources/archivos/2012/9/5/1346865764139genomadn.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://imagenes.publico.es/resources/archivos/2012/9/5/1346865764139genomadn.jpg" height="480" onclick="zoomToggle('640px','300px','100%','100%',this);" width="640" /></a></div><div style="text-align: center;"><br /></div><div style="text-align: right;"><b>by hdbreaker</b></div>Continuando con la entrada anterior:<br /><br /><a href="http://www.securitysignal.tk/2015/01/analisis-estatico-spy-net.html">Análisis Estático Spy-net</a><br /><br />Voy a realizar el Análisis Dinámico de la Infección, para los que no recuerden el escenario <br /><a name='more'></a>es el siguiente:<br /><br />La victima ejecuta un binario de Spy-Net que prometía ser un juego en su pc, este no nota nada inusual nisiquiera una ventana de instalación en su pc,intenta nuevamente la ejecución pero nuevamente nada sucede y antes de decidirse a borrar el archivo se pregunta, estaré siendo victima de un malware... La diferencia radica que esta vez realizaremos un Análisis Dinámico, para identificar el Agresor y desinfectarnos exitosamente...<br /><br />Los Datos Recopilados con el Análisis Estático fueron los siguientes:<br /><br />Troyano: Spy-Net<br /><br />Registros de Autoinicio:<br /><span style="color: red;">"Software\Microsoft\Windows\CurrentVersion\Run"<br />"Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run"</span><br />Ubicación del Malware: <span style="color: red;">C:\Windows\EIS\update.exe</span><br /><br />Rutas de Configuracion MSConfig:<br /><span style="color: red;">"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Shared Tools\MSConfig\startupfolder"<br />"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Shared Tools\MSConfig\startupreg" </span><br /><br /><b>Espectativas</b>: Lograr identificar host y puerto donde se conecta el malware, obtener credenciales necesarias para entrar al panel y de existir, obtener las credenciales asociadas a la recopilación de logs.<br /><br /><br />Primero usaremos Process Monitor para identificar los nuevos procesos que se general al ejecutar el Malware:<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://imageupper.com/s02/1/10/Q1420597131194083_4.png" height="358" onclick="zoomToggle('640px','358px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div>Como podemos apreciar en la imagen, al ejecutar Juego.exe tambien podemos apreciar que aparece en ejecución el proceso update.exe<br />si vemos la ruta de su ejecución podemos apreciar su dirección de destino:<br /><br /><span style="color: red;">"C:\Windows\EIS\update.exe"</span> (La misma que encontramos con nuestro Análisis Estático)<br /><br />Ya con esta información, cerramos Process Monitor, abrimos Process Explorer y ejecutamos nuevamente el Juego.exe:<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://imageupper.com/s02/1/10/Q1420597131194083_6.png" height="358" onclick="zoomToggle('640px','358px','100%','100%',this);" width="640" /></div><br />Luego de algunos intentos (ya que el proceso se cierra para ocultarse del análisis) logramos ingresar a sus propiedades.<br />Al Analizar las mismas no notamos nada extraño. <br /><br />La pregunta ahora es, que hace <span style="color: red;">"C:\Windows\EIS\update.exe"</span>, asi que vamos hacia la dirección ejecutamos el binario y volvemos<br />a analizar con Process Explorer:<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://imageupper.com/s02/1/10/Q1420597131194083_5.png" height="358" onclick="zoomToggle('640px','358px','100%','100%',this);" width="640" /></div><br />Podemos ver que update.exe tiene una ruta de AutoStart:<br /><span style="color: red;">"HKLM\Software\Microsoft\Windows\CurrentVersion\Run\HKLM"</span><br />Entonces procedemos a ejecutar CurrPorts para ver si el malware esta realizando algun tipo de conexión hacia el exterior:<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://imageupper.com/s02/1/10/Q1420597131194083_12.png" height="60" onclick="zoomToggle('640px','60px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div><br />En este apartado podemos notar muy claramente que hay una conexión hacia el host remoto 181.23.131.19 en el puerto 9667<br />pero para nuestra sorpresa notamos que el proceso que realiza la conexión es "Explorer.EXE" y no "Juego.exe" o "update.exe" como esperábamos. Podemos deducir que el Malware migra intentando ocultarse hacia el Proceso Explorer.EXE<br /><br />En este punto se presenta la duda... ¿Podre capturar el trafico que realiza mi pc hacia el host remoto? ¿Podre obtener las credenciales para validar el malware? ¿Enviara logs a algun dominio, podre obtener sus credenciales?<br /><br />Nos ponemos manos a la obra, e iniciamos Wireshark:<br />En este paso vamos a realizar algo importante, primero vamos a apagar la maquina Victima, en ese momento iniciaremos Wireshark y aplicaremos el siguiente filtro:<br /><br /><span style="color: red;"><b>"ip.dst==181.23.131.19 &amp;&amp; tcp.port==9667"</b></span><br /><br />Luego volveremos a iniciar la pc Victima.<br />Esto nos permitirá capturar desde la primer conexión que realice el Troyano al host 181.23.131.19:9667 y con un poco de suerte capturaremos las credenciales para validarnos posteriormente<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://imageupper.com/s02/1/10/Q1420597131194083_1.png" height="358" onclick="zoomToggle('640px','358px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div>Luego de Analizar algunos paquetes, llegamos a la conclusión obvia, de que la comunicación viaja codificada con un cifrado que no logramos reconocer, luego de pensar un poco y sacar mis propias hipótesis bajo mis propios desarrollos de Malware y Crypters, llego a la pregunta:<br /><br />¿En algún momento, el código encriptado se desencripta...? La respuesta es SI<br /><br />Pequeña reseña de como funciona un Malware Encriptado (Crypter):<br /><br />"Un Malware Encriptado es la unión de 2 programas, el Stub y el Malware Encriptado. El stub se encarga de leerse a el mismo buscando un delimitador que le indique que apartir de ese byte todo lo que sigue es el malware Encriptado cargado en memoria, lo desencripta completamente al finalizar <b>OBTIENE UNA VERSIÓN LIMPIA, DESENCRIPTADA Y DESOFUSCADA DEL MALWARE</b>[, que luego envía hacia el RUNPE que se encarga de inyectar el codigo en memoria (String) dentro de un proceso (por ej notepad.exe) que inicia suspendido, una vez la inyección termina con éxito reactiva el proceso (notepad.exe) que realmente ejecuta el codigo inyectado de nuestro malware"<br /><br /><b>OBTIENE UNA VERSIÓN LIMPIA, DESENCRIPTADA Y DESOFUSCADA DEL MALWARE...</b> Joder es el momento ideal para analizar las conexiones que realiza el troyano. <br /><br />La pregunta ahora es... ¿Donde obtengo esa versión limpia? y la respuesta es <b>DESDE LA MEMORIA RAM!!!</b><br /><br />Con la ayuda de nuestro amigo DumpIT (un programa que permite volcar la memoria RAM a un archivo hexadecimal) volcaremos<br />la memoria de nuestra Victima para analizar sus Strings Completamente Desencriptados...<br /><br /><b>Acá existe un punto que aclarar, un volcado de memoria resulta ser bastante sucio ya que vuelca todo lo que este residente en RAM, eso involucra a todos los programas que no son nuestro malware y que estarán complicando nuestro Análisis, una recomendación es reiniciar la pc antes de realizar el volcado, con el fin de liberar la RAM de toda basura que haya quedado residente en memoria. Ademas mientras mayor sea nuestra cantidad de RAM mayor sera el tamaño del fichero de volcado, por lo que si es posible reducir la memoria lo mas que se pueda, en mi caso reduje la memoria de 1 GB a 256 mb para obtener un resultado mas pulcro</b><br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://imageupper.com/s02/1/10/Q1420597131194083_10.png" height="358" onclick="zoomToggle('640px','358px','100%','100%',this);" width="640" /></div><br />Luego de esto abrimos con nuestro editor hexadecimal favorito el archivo .raw que creo DumpIT, como les dije el resultado sera algo bastante sucio y complicado de leer, por el principio de como funciona la RAM y la MEMORY REALOCATION que se encarga de "desfragmentar" la memoria en tiempo real casi como si fuera el garbage colector de JAVA con el fin de liberar memoria q no se este utilizando, y puedo enviar hacia donde mejor considere partes del codigo que queremos analizar, ya que internamente el STACK siempre mantiene un puntero que entrelaza todas las direcciones de memoria que organizan el binario en ejecución. Pero gracias a la opción "SEARCH" podemos buscar Strings por medio de todo el volcado. <br /><br />La pregunta que nace es... ¿Qué buscamos? y para responder esto debemos pensar QUE SABEMOS<br /><br />Lo que sabemos:<br /><br />Nombres de los binarios infectados:<br /><span style="color: red;">update.exe<br />Juego.exe<br />explorer.exe</span><br /><br />Troyano: <span style="color: red;">Spy-Net</span><br />Probablemente utilice algun servicio de refresco automatico de ip:<br /><span style="color: red;">no-ip, dyndns, ddns, etc</span><br /><br />Claves del Registro:<br /><span style="color: red;">"HKLM\Software\Microsoft\Windows\CurrentVersion\Run\HKLM"<br />"Software\Microsoft\Windows\CurrentVersion\Run"<br />"Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run"</span><br /><br />Utilicemos esta información para buscar sobre el volcado de memoria, con un poco de paciencia y arduo Análisis llegamos al siguiente resultado:<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://imageupper.com/s02/1/10/Q1420597131194083_11.png" height="144" onclick="zoomToggle('640px','144px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div>En este momento podemos estallar de alegría, ya que hemos obtenido información muy importante<br /><br /><b>Informacion Obtenida:</b><br /><br />El Malware se conecta a 2 host distintos<br />Una posible contraseña de autentificación del Malware<br />Un servicio ftp con Usuario y Contraseña (Probablemente donde se guarden los logs del keyloger)<br /><br />Una visita al ftp revela que hemos dado con el registro de logs del atacante, lo que basicamente significa que hemos obtenido lo mas importante de una botnet, todos los datos tipeados por las victimas (Usuarios, Contraseñas, CreditCards, HomeBanking, etc)<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://imageupper.com/s02/1/10/Q1420597131194083_9.png" height="608" onclick="zoomToggle('640px','608px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div><br />Desinfección:<br /><br />En este paso nos haremos de la mano de Apate DNS, un Servidor DNS que nos permite redireccionar todo el trafico saliente hacia una dirección IP especifica, en nuestro caso nuestro "127.0.0.1" (No hay lugar como el hogar)<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://imageupper.com/s02/1/10/Q1420597131194083_13.png" height="456" onclick="zoomToggle('640px','456px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div>Luego de esto abrimos Spy-Net y configuramos el cliente con los datos que hemos obtenido<br /><br />Puertos: <span style="color: red;">9667</span> y <span style="color: red;">5992</span><br />Pass: <span style="color: red;">XXXXXX</span><br /><br />y esperamos la conexión, en caso de que esta no se realice con exito antes de cuestionar la validez de la password, abrir CurrPorts, y cerrar las conexiónes establecidas por el rat para que este reconecte.<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://imageupper.com/s02/1/10/Q1420597131194083_3.png" height="358" onclick="zoomToggle('640px','358px','100%','100%',this);" width="640" /></div><br />Desinstalamos el Malware de nuestra maquina, y ahora podemos dar caza al Atacante (robar o borrar sus logs y averiguar un poco mas de el)<br />para esto realizamos un ping para saber si alguno de los host isAlive:<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://imageupper.com/s02/1/10/Q1420597131194083_7.png" height="200" onclick="zoomToggle('640px','200px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div><br />El host esta activo realizamos un pequeño whois:<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://imageupper.com/s02/1/10/Q1420597131194083_2.png" height="262" onclick="zoomToggle('640px','262px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><br /></div>Vemos que el ISP que sirve esa dirección es Telefonica, ahora simplemente podemos llamar al ISP pedir junto con una denuncia la pc que estuvo ocupando ese ip por este periodo de tiempo, y asi poder llevar a la cárcel al dueño de esta botnet.<br /><br />O... podemos indagar un poco mas con NMAP<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://imageupper.com/s02/1/10/Q1420597131194083_8.png" height="248" onclick="zoomToggle('640px','248px','100%','100%',this);" width="640" /></div><br />Como podemos ver el atacante tiene varios servicios levantados, ahora toca buscar alguna vulnerabilidad en su sistema, adueñarse de su botnet y devolverle el favor de la infección. ¿Cual fue mi decisión....? Lo dejo a su imaginación ;)<br /><div style="text-align: center;"><br /><b>Happy Hunting :)</b></div><br /><br /></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-01-18T21:05:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:05 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/01/18/analisis-dinamico-spy-net/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/01/18/analisis-dinamico-spy-net/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/01/18/analisis-estatico-spy-net/" title="Previous Post: Análisis Estático Spy-Net">&laquo; Análisis Estático Spy-Net</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/01/18/analizando-el-volcado-con-volatility/" title="Next Post: Analizando el volcado con Volatility">Analizando el volcado con Volatility &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

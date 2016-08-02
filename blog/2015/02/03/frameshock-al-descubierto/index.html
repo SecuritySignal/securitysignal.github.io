@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Frameshock Al Descubierto! - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="&nbsp;by hdbreakerAntes que nada quiero agradecer a la comunidad que me ha ido reportando pequeños bugs de inestabilidad sobre el framework, los &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/02/03/frameshock-al-descubierto/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Frameshock Al Descubierto!</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-03T12:19:00-08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2015</span></span> <span class='time'>12:19 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://4.bp.blogspot.com/-P9Scx1bAufw/VNEsZyzz7PI/AAAAAAAAAS4/rzEpDsGvBcY/s1600/main.png" height="300" onclick="zoomToggle('640px','300px','100%','100%',this);" width="640" /></div><div class="separator" style="clear: both; text-align: right;"><b>&nbsp;by hdbreaker</b></div><div class="separator" style="clear: both; text-align: right;"><br /></div>Antes que nada quiero agradecer a la comunidad que me ha ido reportando pequeños bugs de inestabilidad sobre el framework, los cuales<br /><a name='more'></a>he ido fixeando constantemente, a todos ellos les agradezco y los invito a descargar la ultima versión de su repositorio oficial:<br /><br /><a href="https://bitbucket.org/hdbreaker/frameshock">https://bitbucket.org/hdbreaker/frameshock</a><br /><br />Si aun no sabes lo que es Frameshock, te invito a pasar y conocer mas sobre este proyecto:<br /><a href="http://www.securitysignal.tk/2015/02/frameshock-v-10.html">http://www.securitysignal.tk/2015/02/frameshock-v-10.html</a><br /><br />Les recuerdo que el framework esta en fase BETA, en este momento solo es soportado por distribuciones Linux derivadas de Debian y esta en constante desarrollo, por lo que pido que todo aquel que haya identificado un error, actualice a la ultima versión del repositorio y confirme si el mismo sigue vigente.<br /><div style="text-align: right;"><br /><b>En fin, un millón&nbsp; de gracias por colaborar!</b></div><div style="text-align: right;"><br /><div style="text-align: left;"><br /></div></div><div class="separator" style="clear: both; text-align: left;">En esta entrada quiero presentar una pequeña guía para explicar el funcionamiento de Frameshock y solventar dudas en su utilización.</div><div class="separator" style="clear: both; text-align: left;"></div><div class="separator" style="clear: both; text-align: left;"></div><div class="separator" style="clear: both; text-align: left;"></div><div class="separator" style="clear: both; text-align: left;"><br /></div>Lo primero a resaltar es que todo aquel que haya utilizado alguna vez Metasploit no encontrara mayores problemas al familiarizarse con Frameshock, ya que hemos decidido seguir la linea de interacción de msf con el usuario para facilitar la migración y evitar las complicaciones sintácticas que implica una nueva forma de trabajo.<br /><br />Frameshock se divide en 4 grande partes:<br /><br /><div class="separator" style="clear: both; text-align: left;">[*] El Main</div><div class="separator" style="clear: both; text-align: left;">[*] El Payload</div>[*] El Handler<br />[*] Los Modulos<br /><b> </b><br /><div style="text-align: center;"><h2>El Main</h2><h2><img border="0" src="http://2.bp.blogspot.com/-5yVgFTxNm1U/VNEgsPuJijI/AAAAAAAAARo/SOjZQw8jkdY/s1600/main.png" height="277" onclick="zoomToggle('400px','277px','100%','100%',this);" width="400" /> </h2><div style="text-align: left;">Este es el cuerpo principal del Framework, en el encontraremos todas las utilidades de configuración para el correcto funcionamiento del mismo, las opciones de configuración de los payloads, la posibilidad de acceder al MultiHander de Frameshock así también como a la opción de búsquedas con el motor de SHODAN y todas las modificaciones a la base de datos que esto representa.</div></div><div class="separator" style="clear: both; text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: left;">Lo importante a tratar en Frameshock, es que a diferencia de Metasploit las opciones de configuración del framework son globales, lo que nos permite acceder a las mismas desde módulos subyacentes brindado una excesiva flexibilidad al momento de desarrollar. </div><br />Los Payload en Frameshock también son globales así también las búsquedas de SHODAN, permitiéndonos rápidamente realizar múltiples ataques y reconfiguraciones veloces sin necesidad de modificar nada dentro del modulo que estamos operando ni de las Sesiones obtenidas.<br /><div class="separator" style="clear: both; text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: left;">Frameshock sigue esta linea de pensamiento:</div><br />1) Elige el payload a utilizar..<br /><div class="separator" style="clear: both; text-align: left;">2) Inicia el Manejador de Sesiones.</div><div class="separator" style="clear: both; text-align: left;">3) Selecciona un Modulo y Ataca.</div><h2 class="separator" style="clear: both; text-align: center;">El Payload&nbsp;&nbsp;</h2><h2 class="separator" style="clear: both; text-align: center;"><img border="0" src="http://4.bp.blogspot.com/-QZf-MZni-Sg/VNEgtQ0uFtI/AAAAAAAAARw/wTQKBPH1784/s1600/payload.png" height="132" onclick="zoomToggle('400px','132px','100%','100%',this);" width="400" /></h2><div class="separator" style="clear: both; text-align: left;">A diferencia de Mestasploit, Frameshock ofrece solo 5 posibles Payloads.</div><div class="separator" style="clear: both; text-align: left;"><br /></div>Cada uno cumple todas las necesidades que puede requerir un pentester dependiendo del sistema que va a atacar. <br /><br />Los payloads mas potentes de Frameshock están programados en python, dando una dependencia de la maquina víctima con el interprete.<br /><div class="separator" style="clear: both; text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: left;">Esto fue solventado en linux, dando la posibilidad de generar 2 Payloads que dependen directamente de las Shells interactivas del sistema. Dado que algunos sistemas basados en ARM/IoT solo presentan /bin/sh creamos 2 payload que nos permiten gestionar Reverse Shell tanto en BASH como SH.</div><br /><b>La verdad es que todavía para atacar a maquinas Windows de forma eficiente nos encontramos desarrollando un payload en C/C++</b> pero por el momento se puede pasar el payload por Py2Exe para generar un ejecutable compilado y lograr realizar el ataque correctamente. Aunque siempre esta la posibilidad de atacar servidores <b>Windows</b> con <b>PowerShell</b> que incluyen Python por defecto.<br /><div class="separator" style="clear: both; text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: left;">Dentro de los Payload tenemos 3 formas distintas de Funcionamiento.</div><br /><b>Los Python Payloads:</b><br /><br />Main Frameshock al seleccionar un Payload, genera un injector.py, el mismo se encuentra dentro de la carpeta del proyecto /Injector y a su vez es copiado dentro del directorio <b>/Injector</b> dentro la ruta definida por el usuario de Apache (/var/www en nuestro caso)<br /><div class="separator" style="clear: both; text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: left;"><span style="color: red;">/var/www/Injector/injector.py</span> #Esto nos permite acceder al payload de forma remota por medio de wget luego de la explotación de la vulnerabilidad.</div><div class="separator" style="clear: both; text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: left;">injector.py es un pequeño código que se encarga de solicitarle al <b>Handler</b> el verdadero Payload para luego ejecutarlo <span style="color: red;">On The Fly</span>, evitando detecciones de Antivirus y realizando un mínimo trafico hacia internet .</div><br /><b>Diagrama:</b><br /><br />Victima (injector.py) --------------<span style="color: red;">GiveMePayload</span>----------&gt; Atacante Handler<br /><div class="separator" style="clear: both; text-align: left;">Victima (injector.py) &lt;-------------------<span style="color: red;">Payload</span>----------------- Atacante Handler</div>Victima (<span style="color: red;">Payload On Memory</span>) ------<span style="color: red;">Reverse Shell</span>-----&gt; Atacante Handler<br /><br /><div class="separator" style="clear: both; text-align: left;"><b>Los Shell Payloads:</b></div><div class="separator" style="clear: both; text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: left;">Main  Frameshock&nbsp; genera injector.sh o injector.bash, el mismo se  encuentra dentro de la carpeta del proyecto /Injector y a su vez es  copiado dentro del directorio <b>/Injector</b> dentro la ruta definida por el  usuario de Apache (/var/www en nuestro caso)</div><div class="separator" style="clear: both; text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: left;"><span style="color: red;">/var/www/Injector/injector.sh || </span><span style="color: red;">/var/www/Injector/injector.bash</span> #Esto nos permite acceder al payload de forma remota por medio de wget luego de la explotación de la vulnerabilidad.</div><div class="separator" style="clear: both; text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: left;">En este caso Injector.sh o Injector.bash, retorna por medio de métodos especificos una shell interactiva directamente sin solicitar Payload al Handler.</div><div class="separator" style="clear: both; text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: left;"><b>El Meterpreter Payload:</b></div><div class="separator" style="clear: both; text-align: left;"><br /></div>Main  Frameshock al seleccionar un Payload, genera un injector.py, el mismo se  encuentra dentro de la carpeta del proyecto /Injector y a su vez es  copiado dentro del directorio <b>/Injector</b> dentro la ruta definida por el usuario de Apache (/var/www en nuestro caso)<br /><div class="separator" style="clear: both; text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: left;"><span style="color: red;">/var/www/Injector/injector.py</span> #Esto nos permite acceder al payload de forma remota por medio de wget luego de la explotación de la vulnerabilidad.</div><div class="separator" style="clear: both; text-align: left;"><br /></div><span style="color: red;">injector.py</span> es un pequeño código que se encarga de solicitarle al Payload correspondiente a <b>Metasploit Multi/Handler</b>, el cual posteriormente ejecuta <span style="color: red;">On The Fly</span> y devuelve una Meterpreter Session.<br /><br /><h2 style="text-align: center;">El Handler</h2><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://2.bp.blogspot.com/-SSiIFM3cRjY/VNEe60rwwuI/AAAAAAAAARc/o-Gng23L-c4/s1600/handler.png" height="334" onclick="zoomToggle('640px','334px','100%','100%',this);" width="640" /></div><div class="separator" style="clear: both; text-align: left;"><br /></div>El Handler se inicia desde el Main Menu ejecutando <b>start handler</b>, este es totalmente independiente y nos permite gestionar todos los tipos de Sesiones entregadas por los payloads, a excepción de Meterpreter, que es gestionado por Metasploit y depende de su previa instalación.<br /><div class="separator" style="clear: both; text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: left;">Frameshock Handler, se comporta de 2 formas distintas dependiendo del indentificador enviado por el payload. </div><br />El mismo integra un Payload Manager encargado de enviar los Payload a los Injectors correspondientes y un Session Manager, encargado de gestionar de forma MultiThreading y Asincronica una ilimitada cantidad de Sesiones al mismo tiempo, permitiendo interactuar y volver a background a las Sesiones en cualquier momento por medio de los comandos <b>interact</b> y <b>stop</b>. Se espera en su proxima versión que sea capas de instalar un rootkit en los equipos deseados como modulo para mantener el acceso.<br /><br />En la siguiente imagen se puede apreciar, como un injector.py solicita un payload al hanler y luego de su ejecución en memoria nos devuelve una Reverse Shell con la cual podemos interactuar en cualquier momento<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://1.bp.blogspot.com/-txH0K37pNZc/VNEjUwIe9qI/AAAAAAAAAR8/hPpsadSCa9I/s1600/session.png" height="376" onclick="zoomToggle('640px','376px','100%','100%',this);" width="640" /></div><div style="text-align: center;"><h2>Los Modulos</h2></div><div style="text-align: left;">Los Modulos desarrollados por la  comunidad se encuentran en ExtraModules y deben seleccionarse y copiarse  dentro de la carpeta Modules, respentando la nomenclatura y el  correspondiente identificador numérico acorde a la cantidad de modulos  presentes en la carpeta.&nbsp;</div><div style="text-align: left;"></div><div style="text-align: left;">Una vez hecho esto, podremos interactuar con los módulos seleccionados desde Frameshock con los comandos <b>show modules</b> y <b>use {ModuleNumber}</b>&nbsp;</div><div style="text-align: left;"></div><div style="text-align: left;"><span style="color: red;"><b>Importante: **** Antes de realizar el ataque con un modulo, debemos asegurarnos de haber creado un payload y haber iniciado el Handler ***</b></span>&nbsp; </div><div style="text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://3.bp.blogspot.com/-wy8rUlNVcQc/VNEls3T-PbI/AAAAAAAAASI/I9xATdwRkXY/s1600/module.png" height="286" onclick="zoomToggle('400px','286px','100%','100%',this);" width="400" /></div><div style="text-align: left;"><br />Una vez seleccionado un modulo, podemos visualizar sus opciones internas para adaptarlo a nuestras necesidades con el comando comando <b>help</b><br /><br />Cabe desatacar que cada desarrollador puede adaptar las propiedades internas de sus módulos acorde a sus necesidades, Frameshock propone una estructura base que ha de respetarse para sacar el maximo provecho del framework.</div><div style="text-align: left;"><br /></div><div style="text-align: left;">Entre las opciones por defecto de los modulos se expresa la función:&nbsp; <b>use shodan</b> la cual carga como targets todos dispositivos obtenidos al utilizar la búsqueda por SHODAN en el Main Menu de Frameshock, permitiéndonos automatizar ataques masivos de forma sencilla y veloz.</div><div style="text-align: left;"><br />En el ejemplo a tratar en este manual se atacara a una Camara AXIS remota, vulnerable al modulo AXISIntruder desarrollado por [Q]3rv[0], el cual prueba contraseñas débiles en estos dispositivos, una vez logrado acceso sube el Payload y en unos segundos nos retorna una shell dentro del pequeño sistema interno de estos dispositivos.<br /><br />Cabe destacar que las cámaras AXIS ARM solo disponen de <b>/bin/sh</b>, por lo que nuestro payload deber ser acorde al ataque a realizar.</div><div style="text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: center;"></div><div class="separator" style="clear: both; text-align: center;"></div><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://4.bp.blogspot.com/-DHihCvlVyhg/VNEojAm1yoI/AAAAAAAAASU/qC4dUVnvSto/s1600/sh.png" height="151" onclick="zoomToggle('400px','151px','100%','100%',this);" width="400" /></div><div style="text-align: left;"></div><div style="text-align: left;"><br />Iniciamos el Handler:<br /><br /><div style="text-align: center;"><img border="0" src="http://2.bp.blogspot.com/-SSiIFM3cRjY/VNEe60rwwuI/AAAAAAAAARc/o-Gng23L-c4/s1600/handler.png" height="334" onclick="zoomToggle('640px','334px','100%','100%',this);" width="640" /></div></div><div style="text-align: left;"><br /></div><div style="text-align: left;">Seleccionamos el Modulo:</div><div style="text-align: left;"><br /></div><div style="text-align: center;"><img border="0" src="http://3.bp.blogspot.com/-wy8rUlNVcQc/VNEls3T-PbI/AAAAAAAAASI/I9xATdwRkXY/s1600/module.png" height="286" onclick="zoomToggle('400px','286px','100%','100%',this);" width="400" /></div><div style="text-align: left;"><br /></div><div style="text-align: left;">Configuramos un Target Manual:</div><div style="text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://3.bp.blogspot.com/-QgmUq6DHo48/VNEpMaTj66I/AAAAAAAAASc/hYde9EDMS6E/s1600/target.png" height="36" onclick="zoomToggle('400px','36px','100%','100%',this);" width="400" />&nbsp;</div><div class="separator" style="clear: both; text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: left;">Ejecutamos el Ataque:</div><div class="separator" style="clear: both; text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://1.bp.blogspot.com/--kiiqR-A8A8/VNErafetHSI/AAAAAAAAASo/n_lCTpnzYvQ/s1600/exploit.png" height="78" onclick="zoomToggle('640px','78px','100%','100%',this);" width="640" /></div><div class="separator" style="clear: both; text-align: left;"><br /></div>Esperamos unos segundos, y vemos como nuestro handler maneja la Sesión:<br /><div class="separator" style="clear: both; text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://2.bp.blogspot.com/-bDsjKJTock8/VNEroaRCRTI/AAAAAAAAASw/ILVnaW0k_lw/s1600/victim.png" height="574" onclick="zoomToggle('640px','574px','100%','100%',this);" width="640" /></div><div style="text-align: left;"><br /></div><div style="text-align: left;">Espero que esta guía solvente muchas de sus dudas, que les sea de utilidad y por sobretodo gracias por ayudarnos a volver realidad este gran proyecto!</div><div class="separator" style="clear: both; text-align: left;"></div><div class="separator" style="clear: both; text-align: left;"></div><div style="text-align: right;"><br />Saludos!</div><div class="separator" style="clear: both; text-align: left;"><br /></div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-02-03T12:19:00-08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2015</span></span> <span class='time'>12:19 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/02/03/frameshock-al-descubierto/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/02/03/frameshock-al-descubierto/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/02/02/frameshock-v-10/" title="Previous Post: Frameshock">&laquo; Frameshock</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/02/04/securitysigalorg/" title="Next Post: SecuritySignal.org">SecuritySignal.org &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

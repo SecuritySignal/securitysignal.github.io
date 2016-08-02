@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Analizando JS Malicioso AutoLike/AutoShare - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="by hdbreakerHoy quiero contarles un rápido análisis que realice de un archivo javascript malicioso que permite realizar AutoShares y AutoLikes en &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/05/12/analizando-js-malicioso/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Analizando JS Malicioso AutoLike/AutoShare</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-05-12T23:21:00-07:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:21 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="https://blog.kaspersky.com/files/2012/12/malware-2012.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="https://blog.kaspersky.com/files/2012/12/malware-2012.jpg" /></a></div><div style="text-align: right;"><b>by hdbreaker</b></div><div style="text-align: right;"><br /></div><div style="text-align: left;">Hoy quiero contarles un rápido análisis que realice de un archivo javascript malicioso que permite realizar AutoShares y AutoLikes en facebook.<br /><a name='more'></a><br />Como todo análisis tiene una historia previa, navegando la red social como usuario habitual de facebook, encontré un articulo que llamo mi atención, al acceder al mismo advertí una pequeña ventana modal el cual me informaba que para cerrarla debía presionar la X... Esto ya me olía mal, pero confiado de mis conocimientos decidí seguir adelante. En caso de un script malicio tendría en mis manos algo interesante por el cual escribir.<br /><br />Al dar 2 click en la X y ver que la ventana modal no cerraba saltaron mis sospechas y lo primero que revise fue mi muro de Facebook, donde por cuasi arte de magia había compartido una publicación sin mi consentimiento. <br /><br />Como no soy un usuario asustadizo lo primero que me propuse era investigar donde estuvo la trampa, de todas formas, si hubiera sido algo peor, ya seria parte de alguna botnet. No perdía nada con seguir el juego!<br /><br />Primero analice velozmente el html, detectando un iframe que se cargaba sobre la X.</div><div style="text-align: left;"></div><div style="text-align: left;"></div><div style="text-align: center;"><br /></div><div style="text-align: center;"><a href="http://3.bp.blogspot.com/-4AfGl4h1Dnc/VVLXZ45mZnI/AAAAAAAAAfY/oeyWJ_QGVHA/s1600/mal1.png" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="360" src="http://3.bp.blogspot.com/-4AfGl4h1Dnc/VVLXZ45mZnI/AAAAAAAAAfY/oeyWJ_QGVHA/s640/mal1.png" width="640" /></a></div><div style="text-align: left;"><br />para mi sorpresa lo que había sobre la X en realidad era un formulario HTML con varios input con values predefinidos ocultos y maquillados con un poco de css.</div><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-yki5h2UBLV4/VVLYDolYj0I/AAAAAAAAAfo/eMx28Wdf2sU/s1600/mal2.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="360" src="http://3.bp.blogspot.com/-yki5h2UBLV4/VVLYDolYj0I/AAAAAAAAAfo/eMx28Wdf2sU/s640/mal2.png" width="640" /></a></div><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-tESNp4gKQYQ/VVLYDtje83I/AAAAAAAAAfs/zlUEDH135PA/s1600/mal3.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="360" src="http://3.bp.blogspot.com/-tESNp4gKQYQ/VVLYDtje83I/AAAAAAAAAfs/zlUEDH135PA/s640/mal3.png" width="640" /></a></div><div style="text-align: center;"><br /></div><div style="text-align: left;">Lo interesante de esto fue el value de uno de sus input.</div><div style="text-align: center;"><a href="http://1.bp.blogspot.com/-W9i0B46osHw/VVLZAKsaCZI/AAAAAAAAAgA/chPE_GDRx6Q/s1600/mal2.png" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="360" src="http://1.bp.blogspot.com/-W9i0B46osHw/VVLZAKsaCZI/AAAAAAAAAgA/chPE_GDRx6Q/s640/mal2.png" width="640" /></a></div><div style="text-align: left;"><br />Que para mi poca sorpresa era un link de facebook:<br /><br /><a href="https://www.facebook.com/groups/361531944052219/permalink/362524573952956/">https://www.facebook.com/groups/361531944052219/permalink/362524573952956/</a><br /><br />Los que hemos trabajado con el API de facebook o aquellos curiosos que han estudiado que son los números de las url de facebook podrán ver a simple vista<br />que el primer numero <a href="https://www.facebook.com/groups/361531944052219/permalink/362524573952956/">361531944052219</a> identifica a un grupo y el siguiente numero <a href="https://www.facebook.com/groups/361531944052219/permalink/362524573952956/">362524573952956</a> identifica a una publicación dentro del grupo.<br /><br />Sin dudarlo lo visite para ver a donde me llevaba.</div><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-dTei2yickBQ/VVLaD1F-eLI/AAAAAAAAAgI/wy4BGB1rBbA/s1600/grupo.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="400" src="http://4.bp.blogspot.com/-dTei2yickBQ/VVLaD1F-eLI/AAAAAAAAAgI/wy4BGB1rBbA/s400/grupo.png" width="332" /></a></div><div style="text-align: center;"><br /></div><div style="text-align: left;">Con esto detectamos que el Usuario <b>Dario Lopez</b> del grupo Noticias Importantes Mundial esta dispersando malware con el fin de hacer popular una nota o un sitio web. <br /><br />A simple vista el perfil de Dario Lopez, no parece un Perfil falso ya que posee una cantidad considerable de amistades y fotos familiares concretas.<br /><br /><div style="text-align: center;"><a href="http://1.bp.blogspot.com/-tS6R0tzTLPA/VVLa6ESekfI/AAAAAAAAAgQ/YrSVnrUENRg/s1600/malfacebook.png" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="236" src="http://1.bp.blogspot.com/-tS6R0tzTLPA/VVLa6ESekfI/AAAAAAAAAgQ/YrSVnrUENRg/s640/malfacebook.png" width="640" /></a></div>No puedo decir si <b>Dario Lopez</b> es la mente detrás de este malware, pero no hay que descartar que por "coincidencia" es un <b>"profesional"</b> (Si lo remarco!) del área informática según su información y además es administrador del sitio <b>http://laferia.do</b>, casualmente el dominio que hospeda el fichero analizado también es <b>.do</b>. Muchos dirán que puede ser pura casualidad, pero cuando muchas casualidades convergen en el mismo punto hay que mantenernos atentos.</div><div style="text-align: left;"><br /><div style="text-align: center;"><a href="http://2.bp.blogspot.com/-r24QXdH7EnQ/VVLbV74FnwI/AAAAAAAAAgY/8w2VZVGQeVc/s1600/data.png" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-r24QXdH7EnQ/VVLbV74FnwI/AAAAAAAAAgY/8w2VZVGQeVc/s1600/data.png" /></a></div>Además, existen publicaciones de <b>Dario Lopez</b> exponiendo de forma publica que el se encarga del SEO y posicionamiento del sitio <b>http://enminutos.do<br /></b><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-hD1H9to59nw/VVkow_kCgtI/AAAAAAAAAjA/PU2jfBfD3JE/s1600/Screenshot_2015-05-14-23-53-29.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="640" src="http://4.bp.blogspot.com/-hD1H9to59nw/VVkow_kCgtI/AAAAAAAAAjA/PU2jfBfD3JE/s640/Screenshot_2015-05-14-23-53-29.png" width="360" /></a></div><br />Muchos Analistas estarían feliz con esta información, pero yo quise llegar un poco mas lejos.</div><div style="text-align: left;"></div><div style="text-align: left;"><br />Todo formulario html debe apuntar a algún lado y esta no es la excepción.</div><div style="text-align: left;">Este formulario envía los datos a:<br /><a href="http://enminutos.do/v1/wp-content/plugins/gereshare/comp.php">http://enminutos.do/v1/wp-content/plugins/gereshare/comp.php</a><br /><br />En este punto dije, espero que este sujeto no permita Directory Listing, pero como era de esperar sus habilidades dejan mucho que desear.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-ol9k2qmFoQM/VVLdSJE-lgI/AAAAAAAAAg0/sZGNm0Iet74/s1600/malwarePath.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="360" src="http://4.bp.blogspot.com/-ol9k2qmFoQM/VVLdSJE-lgI/AAAAAAAAAg0/sZGNm0Iet74/s640/malwarePath.png" width="640" /></a></div><div style="text-align: center;"><br /></div><br />En el la raiz del sitio, podemos observar varios archivos interesantes, entre los cuales resaltan a simple vista 3.<br /><b><br />comp.php</b> (El cual seria el encargado de compartir publicaciones)<br /><b>autolikewp.php</b> (El encargado de los likes)<br /><b>wppanel.php</b> (Probablemente el panel de administración de esta pseudobotnet js)<br /><br />Al abrir el archivo Ok.php podemos ver el mensaje que nos devuelve la ventana modal, que nos solicita clickear 2 veces la X.<br /><br /><div style="text-align: center;"><a href="http://2.bp.blogspot.com/-uZzGDVC7k7M/VVLgLMl2atI/AAAAAAAAAhY/g8MP_WgKvT4/s1600/ok.png" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="224" src="http://2.bp.blogspot.com/-uZzGDVC7k7M/VVLgLMl2atI/AAAAAAAAAhY/g8MP_WgKvT4/s640/ok.png" width="640" /></a></div></div><div style="text-align: left;"></div><div style="text-align: left;"><br />Analizando como funcionaba el archivo comp.php en base al formulario html, se puede apreciar que el mismo obtiene como parametro GET (<b>?n=</b>) una url de facebook y gracias a ello, realiza el share de la publicación en nuestro muro.<br /><br /><div style="text-align: center;"><a href="http://2.bp.blogspot.com/-FXSHaNWQMwQ/VVLgvxmsXKI/AAAAAAAAAhg/uAAs4eSMkYk/s1600/maltrick.png" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="360" src="http://2.bp.blogspot.com/-FXSHaNWQMwQ/VVLgvxmsXKI/AAAAAAAAAhg/uAAs4eSMkYk/s640/maltrick.png" width="640" /></a></div>También se puede apreciar el pequeño icono <b>Recommander</b> que genera, el cual esta situado sobre la X de la primera ventana modal de forma oculta.<br /><br />Al presionar por primera vez el icono, la publicación es compartida automáticamente en nuestro muro. </div><div style="text-align: left;"><br /><div style="text-align: center;"><a href="http://4.bp.blogspot.com/-s5Rctqb7g0U/VVLhyRJCazI/AAAAAAAAAho/N2W2wIO6AIA/s1600/comp.png" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="367" src="http://4.bp.blogspot.com/-s5Rctqb7g0U/VVLhyRJCazI/AAAAAAAAAho/N2W2wIO6AIA/s400/comp.png" width="400" /></a></div><div style="text-align: center;"><b><br />¿Pero como es esto posible?</b></div>Si analizamos las solicitudes que realizan al pinchar sobre el icono con Live HTTP Headers, vemos que en realidad <b>comp.php</b> realiza una solicitud cruzada (CSRF) a facebook en la siguiente url:<br /><br /><a href="http://a/" target="_blank">https://www.facebook.com/plugins/like.php?action=recommend&amp;locale=fr_FR&amp;href=https://www.facebook.com/groups/361531944052219/permalink/362524573952956/</a><br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-6NNlHnX6NO4/VVLjnPYI87I/AAAAAAAAAh0/6zxiV0L1Qxw/s1600/csrf.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-6NNlHnX6NO4/VVLjnPYI87I/AAAAAAAAAh0/6zxiV0L1Qxw/s1600/csrf.png" /></a></div><div style="text-align: center;"><br /></div><br />Luego de compartir, sorprendentemente se genera otro icono que solicita volver a pinchar sobre el (clickear 2 veces sobre la X cobra sentido).</div><div style="text-align: left;"><br />Este segundo click, obtiene nuestra lista de amigos: solicitando la siguiente url, y enviando como parametros nuestro user id.<br /><br /><div style="text-align: center;"><a href="http://3.bp.blogspot.com/-zyVW8dBzn10/VVLl1ezidVI/AAAAAAAAAiE/JmbI8B-zVlE/s1600/liveb.png" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="316" src="http://3.bp.blogspot.com/-zyVW8dBzn10/VVLl1ezidVI/AAAAAAAAAiE/JmbI8B-zVlE/s640/liveb.png" width="640" /></a></div></div><div style="text-align: left;"><br /><a href="https://www.facebook.com/ajax/chat/buddy_list.php">https://www.facebook.com/ajax/chat/buddy_list.php</a><br />POST DATA:<br /><br />user=<b>XXXXXXXXXXXX</b>&amp;cached_user_info_ids=100000880896707%2C1539278499%2C1039286048%2C1672917463%2C1159013345%2C100002303816403%2C1579914094%2C100002280882851%2C1294812174%2C1485503826%2C100006827621101%2C1435971856%2C1420035217%2C1549101887%2C100000243965841%2C1189075482%2C1358504234%2C100002206144671%2C100000304744896%2C1541655589%2C100000323464648%2C100005337588429%2C1183924717%2C100000154385259%2C541587768%2C1169111031%2C502648835%2C1019076152%2C1427687216%2C1075931220%2C100000259832559%2C1014462015%2C1797529367%2C1311745204%2C100000621867724%2C1594688351%2C100001114774263%2C100006411360957%2C1585235871%2C1347135662%2C1516698859%2C1460880717&amp;fetch_mobile=false&amp;__user=100000880896707&amp;__a=1&amp;__dyn=7nmajEyl2lm9o-t2u5bGya4Au7pEsx6iqAdy9VQC-K26m6oKewWhEyfyUnwPUS2O4K5ebAxacFoy8ACxuFmdAw&amp;__req=1y&amp;fb_dtsg=AQGj5Kcxo0bW&amp;ttstamp=2658171106537599120111489887&amp;__rev=1733369<br /><br />Esto da como resultado un json con todos los id de los conectados al chat de facebook y su estado actual (Online, Offline).<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-edaNlPNjJqU/VVLlU-kqv5I/AAAAAAAAAh8/cm69atE7Two/s1600/budylist.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="360" src="http://4.bp.blogspot.com/-edaNlPNjJqU/VVLlU-kqv5I/AAAAAAAAAh8/cm69atE7Two/s640/budylist.png" width="640" /></a></div><div style="text-align: center;"><br /></div><div style="text-align: left;">Luego de esto hace solicitudes recursivas para obtener información de cada uno de nuestros contactos del chat.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-hGuu0aKZuAA/VVLmUIggz2I/AAAAAAAAAiM/QwG3nqIsOIM/s1600/userinfo.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="228" src="http://1.bp.blogspot.com/-hGuu0aKZuAA/VVLmUIggz2I/AAAAAAAAAiM/QwG3nqIsOIM/s640/userinfo.png" width="640" /></a></div><div style="text-align: left;">Esto da como resultado información primordial para contactar a cada uno de estos usuarios. <br /><br />Entre esta información se encuentra el id de facebook de cada Amigo del chat, y su url de facebook.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-Ek6Iriuon3s/VVLmnl6ExJI/AAAAAAAAAiU/btkNk4zFuW8/s1600/info.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="360" src="http://3.bp.blogspot.com/-Ek6Iriuon3s/VVLmnl6ExJI/AAAAAAAAAiU/btkNk4zFuW8/s640/info.png" width="640" /></a></div><div style="text-align: left;">Con esta información el atacante puede realizar una campaña de spam buscando obtener cada vez mas víctimas, con esta misma metodología el script intenta enviar spam a cada uno de los usuarios del chat, pero por motivos que desconozco el script falla en este punto. Probablemente protección contra spam de facebook.<br /><br />Al entender como funciona el script no tarde mucho en desarrollar un metodo que me permitía aprovechar la situación por medio de un pequeño <b>PoC</b> que le permite a cualquier persona utilizar este script para realizar campaña sobre sus propios sitios.<br /><br />Solo basta con cambiar parámetro enviado a <b>comp.php</b> de la siguiente forma:<br /><br /><a href="http://enminutos.do/v1/wp-content/plugins/gereshare/comp.php?n=">http://enminutos.do/v1/wp-content/plugins/gereshare/comp.php?n=</a><b>URL</b></div></div></div></div><div style="text-align: left;"><br />URL puede apuntar a una pagina de facebook, a una publicación personal, o a una publicación dentro de un grupo.<br /><br />En este caso utilice como URL la paguina de facebook de <b>SecuritySignal</b><br /><br /><a href="http://enminutos.do/v1/wp-content/plugins/gereshare/comp.php?n=https://www.facebook.com/pages/Security-Signal/1582089988673754?fref=ts">http://enminutos.do/v1/wp-content/plugins/gereshare/comp.php?n=https://www.facebook.com/pages/Security-Signal/1582089988673754?fref=ts</a><br /><br />Vemos con este sencillo PoC como fuimos capaces de reproducir a nuestro favor el script malicioso.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-q6jE7jI8Cjw/VVLpKR6I7kI/AAAAAAAAAig/s2a3VOzouEU/s1600/sec.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="298" src="http://4.bp.blogspot.com/-q6jE7jI8Cjw/VVLpKR6I7kI/AAAAAAAAAig/s2a3VOzouEU/s640/sec.png" width="640" /></a></div><div style="text-align: center;"><br /></div>Luego de llegar a un punto realmente interesante en el funcionamiento de este script malicioso decidí mirar los archivos Javascript ya que todo esto era posible gracias a peticiones ajax.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-I7u1adwsfNg/VVLdxAq-5AI/AAAAAAAAAg8/Kc-dG-8sUas/s1600/js.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="360" src="http://1.bp.blogspot.com/-I7u1adwsfNg/VVLdxAq-5AI/AAAAAAAAAg8/Kc-dG-8sUas/s640/js.png" width="640" /></a></div><div style="text-align: center;"><br /></div><br />Al ver un poco ambos archivos notamos otra coincidencia, nuestro programador es de habla latina, igual que <b>Dario Lopez</b>, y podemos ver con este trozo de código como evalúa el estado de nuestra session por medio de cookies.</div><div style="text-align: left;"><br /><div style="text-align: center;"></div><div style="text-align: center;"><a href="http://4.bp.blogspot.com/-umkOy0Ehsiw/VVLeO8hVuwI/AAAAAAAAAhE/bVnq6gjEDCM/s1600/malcookiecaptcher.png" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="116" src="http://4.bp.blogspot.com/-umkOy0Ehsiw/VVLeO8hVuwI/AAAAAAAAAhE/bVnq6gjEDCM/s640/malcookiecaptcher.png" width="640" /></a> </div><div style="text-align: left;"><br />Dentro del otro fichero javascript es donde la cosa se pone un poco peligrosa.<br /><br />En el siguiente código podemos ver como el script roba nuestras cookies para luego enviarlas muy probablemente a un panel de administración.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-QJ6JXog6uc4/VVLetATWgxI/AAAAAAAAAhQ/0GM0cZXPHCE/s1600/obtiene%2Bnuestra%2Bcookie.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="132" src="http://2.bp.blogspot.com/-QJ6JXog6uc4/VVLetATWgxI/AAAAAAAAAhQ/0GM0cZXPHCE/s640/obtiene%2Bnuestra%2Bcookie.png" width="640" /></a></div><div style="text-align: center;"><br /></div>Entre los datos que obtiene el atacante se encuentra:&nbsp;</div><div style="text-align: left;"><br /><b>Fecha en la que expira nuestra session</b> (para los que pinchan en "iniciar automáticamente")<br /><b>El path</b> desde donde se pincho el link malicioso<br /><b>El dominio</b> en nuestro caso <b>www.facebook.com</b><br /><b>Secure</b> que de momentos la almacena en blanco.<br /><br />Luego de intentar&nbsp; acceder un tiempo a wppanel.php decidí que era tiempo de eliminar las Sessiones de mi navegador, limpiar las Cookies y eliminar cache.</div><div style="text-align: left;">Nadie quiere un Bot JS persistente en el navegador como el desarrollado por nuestro amigo <b>Chema</b> en:<br /><br /><a href="http://www.elladodelmal.com/2012/03/owning-bad-guys-mafia-with-javascript.html">http://www.elladodelmal.com/2012/03/owning-bad-guys-mafia-with-javascript.html</a><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-qVlkpkftoNI/VVLp83dTIiI/AAAAAAAAAio/PL2cjYAYPcQ/s1600/limpiarMal.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="360" src="http://1.bp.blogspot.com/-qVlkpkftoNI/VVLp83dTIiI/AAAAAAAAAio/PL2cjYAYPcQ/s640/limpiarMal.png" width="640" /></a></div><div style="text-align: center;"><br /></div><div style="text-align: left;">Luego de esto pasamos a enviar solicitudes de análisis a sitios como VirusTotal y demás sitios web que repartan muestras de malware a distintas compañías con el fin de intentar quemar lo mas rápido posible este Script Malicioso.<br /><br /><div style="text-align: right;"><b>Si más, espero que les haya gustado esta lectura. Saludos!</b></div><br />Demás esta decir que tengan cuidado al abrir cualquier link que venga desde el sitio <b>http://enminutos.do</b><br /><br />Por si quieren analizar ustedes también <br />Pastebin del html: <a href="http://pastebin.com/Zg5phGGq">http://pastebin.com/Zg5phGGq</a><br /><br /><b>Actualización:</b> Un amigo lector de este blog, envío un email relacionando el funcionamiento relatado con el siguiente script a la venta en distintas zonas y foros. Según parece programado y a la venta por el usuario <b>gere88</b> de <b>foroBeta</b>.<br /><br /><b>Gere88</b> buen trabajo!<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-4jtw3Nrp0WQ/VVktImiRpTI/AAAAAAAAAjI/gbAlxeHhxLU/s1600/aaa.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="640" src="http://3.bp.blogspot.com/-4jtw3Nrp0WQ/VVktImiRpTI/AAAAAAAAAjI/gbAlxeHhxLU/s640/aaa.png" width="507" /></a></div><div style="text-align: center;"><br /></div><br /></div></div></div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-05-12T23:21:00-07:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:21 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/05/12/analizando-js-malicioso/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/05/12/analizando-js-malicioso/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/04/29/darknet-10/" title="Previous Post: Darknet 1.0">&laquo; Darknet 1.0</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/05/25/enganando-el-waf-con-xmp/" title="Next Post: Engañando al WAF con XMP">Engañando al WAF con XMP &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

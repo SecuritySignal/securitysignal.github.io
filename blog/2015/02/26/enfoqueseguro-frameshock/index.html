@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Enfoqueseguro - Frameshock - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="by hdbreaker Hoy, día de mi cumpleaños tuve el gusto de ser entrevistado por un miembro de este importante sitio de seguridad informática: www. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/02/26/enfoqueseguro-frameshock/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Enfoqueseguro - Frameshock</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-26T06:00:00-08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>26</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>6:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-GeJfQFRws4o/VO8jz1FQygI/AAAAAAAAAaQ/m5Pnt0y7Goc/s1600/logoenfoque.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-GeJfQFRws4o/VO8jz1FQygI/AAAAAAAAAaQ/m5Pnt0y7Goc/s1600/logoenfoque.png" height="320" width="320" /></a></div><div style="text-align: left;"><div style="text-align: right;"><b>by hdbreaker</b> </div><br />Hoy, día de mi cumpleaños tuve el gusto de ser entrevistado por un miembro de este importante sitio de seguridad informática: <a href="http://www.enfoqueseguro.com/">www.enfoqueseguro.com</a><br /><a name='more'></a><br />El mismo se encuentra encabezado por <span class="_5yl5" data-reactid=".64.$mid=11424925504634=2171a43b2920a76aa78.2:0.0.0.0.0"><span data-reactid=".64.$mid=11424925504634=2171a43b2920a76aa78.2:0.0.0.0.0.0">Rafael Nuñez y trata toda diversidad de temas relacionados a la seguridad informatica en el mismo.<br /><br />En la entrevista se me realzaron a trasnoche varias preguntas sobre el desarrollo de Frameshock y su futuro.<br /><br />Quiero agradecer a mi gran amigo Q3rv0 que siempre ha estado para darme una mano y afrontar todo tipo de proyectos juntos y a todos los usuarios que apoyan el software libre, a todos aquellos que han reportado fallos, desarrollado módulos y colaborado de cualquier forma con la iniciativa de lograr una plataforma solida y robusta para el trabajo de un pentester.<br /><br />Recuerden el software libre es de todos, cualquiera lo puede usar y modificar, pero así mismo el mantenimiento del software libre es brindado por los mismos usuarios a todos aquellos que se hayan interesado en Frameshock les pedimos que nos ayuden a mejorarlo, desarrollando o detectando fallos!<br /><br />Entrevista:<br /><a href="http://www.enfoqueseguro.com/frameshock-desde-argentina-para-el-mundo/2015/02/26/">http://www.enfoqueseguro.com/frameshock-desde-argentina-para-el-mundo/2015/02/26/</a><br /><br />Respuesta actualizada sobre las dependencias básicas de Frameshock:</span></span>Las dependencias que de momentos requiere el núcleo de Frameshock son:</div><div style="text-align: left;"><br />[*] Tabulate</div><div style="text-align: left;">[*]<a href="https://www.blogger.com/null" name="cl-4"></a> colorama <a href="https://www.blogger.com/null" name="cl-5"></a>&nbsp;</div><div style="text-align: left;">[*] shodan <a href="https://www.blogger.com/null" name="cl-6"></a>&nbsp;</div><div style="text-align: left;">[*] html2text<br /><br />Demás esta decirle a todos los desarrolladores independientes de módulos que tienen la libertad de incluir cualquier dependencia que requieran siempre y cuando se realice un script de instalación de dependencias del mismo.</div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-02-26T06:00:00-08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>26</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>6:00 am</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/02/26/enfoqueseguro-frameshock/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/02/26/enfoqueseguro-frameshock/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/02/18/level4-pwned/" title="Previous Post: Level4 Pwned!">&laquo; Level4 Pwned!</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/02/26/arduino-p0wned-desbordando-arduino/" title="Next Post: Arduino P0wn3d - Desbordando Arduino">Arduino P0wn3d - Desbordando Arduino &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

