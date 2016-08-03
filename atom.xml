@@ -4,7 +4,7 @@
   <title><![CDATA[Security Signal]]></title>
   <link href="http://securitysignal.github.io/atom.xml" rel="self"/>
   <link href="http://securitysignal.github.io/"/>
-  <updated>2016-08-02T20:26:50-03:00</updated>
+  <updated>2016-08-02T22:31:12-03:00</updated>
   <id>http://securitysignal.github.io/</id>
   <author>
     <name><![CDATA[q3rv0 - hdbreaker]]></name>
@@ -22,7 +22,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Ringzer0 Level4 Pwned! By Hdbreaker]]></title>
+    <title type="html"><![CDATA[Ringzer0 Level4 Pwned! by hdbreaker]]></title>
     <link href="http://securitysignal.github.io/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker/"/>
     <updated>2016-01-07T01:21:00-08:00</updated>
     <id>http://securitysignal.github.io/blog/2016/01/07/ringzer0-level4-pwned-by-hdbreaker</id>
@@ -46,7 +46,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[EkoParty Pre CTF]]></title>
+    <title type="html"><![CDATA[EkoParty Pre CTF ]]></title>
     <link href="http://securitysignal.github.io/blog/2015/09/30/eko-party-pre-ctf/"/>
     <updated>2015-09-30T17:54:00-07:00</updated>
     <id>http://securitysignal.github.io/blog/2015/09/30/eko-party-pre-ctf</id>
@@ -54,7 +54,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Esquivando La Seguridad De WIX.COM]]></title>
+    <title type="html"><![CDATA[Esquivando la seguridad de WIX.COM]]></title>
     <link href="http://securitysignal.github.io/blog/2015/07/18/esquivando-la-seguridad-de-wixcom/"/>
     <updated>2015-07-18T09:45:00-07:00</updated>
     <id>http://securitysignal.github.io/blog/2015/07/18/esquivando-la-seguridad-de-wixcom</id>
@@ -62,7 +62,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Cazador De Botnets: [Zeus]]]></title>
+    <title type="html"><![CDATA[Cazador de Botnets: [Zeus]]]></title>
     <link href="http://securitysignal.github.io/blog/2015/07/09/cazador-de-botnets-zeus/"/>
     <updated>2015-07-09T15:20:00-07:00</updated>
     <id>http://securitysignal.github.io/blog/2015/07/09/cazador-de-botnets-zeus</id>
@@ -70,7 +70,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Engañando Al WAF Con XMP]]></title>
+    <title type="html"><![CDATA[Engañando al WAF con XMP]]></title>
     <link href="http://securitysignal.github.io/blog/2015/05/25/enganando-el-waf-con-xmp/"/>
     <updated>2015-05-25T19:46:00-07:00</updated>
     <id>http://securitysignal.github.io/blog/2015/05/25/enganando-el-waf-con-xmp</id>
@@ -126,7 +126,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Webot - One Ring to Control the Others]]></title>
+    <title type="html"><![CDATA[Webot - One Ring to Control the Others ]]></title>
     <link href="http://securitysignal.github.io/blog/2015/03/04/webot-one-ring-to-control-others/"/>
     <updated>2015-03-04T18:32:00-08:00</updated>
     <id>http://securitysignal.github.io/blog/2015/03/04/webot-one-ring-to-control-others</id>
@@ -142,7 +142,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Enfoqueseguro - Frameshock]]></title>
+    <title type="html"><![CDATA[Enfoqueseguro - Frameshock ]]></title>
     <link href="http://securitysignal.github.io/blog/2015/02/26/enfoqueseguro-frameshock/"/>
     <updated>2015-02-26T06:00:00-08:00</updated>
     <id>http://securitysignal.github.io/blog/2015/02/26/enfoqueseguro-frameshock</id>
@@ -158,7 +158,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Programa Tu Modulo Para Frameshock]]></title>
+    <title type="html"><![CDATA[Programa tu modulo para Frameshock]]></title>
     <link href="http://securitysignal.github.io/blog/2015/02/07/programa-tu-modulo-para-frameshock/"/>
     <updated>2015-02-07T12:44:00-08:00</updated>
     <id>http://securitysignal.github.io/blog/2015/02/07/programa-tu-modulo-para-frameshock</id>
@@ -166,7 +166,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[¿Quién Te Choco? Hackeando Patentes]]></title>
+    <title type="html"><![CDATA[¿Quién te choco? Hackeando Patentes ]]></title>
     <link href="http://securitysignal.github.io/blog/2015/02/05/quien-te-choco-hackeado-patentes/"/>
     <updated>2015-02-05T19:19:00-08:00</updated>
     <id>http://securitysignal.github.io/blog/2015/02/05/quien-te-choco-hackeado-patentes</id>
